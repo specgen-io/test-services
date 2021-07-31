@@ -173,7 +173,7 @@ commands:
           name: Run tests
           command: |
             mkdir -p ./test-results
-            << parameters.command >> 2>&1 | ./go-junit-report > ./test-results/go-test-report.xml
+            <<parameters.command>> 2>&1 | ./go-junit-report > ./test-results/go-test-report.xml
       - store_test_results:
           path: ./test-results
   wait-url:
@@ -191,9 +191,9 @@ commands:
           name: Wait until url is available
           command: |
             attempt_counter=0
-            max_attempts=<< parameters.attempts >>
+            max_attempts=<<parameters.attempts>>
 
-            until $(curl --output /dev/null --silent --head --fail << parameters.url >>); do
+            until $(curl --output /dev/null --silent --head --fail <<parameters.url>>); do
               if [ ${attempt_counter} -eq ${max_attempts} ];then
                 echo "Max attempts reached"
                 exit 1
@@ -201,7 +201,7 @@ commands:
 
               printf '.'
               attempt_counter=$(($attempt_counter+1))
-              sleep << parameters.sleep >>
+              sleep <<parameters.sleep>>
             done
 
 workflows:
