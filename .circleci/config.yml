@@ -207,6 +207,8 @@ commands:
 workflows:
   build-test:
     jobs:
+      - scala-play:
+          context: specgen
       - go:
           context: specgen
       - ts-express:
