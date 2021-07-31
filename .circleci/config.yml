@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
-      - artifactory/setup-sbt:
+      - setup-sbt:
           jfrog-server-url: specgen.jfrog.io
           repo-name: sbt
       - run:
@@ -146,6 +146,23 @@ jobs:
 
 
 commands:
+  setup-sbt:
+    parameters:
+      jfrog-server-url:
+        type: string
+      repo-name:
+        type: string
+    steps:
+      - run:
+          name: Setup Artifactory for SBT
+          command: |
+            mkdir -p ~/.sbt/1.0
+            tee > ~/.sbt/1.0/artifactory.sbt \<<END
+            credentials += Credentials("Artifactory Realm", "<< parameters.jfrog-server-url >>", "$JFROG_USER", "$JFROG_PASS")
+            val artifactory = "Artifactory Realm" at "https://<< parameters.jfrog-server-url >>/artifactory/<< parameters.repo-name >>"
+            resolvers += artifactory
+            publishTo := Some(artifactory)
+            END
   service-tests:
     parameters:
       tests-version:
