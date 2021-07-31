@@ -1,0 +1,212 @@
+version: 2.1
+
+parameters:
+  specgen-version:
+    type: string
+    default: 2.0.348
+  tests-version:
+    type: string
+    default: 2.0.34
+
+jobs:
+  scala-play:
+    environment:
+      SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+    working_directory: ~/specgen-tests
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "./scala-play/build.sbt" }}
+      - run:
+          name: Create temp folder for tests results
+          command: mkdir -p /tmp/test-results
+      - artifactory/setup-sbt:
+          jfrog-server-url: specgen.jfrog.io
+          repo-name: sbt
+      - run:
+          name: Build service
+          command: |
+            cd ./scala-play
+            sbt compile < /dev/null
+      - run:
+          name: Run service
+          command: |
+            cd ./scala-play
+            sbt -Dhttp.port=8081 run < /dev/null
+          background: true
+      - save_cache:
+          key: cache-{{ checksum "./scala-play/build.sbt" }}
+          paths:
+            - ~/.sbt
+            - ~/.ivy2
+      - wait-url:
+          url: http://localhost:8081/docs/index.html?url=swagger.yaml
+      - service-tests:
+          tests-version: <<pipeline.parameters.tests-version>>
+
+  go:
+    working_directory: ~/specgen-tests
+    docker:
+      - image: cimg/go:1.16.4
+    steps:
+      - checkout
+      - run:
+          name: Build service
+          command: |
+            cd ./go
+            go install github.com/specgen-io/specgen/<<pipeline.parameters.specgen-version-major>>@v<<pipeline.parameters.specgen-version>>
+            go generate
+            go build
+      - run:
+          name: Run service
+          command: |
+            cd ./go
+            go run service.go --port 8081
+          background: true
+      - wait-url:
+          url: http://localhost:8081/
+      - service-tests:
+          tests-version: <<pipeline.parameters.tests-version>>
+
+  ts-express:
+    working_directory: ~/specgen-tests
+    docker:
+      - image: cimg/node:14.15.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "./ts-express/package.json" }}
+      - run:
+          name: Create temp folder for tests results
+          command: mkdir -p /tmp/test-results
+      - run:
+          name: Build service
+          command: |
+            cd ./ts-express
+            npm add specgen.io@<<pipeline.parameters.specgen-version>>
+            npm install
+            npm run specgen
+            npm run build
+      - run:
+          name: Run service
+          command: |
+            cd ./ts-express
+            npm run start
+          background: true
+      - save_cache:
+          key: cache-{{ checksum "./ts-express/package.json" }}
+          paths:
+            - ~/specgen-tests/ts-express/node_modules
+      - wait-url:
+          url: http://localhost:8081/docs/
+      - service-tests:
+          tests-version: <<pipeline.parameters.tests-version>>
+
+  ts-koa:
+    working_directory: ~/specgen-tests
+    docker:
+      - image: cimg/node:14.15.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "./ts-koa/package.json" }}
+      - run:
+          name: Create temp folder for tests results
+          command: mkdir -p /tmp/test-results
+      - run:
+          name: Build service
+          command: |
+            cd ./ts-koa
+            npm add specgen.io@<<pipeline.parameters.specgen-version>>
+            npm install
+            npm run specgen
+            npm run build
+      - run:
+          name: Run service
+          command: |
+            cd ./ts-koa
+            npm run start
+          background: true
+      - save_cache:
+          key: cache-{{ checksum "./ts-koa/package.json" }}
+          paths:
+            - ~/specgen-tests/ts-koa/node_modules
+      - wait-url:
+          url: http://localhost:8081/docs/
+      - service-tests:
+          tests-version: <<pipeline.parameters.tests-version>>
+
+
+commands:
+  service-tests:
+    parameters:
+      tests-version:
+        type: string
+    steps:
+      - run:
+          name: Install service-tests
+          command: |
+            curl -L https://github.com/specgen-io/service-tests/releases/download/<<parameters.tests-version>>/service-tests_linux_amd64.zip > service-tests.zip
+            unzip -o service-tests.zip
+      - go-tests:
+          command: ./service-tests -test.v
+  go-tests:
+    parameters:
+      command:
+        type: string
+        default: go test
+    steps:
+      - run:
+          name: Install go-junit-report
+          command: |
+            curl -L https://github.com/specgen-io/go-junit-report/releases/download/latest/go-junit-report_linux_amd64.zip > go-junit-report.zip
+            unzip -o go-junit-report.zip
+      - run:
+          name: Run tests
+          command: |
+            mkdir -p ./test-results
+            << parameters.command >> 2>&1 | ./go-junit-report > ./test-results/go-test-report.xml
+      - store_test_results:
+          path: ./test-results
+  wait-url:
+    parameters:
+      url:
+        type: string
+      sleep:
+        type: integer
+        default: 5
+      attempts:
+        type: integer
+        default: 12
+    steps:
+      - run:
+          name: Wait until url is available
+          command: |
+            attempt_counter=0
+            max_attempts=<< parameters.attempts >>
+
+            until $(curl --output /dev/null --silent --head --fail << parameters.url >>); do
+              if [ ${attempt_counter} -eq ${max_attempts} ];then
+                echo "Max attempts reached"
+                exit 1
+              fi
+
+              printf '.'
+              attempt_counter=$(($attempt_counter+1))
+              sleep << parameters.sleep >>
+            done
+
+workflows:
+  build-test:
+    jobs:
+      - go:
+          context: specgen
+      - ts-express:
+          context: specgen
+      - ts-koa:
+          context: specgen

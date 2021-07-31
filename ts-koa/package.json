@@ -1,0 +1,41 @@
+{
+  "name": "my-cool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "specgen": "specgen service-ts --server koa  --validation superstruct --spec-file ./spec.yaml --generate-path ./src/spec --swagger-path ./docs/swagger.yaml --services-path ./src",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specgen-io/test-service-express.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/specgen-io/test-service-express/issues"
+  },
+  "homepage": "https://github.com/specgen-io/test-service-express#readme",
+  "dependencies": {
+    "@koa/router": "^10.0.0",
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa2-swagger-ui": "^5.2.0",
+    "superstruct": "^0.15.2",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.1",
+    "@types/koa__router": "^8.0.4",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/node": "^15.12.2",
+    "@types/yamljs": "^0.2.31",
+    "specgen.io": "2.0.348",
+    "typescript": "^4.3.2"
+  }
+}
