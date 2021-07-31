@@ -4,6 +4,9 @@ parameters:
   specgen-version:
     type: string
     default: 2.0.348
+  specgen-version-major:
+    type: string
+    default: v2    
   tests-version:
     type: string
     default: 2.0.34
