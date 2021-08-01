@@ -8,6 +8,7 @@ import models._
 trait ICheckService {
   import ICheckService._
   def checkQuery(pString: String, pStringOpt: Option[String], pStringArray: List[String], pDate: java.time.LocalDate, pDateArray: List[java.time.LocalDate], pDatetime: java.time.LocalDateTime, pInt: Int, pLong: Long, pDecimal: BigDecimal, pEnum: Choice, pStringDefaulted: String): Future[CheckQueryResponse]
+  def checkUrlParams(intUrl: Long, stringUrl: String, floatUrl: Float, boolUrl: Boolean, uuidUrl: java.util.UUID, decimalUrl: BigDecimal, dateUrl: java.time.LocalDate): Future[CheckUrlParamsResponse]
   def checkForbidden(): Future[CheckForbiddenResponse]
 }
 
@@ -16,8 +17,13 @@ object ICheckService {
   object CheckQueryResponse {
     case class Ok() extends CheckQueryResponse
   }
+  sealed trait CheckUrlParamsResponse
+  object CheckUrlParamsResponse {
+    case class Ok() extends CheckUrlParamsResponse
+  }
   sealed trait CheckForbiddenResponse
   object CheckForbiddenResponse {
+    case class Ok(body: Message) extends CheckForbiddenResponse
     case class Forbidden() extends CheckForbiddenResponse
   }
 }

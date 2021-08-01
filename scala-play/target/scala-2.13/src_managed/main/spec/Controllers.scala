@@ -77,10 +77,19 @@ class CheckController @Inject()(api: ICheckService, cc: ControllerComponents)(im
       }
       response.recover { case _: Exception => InternalServerError }
   }
+  def checkUrlParams(intUrl: Long, stringUrl: String, floatUrl: Float, boolUrl: Boolean, uuidUrl: java.util.UUID, decimalUrl: BigDecimal, dateUrl: java.time.LocalDate) = Action.async {
+    implicit request =>
+      val result = api.checkUrlParams(intUrl, stringUrl, floatUrl, boolUrl, uuidUrl, decimalUrl, dateUrl)
+      val response = result.map {
+        case CheckUrlParamsResponse.Ok() => new Status(200)
+      }
+      response.recover { case _: Exception => InternalServerError }
+  }
   def checkForbidden() = Action.async {
     implicit request =>
       val result = api.checkForbidden()
       val response = result.map {
+        case CheckForbiddenResponse.Ok(body) => new Status(200)(Jsoner.write(body))
         case CheckForbiddenResponse.Forbidden() => new Status(403)
       }
       response.recover { case _: Exception => InternalServerError }
