@@ -22,7 +22,7 @@ jobs:
           name: Build tests
           command: |
             cd tests
-            go test -c -o service_tests
+            go test -c -o service-tests
       - persist_to_workspace:
           root: .
           paths:
