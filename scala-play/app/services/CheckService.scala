@@ -4,6 +4,9 @@ import javax.inject._
 import scala.concurrent._
 import models._
 
+import java.time.LocalDate
+import java.util.UUID
+
 @Singleton
 class CheckService @Inject()()(implicit ec: ExecutionContext) extends ICheckService {
   import ICheckService._
@@ -27,4 +30,9 @@ class CheckService @Inject()()(implicit ec: ExecutionContext) extends ICheckServ
    Future {
      CheckForbiddenResponse.Forbidden()
    }
+
+  override def checkUrlParams(intUrl: Long, stringUrl: String, floatUrl: Float, boolUrl: Boolean, uuidUrl: UUID, decimalUrl: BigDecimal, dateUrl: LocalDate): Future[CheckUrlParamsResponse] =
+    Future {
+      CheckUrlParamsResponse.Ok()
+    }
 }

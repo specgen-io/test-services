@@ -59,6 +59,22 @@ class CheckRouter @Inject()(Action: DefaultActionBuilder, controller: CheckContr
   lazy val routeCheckQuery = Route("GET", PathPattern(List(
     StaticPart("/check/query"),
   )))
+  lazy val routeCheckUrlParams = Route("GET", PathPattern(List(
+    StaticPart("/check/url_params/"),
+    DynamicPart("int_url", """[^/]+""", true),
+    StaticPart("/"),
+    DynamicPart("string_url", """[^/]+""", true),
+    StaticPart("/"),
+    DynamicPart("float_url", """[^/]+""", true),
+    StaticPart("/"),
+    DynamicPart("bool_url", """[^/]+""", true),
+    StaticPart("/"),
+    DynamicPart("uuid_url", """[^/]+""", true),
+    StaticPart("/"),
+    DynamicPart("decimal_url", """[^/]+""", true),
+    StaticPart("/"),
+    DynamicPart("date_url", """[^/]+""", true),
+  )))
   lazy val routeCheckForbidden = Route("GET", PathPattern(List(
     StaticPart("/check/forbidden"),
   )))
@@ -82,6 +98,22 @@ class CheckRouter @Inject()(Action: DefaultActionBuilder, controller: CheckContr
       arguments match{
         case Left(_) => Action { Results.BadRequest }
         case Right((pString, pStringOpt, pStringArray, pDate, pDateArray, pDatetime, pInt, pLong, pDecimal, pEnum, pStringDefaulted)) => controller.checkQuery(pString, pStringOpt, pStringArray, pDate, pDateArray, pDatetime, pInt, pLong, pDecimal, pEnum, pStringDefaulted)
+      }
+    case routeCheckUrlParams(params@_) =>
+      val arguments =
+        for {
+          intUrl <- params.fromPath[Long]("int_url").value
+          stringUrl <- params.fromPath[String]("string_url").value
+          floatUrl <- params.fromPath[Float]("float_url").value
+          boolUrl <- params.fromPath[Boolean]("bool_url").value
+          uuidUrl <- params.fromPath[java.util.UUID]("uuid_url").value
+          decimalUrl <- params.fromPath[BigDecimal]("decimal_url").value
+          dateUrl <- params.fromPath[java.time.LocalDate]("date_url").value
+        }
+        yield (intUrl, stringUrl, floatUrl, boolUrl, uuidUrl, decimalUrl, dateUrl)
+      arguments match{
+        case Left(_) => Action { Results.BadRequest }
+        case Right((intUrl, stringUrl, floatUrl, boolUrl, uuidUrl, decimalUrl, dateUrl)) => controller.checkUrlParams(intUrl, stringUrl, floatUrl, boolUrl, uuidUrl, decimalUrl, dateUrl)
       }
     case routeCheckForbidden(params@_) =>
       controller.checkForbidden()
