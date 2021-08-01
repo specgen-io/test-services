@@ -106,7 +106,7 @@ func Test_Check_Query_Params(t *testing.T) {
 	q.Add("p_date", "2020-01-01")
 	q.Add("p_date_array", "2020-01-01")
 	q.Add("p_date_array", "2020-01-02")
-	q.Add("p_datetime", "2019-11-30T17:45:55Z")
+	q.Add("p_datetime", "2019-11-30T17:45:55")
 	q.Add("p_int", "123")
 	q.Add("p_long", "1234")
 	q.Add("p_decimal", "12345")
