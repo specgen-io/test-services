@@ -12,6 +12,22 @@ parameters:
     default: 2.0.34
 
 jobs:
+  tests:
+    docker:
+      - image: cimg/go:1.16.4
+    working_directory: ~/specgen-tests
+    steps:
+      - checkout
+      - run:
+          name: Build tests
+          command: |
+            cd tests
+            go test -c -o service_tests
+      - persist_to_workspace:
+          root: .
+          paths:
+            - tests
+
   scala-play:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
@@ -20,6 +36,8 @@ jobs:
       - image: circleci/openjdk:8-jdk
     steps:
       - checkout
+      - attach_workspace:
+          at: .      
       - restore_cache:
           keys:
             - cache-{{ checksum "./scala-play/build.sbt" }}
@@ -47,8 +65,8 @@ jobs:
             - ~/.ivy2
       - wait-url:
           url: http://localhost:8081/docs/index.html?url=swagger.yaml
-      - service-tests:
-          tests-version: <<pipeline.parameters.tests-version>>
+      - go-tests:
+          command: ./tests/service-tests -test.v
 
   go:
     working_directory: ~/specgen-tests
@@ -224,8 +242,11 @@ commands:
 workflows:
   build-test:
     jobs:
+      - tests
       - scala-play:
           context: specgen
+          requires:
+            - tests          
       - go:
           context: specgen
       - ts-express:
