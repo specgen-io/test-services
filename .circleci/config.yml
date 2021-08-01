@@ -74,6 +74,8 @@ jobs:
       - image: cimg/go:1.16.4
     steps:
       - checkout
+      - attach_workspace:
+          at: .      
       - run:
           name: Build service
           command: |
@@ -89,8 +91,8 @@ jobs:
           background: true
       - wait-url:
           url: http://localhost:8081/
-      - service-tests:
-          tests-version: <<pipeline.parameters.tests-version>>
+      - go-tests:
+          command: ./tests/service-tests -test.v
 
   ts-express:
     working_directory: ~/specgen-tests
@@ -98,6 +100,8 @@ jobs:
       - image: cimg/node:14.15.1
     steps:
       - checkout
+      - attach_workspace:
+          at: .      
       - restore_cache:
           keys:
             - cache-{{ checksum "./ts-express/package.json" }}
@@ -124,8 +128,8 @@ jobs:
             - ~/specgen-tests/ts-express/node_modules
       - wait-url:
           url: http://localhost:8081/docs/
-      - service-tests:
-          tests-version: <<pipeline.parameters.tests-version>>
+      - go-tests:
+          command: ./tests/service-tests -test.v
 
   ts-koa:
     working_directory: ~/specgen-tests
@@ -133,6 +137,8 @@ jobs:
       - image: cimg/node:14.15.1
     steps:
       - checkout
+      - attach_workspace:
+          at: .      
       - restore_cache:
           keys:
             - cache-{{ checksum "./ts-koa/package.json" }}
@@ -159,9 +165,8 @@ jobs:
             - ~/specgen-tests/ts-koa/node_modules
       - wait-url:
           url: http://localhost:8081/docs/
-      - service-tests:
-          tests-version: <<pipeline.parameters.tests-version>>
-
+      - go-tests:
+          command: ./tests/service-tests -test.v
 
 commands:
   setup-sbt:
@@ -246,10 +251,16 @@ workflows:
       - scala-play:
           context: specgen
           requires:
-            - tests          
+            - tests
       - go:
           context: specgen
+          requires:
+            - tests
       - ts-express:
           context: specgen
+          requires:
+            - tests
       - ts-koa:
           context: specgen
+          requires:
+            - tests
