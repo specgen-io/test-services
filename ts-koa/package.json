@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "specgen": "specgen service-ts --server koa  --validation superstruct --spec-file ./spec.yaml --generate-path ./src/spec --swagger-path ./docs/swagger.yaml --services-path ./src",
+    "specgen": "specgen service-ts --server koa  --validation superstruct --spec-file ./../spec.yaml --generate-path ./src/spec --swagger-path ./docs/swagger.yaml --services-path ./src",
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node .",

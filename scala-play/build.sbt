@@ -8,7 +8,7 @@ name := "echo"
 
 useJCenter := true
 
-specFile := file("spec.yaml")
+specFile := file("./../spec.yaml")
 
 libraryDependencies ++= specPlayDependencies ++ Seq(
   guice

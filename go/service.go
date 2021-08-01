@@ -1,4 +1,4 @@
-//go:generate specgen service-go --spec-file ./spec.yaml --generate-path .
+//go:generate specgen service-go --spec-file ./../spec.yaml --generate-path .
 
 package main
 
