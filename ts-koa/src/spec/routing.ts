@@ -141,6 +141,18 @@ type CheckUrlParamsUrlParams = t.Infer<typeof TCheckUrlParamsUrlParams>
 export let checkRouter = (service: services.CheckService) => {
     let router = new Router()
 
+    router.get('/check/empty', async (ctx) => {
+        try {
+            let result = await service.checkEmpty({})
+            switch (result.status) {
+                case 'ok':
+                    ctx.status = 200
+            }
+        } catch (error) {
+            ctx.throw(500)
+        }
+    })
+
     router.get('/check/query', async (ctx) => {
         var queryParams: CheckQueryQueryParams
         try {

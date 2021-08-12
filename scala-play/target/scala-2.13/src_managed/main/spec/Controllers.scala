@@ -69,6 +69,14 @@ class EchoController @Inject()(api: IEchoService, cc: ControllerComponents)(impl
 @Singleton
 class CheckController @Inject()(api: ICheckService, cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc) {
   import ICheckService._
+  def checkEmpty() = Action.async {
+    implicit request =>
+      val result = api.checkEmpty()
+      val response = result.map {
+        case CheckEmptyResponse.Ok() => new Status(200)
+      }
+      response.recover { case _: Exception => InternalServerError }
+  }
   def checkQuery(p_string: String, p_string_opt: Option[String], p_string_array: List[String], p_date: java.time.LocalDate, p_date_array: List[java.time.LocalDate], p_datetime: java.time.LocalDateTime, p_int: Int, p_long: Long, p_decimal: BigDecimal, p_enum: Choice, p_string_defaulted: String) = Action.async {
     implicit request =>
       val result = api.checkQuery(p_string, p_string_opt, p_string_array, p_date, p_date_array, p_datetime, p_int, p_long, p_decimal, p_enum, p_string_defaulted)
