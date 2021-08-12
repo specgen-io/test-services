@@ -3,13 +3,10 @@ version: 2.1
 parameters:
   specgen-version:
     type: string
-    default: 2.0.350
+    default: 2.0.404
   specgen-version-major:
     type: string
     default: v2
-  tests-version:
-    type: string
-    default: 2.0.34
 
 jobs:
   tests:
@@ -186,18 +183,6 @@ commands:
             resolvers += artifactory
             publishTo := Some(artifactory)
             END
-  service-tests:
-    parameters:
-      tests-version:
-        type: string
-    steps:
-      - run:
-          name: Install service-tests
-          command: |
-            curl -L https://github.com/specgen-io/service-tests/releases/download/<<parameters.tests-version>>/service-tests_linux_amd64.zip > service-tests.zip
-            unzip -o service-tests.zip
-      - go-tests:
-          command: ./service-tests -test.v
   go-tests:
     parameters:
       command:
