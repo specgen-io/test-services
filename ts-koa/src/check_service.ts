@@ -9,7 +9,7 @@ export let checkService = (): services.CheckService => {
         return {status: 'ok'}
     }
     
-    let checkForbidden = async (params: services.CheckForbiddenParams): Promise<services.CheckForbiddenResponse> => {
+    let checkForbidden = async (): Promise<services.CheckForbiddenResponse> => {
         return {status: 'forbidden'}
     }
 
