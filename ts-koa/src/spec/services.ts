@@ -38,9 +38,6 @@ export interface EchoService {
     echoUrlParams(params: EchoUrlParamsParams): Promise<EchoUrlParamsResponse>
 }
 
-export interface CheckEmptyParams {
-}
-
 export type CheckEmptyResponse =
     | { status: "ok" }
 
@@ -74,16 +71,13 @@ export interface CheckUrlParamsParams {
 export type CheckUrlParamsResponse =
     | { status: "ok" }
 
-export interface CheckForbiddenParams {
-}
-
 export type CheckForbiddenResponse =
     | { status: "ok", data: models.Message }
     | { status: "forbidden" }
 
 export interface CheckService {
-    checkEmpty(params: CheckEmptyParams): Promise<CheckEmptyResponse>
+    checkEmpty(): Promise<CheckEmptyResponse>
     checkQuery(params: CheckQueryParams): Promise<CheckQueryResponse>
     checkUrlParams(params: CheckUrlParamsParams): Promise<CheckUrlParamsResponse>
-    checkForbidden(params: CheckForbiddenParams): Promise<CheckForbiddenResponse>
+    checkForbidden(): Promise<CheckForbiddenResponse>
 }
