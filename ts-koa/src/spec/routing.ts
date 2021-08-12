@@ -143,7 +143,7 @@ export let checkRouter = (service: services.CheckService) => {
 
     router.get('/check/empty', async (ctx) => {
         try {
-            let result = await service.checkEmpty({})
+            let result = await service.checkEmpty()
             switch (result.status) {
                 case 'ok':
                     ctx.status = 200
@@ -193,7 +193,7 @@ export let checkRouter = (service: services.CheckService) => {
 
     router.get('/check/forbidden', async (ctx) => {
         try {
-            let result = await service.checkForbidden({})
+            let result = await service.checkForbidden()
             switch (result.status) {
                 case 'ok':
                     ctx.status = 200
