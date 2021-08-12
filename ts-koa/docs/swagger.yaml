@@ -110,6 +110,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+  /check/empty:
+    get:
+      operationId: checkCheckEmpty
+      tags:
+        - check
+      responses:
+        "200":
+          description: ""
   /check/query:
     get:
       operationId: checkCheckQuery

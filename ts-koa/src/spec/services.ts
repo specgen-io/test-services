@@ -38,6 +38,12 @@ export interface EchoService {
     echoUrlParams(params: EchoUrlParamsParams): Promise<EchoUrlParamsResponse>
 }
 
+export interface CheckEmptyParams {
+}
+
+export type CheckEmptyResponse =
+    | { status: "ok" }
+
 export interface CheckQueryParams {
     p_string: string,
     p_string_opt?: string | undefined,
@@ -76,6 +82,7 @@ export type CheckForbiddenResponse =
     | { status: "forbidden" }
 
 export interface CheckService {
+    checkEmpty(params: CheckEmptyParams): Promise<CheckEmptyResponse>
     checkQuery(params: CheckQueryParams): Promise<CheckQueryResponse>
     checkUrlParams(params: CheckUrlParamsParams): Promise<CheckUrlParamsResponse>
     checkForbidden(params: CheckForbiddenParams): Promise<CheckForbiddenResponse>

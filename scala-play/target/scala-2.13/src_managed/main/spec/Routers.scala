@@ -56,6 +56,9 @@ class EchoRouter @Inject()(Action: DefaultActionBuilder, controller: EchoControl
 }
 
 class CheckRouter @Inject()(Action: DefaultActionBuilder, controller: CheckController) extends SimpleRouter {
+  lazy val routeCheckEmpty = Route("GET", PathPattern(List(
+    StaticPart("/check/empty"),
+  )))
   lazy val routeCheckQuery = Route("GET", PathPattern(List(
     StaticPart("/check/query"),
   )))
@@ -79,6 +82,8 @@ class CheckRouter @Inject()(Action: DefaultActionBuilder, controller: CheckContr
     StaticPart("/check/forbidden"),
   )))
   def routes: Router.Routes = {
+    case routeCheckEmpty(params@_) =>
+      controller.checkEmpty()
     case routeCheckQuery(params@_) =>
       val arguments =
         for {
