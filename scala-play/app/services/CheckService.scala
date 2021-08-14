@@ -10,6 +10,12 @@ import java.util.UUID
 @Singleton
 class CheckService @Inject()()(implicit ec: ExecutionContext) extends ICheckService {
   import ICheckService._
+
+  override def checkEmpty(): Future[CheckEmptyResponse] =
+    Future {
+      CheckEmptyResponse.Ok()
+    }
+
   override def checkQuery(
      pString: String,
      pStringOpt: Option[String],
@@ -26,10 +32,11 @@ class CheckService @Inject()()(implicit ec: ExecutionContext) extends ICheckServ
     Future {
       CheckQueryResponse.Ok()
     }
- override def checkForbidden(): Future[CheckForbiddenResponse] =
-   Future {
-     CheckForbiddenResponse.Forbidden()
-   }
+
+  override def checkForbidden(): Future[CheckForbiddenResponse] =
+    Future {
+      CheckForbiddenResponse.Forbidden()
+    }
 
   override def checkUrlParams(intUrl: Long, stringUrl: String, floatUrl: Float, boolUrl: Boolean, uuidUrl: UUID, decimalUrl: BigDecimal, dateUrl: LocalDate): Future[CheckUrlParamsResponse] =
     Future {

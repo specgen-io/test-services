@@ -8,6 +8,10 @@ import (
 
 type CheckService struct{}
 
+func (service *CheckService) CheckEmpty() (*CheckEmptyResponse, error) {
+	return &CheckEmptyResponse{Ok: &Empty}, nil
+}
+
 func (service *CheckService) CheckQuery(
 	pString string,
 	pStringOpt *string,
