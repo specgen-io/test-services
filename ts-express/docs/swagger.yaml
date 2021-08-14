@@ -1,5 +1,6 @@
 openapi: 3.0.0
 info:
+  title: test-service
   version: "1"
 paths:
   /v2/echo/body:
@@ -20,6 +21,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/v2.Message'
+        "400":
+          description: Service will return this if parameters are not provided or couldn't be parsed correctly
+        "500":
+          description: Service will return this if unexpected internal error happens
   /echo/body:
     post:
       operationId: echoEchoBody
@@ -38,6 +43,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+        "400":
+          description: Service will return this if parameters are not provided or couldn't be parsed correctly
+        "500":
+          description: Service will return this if unexpected internal error happens
   /echo/query:
     get:
       operationId: echoEchoQuery
@@ -62,6 +71,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+        "400":
+          description: Service will return this if parameters are not provided or couldn't be parsed correctly
+        "500":
+          description: Service will return this if unexpected internal error happens
   /echo/header:
     get:
       operationId: echoEchoHeader
@@ -86,6 +99,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+        "400":
+          description: Service will return this if parameters are not provided or couldn't be parsed correctly
+        "500":
+          description: Service will return this if unexpected internal error happens
   /echo/url_params/{int_url}/{string_url}:
     get:
       operationId: echoEchoUrlParams
@@ -110,6 +127,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+        "400":
+          description: Service will return this if parameters are not provided or couldn't be parsed correctly
+        "500":
+          description: Service will return this if unexpected internal error happens
+  /check/empty:
+    get:
+      operationId: checkCheckEmpty
+      tags:
+        - check
+      responses:
+        "200":
+          description: ""
+        "500":
+          description: Service will return this if unexpected internal error happens
   /check/query:
     get:
       operationId: checkCheckQuery
@@ -185,6 +216,10 @@ paths:
       responses:
         "200":
           description: ""
+        "400":
+          description: Service will return this if parameters are not provided or couldn't be parsed correctly
+        "500":
+          description: Service will return this if unexpected internal error happens
   /check/url_params/{int_url}/{string_url}/{float_url}/{bool_url}/{uuid_url}/{decimal_url}/{date_url}:
     get:
       operationId: checkCheckUrlParams
@@ -234,6 +269,10 @@ paths:
       responses:
         "200":
           description: ""
+        "400":
+          description: Service will return this if parameters are not provided or couldn't be parsed correctly
+        "500":
+          description: Service will return this if unexpected internal error happens
   /check/forbidden:
     get:
       operationId: checkCheckForbidden
@@ -248,6 +287,8 @@ paths:
                 $ref: '#/components/schemas/Message'
         "403":
           description: ""
+        "500":
+          description: Service will return this if unexpected internal error happens
 components:
   schemas:
     v2.Message:

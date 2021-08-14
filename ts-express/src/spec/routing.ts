@@ -138,6 +138,18 @@ type CheckUrlParamsUrlParams = t.Infer<typeof TCheckUrlParamsUrlParams>
 export let checkRouter = (service: services.CheckService) => {
     let router = Router()
 
+    router.get('/check/empty', async (request: Request, response: Response) => {
+        try {
+            let result = await service.checkEmpty()
+            switch (result.status) {
+                case 'ok':
+                    response.status(200).send()
+            }
+        } catch (error) {
+            response.status(500).send()
+        }
+    })
+
     router.get('/check/query', async (request: Request, response: Response) => {
         var queryParams: CheckQueryQueryParams
         try {
@@ -178,7 +190,7 @@ export let checkRouter = (service: services.CheckService) => {
 
     router.get('/check/forbidden', async (request: Request, response: Response) => {
         try {
-            let result = await service.checkForbidden({})
+            let result = await service.checkForbidden()
             switch (result.status) {
                 case 'ok':
                     response.status(200).type('json').send(JSON.stringify(t.encode(models.TMessage, result.data)))
