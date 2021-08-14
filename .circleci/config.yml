@@ -3,7 +3,7 @@ version: 2.1
 parameters:
   specgen-version:
     type: string
-    default: 2.0.404
+    default: 2.0.421
   specgen-version-major:
     type: string
     default: v2
@@ -178,8 +178,8 @@ commands:
           command: |
             mkdir -p ~/.sbt/1.0
             tee > ~/.sbt/1.0/artifactory.sbt \<<END
-            credentials += Credentials("Artifactory Realm", "<< parameters.jfrog-server-url >>", "$JFROG_USER", "$JFROG_PASS")
-            val artifactory = "Artifactory Realm" at "https://<< parameters.jfrog-server-url >>/artifactory/<< parameters.repo-name >>"
+            credentials += Credentials("Artifactory Realm", "<<parameters.jfrog-server-url>>", "$JFROG_USER", "$JFROG_PASS")
+            val artifactory = "Artifactory Realm" at "https://<<parameters.jfrog-server-url>>/artifactory/<<parameters.repo-name>>"
             resolvers += artifactory
             publishTo := Some(artifactory)
             END
