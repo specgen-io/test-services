@@ -1,4 +1,4 @@
-module github.com/specgen-io/test-service-go
+module github.com/specgen-io/test-service/go
 
 go 1.16
 

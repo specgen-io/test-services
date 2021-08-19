@@ -6,8 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/husobee/vestigo"
-	"github.com/specgen-io/test-service-go/spec"
-	"github.com/specgen-io/test-service-go/spec_v2"
+	"github.com/specgen-io/test-service/go/spec"
 	"log"
 	"net/http"
 )
@@ -18,18 +17,12 @@ func main() {
 
 	router := vestigo.NewRouter()
 
-	router.Get("/", func (w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(200)
-	})
-
 	router.SetGlobalCors(&vestigo.CorsAccessControl{
-		AllowOrigin:      []string{"*", "*"},
+		AllowOrigin: []string{"*", "*"},
 	})
 
-	spec.AddEchoRoutes(router, &spec.EchoService{})
-	spec.AddCheckRoutes(router, &spec.CheckService{})
-	spec_v2.AddEchoRoutes(router, &spec_v2.EchoService{})
+	spec.AddRoutes(router)
 
-	fmt.Println("Starting service on port: "+*port)
+	fmt.Println("Starting service on port: " + *port)
 	log.Fatal(http.ListenAndServe(":"+*port, router))
 }
