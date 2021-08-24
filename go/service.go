@@ -31,6 +31,8 @@ func main() {
 
 	spec.AddRoutes(router, echoServiceV2, echoService, checkService)
 
+	router.Get("/docs/*", http.StripPrefix("/docs/", http.FileServer(http.Dir("docs"))).ServeHTTP)
+
 	fmt.Println("Starting service on port: " + *port)
 	log.Fatal(http.ListenAndServe(":"+*port, router))
 }
