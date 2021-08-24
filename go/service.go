@@ -1,4 +1,4 @@
-//go:generate specgen service-go --spec-file ./../spec.yaml --module-name test-service --generate-path .
+//go:generate specgen service-go --spec-file ./../spec.yaml --module-name test-service --generate-path . --swagger-path docs/swagger.yaml
 
 package main
 
@@ -19,7 +19,7 @@ func main() {
 
 	router := vestigo.NewRouter()
 
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {w.WriteHeader(200)})
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(200) })
 
 	router.SetGlobalCors(&vestigo.CorsAccessControl{
 		AllowOrigin: []string{"*", "*"},
