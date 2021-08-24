@@ -18,6 +18,8 @@ func main() {
 
 	router := vestigo.NewRouter()
 
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {w.WriteHeader(200)})
+
 	router.SetGlobalCors(&vestigo.CorsAccessControl{
 		AllowOrigin: []string{"*", "*"},
 	})
