@@ -2,11 +2,11 @@ package spec
 
 import (
 	"github.com/husobee/vestigo"
-	"github.com/specgen-io/test-service/go/spec/v2"
+	"test-service/spec/v2"
 )
 
-func AddRoutes(router *vestigo.Router) {
-	v2.AddEchoRoutes(router, &v2.EchoService{})
-	AddEchoRoutes(router, &EchoService{})
-	AddCheckRoutes(router, &CheckService{})
+func AddRoutes(router *vestigo.Router, echoServiceV2 v2.IEchoService, echoService IEchoService, checkService ICheckService) {
+	v2.AddEchoRoutes(router, echoServiceV2)
+	AddEchoRoutes(router, echoService)
+	AddCheckRoutes(router, checkService)
 }
