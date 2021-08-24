@@ -1,10 +1,10 @@
-package main
+package services
 
 import "errors"
-import "test-service/spec"
 import "cloud.google.com/go/civil"
 import "github.com/google/uuid"
 import "github.com/shopspring/decimal"
+import "test-service/spec"
 
 type CheckService struct{}
 
