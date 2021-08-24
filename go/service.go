@@ -1,4 +1,4 @@
-//go:generate specgen service-go --spec-file ./../spec.yaml --generate-path .
+//go:generate specgen service-go --spec-file ./../spec.yaml --module-name test-service  --generate-path .
 
 package main
 
@@ -6,10 +6,10 @@ import (
 	"flag"
 	"fmt"
 	"github.com/husobee/vestigo"
-	"github.com/specgen-io/test-service-go/spec"
-	"github.com/specgen-io/test-service-go/spec_v2"
 	"log"
 	"net/http"
+	"test-service/spec"
+	"test-service/spec/v2"
 )
 
 func main() {
@@ -18,18 +18,18 @@ func main() {
 
 	router := vestigo.NewRouter()
 
-	router.Get("/", func (w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(200)
-	})
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {w.WriteHeader(200)})
 
 	router.SetGlobalCors(&vestigo.CorsAccessControl{
-		AllowOrigin:      []string{"*", "*"},
+		AllowOrigin: []string{"*", "*"},
 	})
 
-	spec.AddEchoRoutes(router, &spec.EchoService{})
-	spec.AddCheckRoutes(router, &spec.CheckService{})
-	spec_v2.AddEchoRoutes(router, &spec_v2.EchoService{})
+	echoServiceV2 := &v2.EchoService{}
+	echoService := &spec.EchoService{}
+	checkService := &spec.CheckService{}
 
-	fmt.Println("Starting service on port: "+*port)
+	spec.AddRoutes(router, echoServiceV2, echoService, checkService)
+
+	fmt.Println("Starting service on port: " + *port)
 	log.Fatal(http.ListenAndServe(":"+*port, router))
 }
