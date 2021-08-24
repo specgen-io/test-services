@@ -1,4 +1,4 @@
-package main
+package services
 
 import "errors"
 import "test-service/spec"

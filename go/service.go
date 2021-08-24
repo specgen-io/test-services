@@ -1,4 +1,4 @@
-//go:generate specgen service-go --spec-file ./../spec.yaml --module-name test-service  --generate-path .
+//go:generate specgen service-go --spec-file ./../spec.yaml --module-name test-service --generate-path .
 
 package main
 
@@ -8,8 +8,9 @@ import (
 	"github.com/husobee/vestigo"
 	"log"
 	"net/http"
+	"test-service/services"
+	"test-service/services/v2"
 	"test-service/spec"
-	"test-service/spec/v2"
 )
 
 func main() {
@@ -25,8 +26,8 @@ func main() {
 	})
 
 	echoServiceV2 := &v2.EchoService{}
-	echoService := &spec.EchoService{}
-	checkService := &spec.CheckService{}
+	echoService := &services.EchoService{}
+	checkService := &services.CheckService{}
 
 	spec.AddRoutes(router, echoServiceV2, echoService, checkService)
 
