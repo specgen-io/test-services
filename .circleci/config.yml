@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  artifactory: specgen/artifactory@0.1.0
+  artifactory: specgen/artifactory@0.5.0
 
 parameters:
   specgen-version:
@@ -97,7 +97,7 @@ jobs:
   ts-express:
     working_directory: ~/specgen-tests
     docker:
-      - image: cimg/node:14.15.1
+      - image: cimg/node:16.8.0
     steps:
       - checkout
       - attach_workspace:
@@ -108,11 +108,15 @@ jobs:
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
+      - artifactory/setup-npm:
+          jfrog-server-url: specgen.jfrog.io
+          repo-name: npm
+          scope: specgen.io
       - run:
           name: Build service
           command: |
             cd ./ts-express
-            npm add specgen.io@<<pipeline.parameters.specgen-version>>
+            npm install @specgen.io/specgen.io@$SPECGEN_VERSION --save-dev
             npm install
             npm run specgen
             npm run build
@@ -134,7 +138,7 @@ jobs:
   ts-koa:
     working_directory: ~/specgen-tests
     docker:
-      - image: cimg/node:14.15.1
+      - image: cimg/node:16.8.0
     steps:
       - checkout
       - attach_workspace:
@@ -145,11 +149,15 @@ jobs:
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
+      - artifactory/setup-npm:
+          jfrog-server-url: specgen.jfrog.io
+          repo-name: npm
+          scope: specgen.io
       - run:
           name: Build service
           command: |
             cd ./ts-koa
-            npm add specgen.io@<<pipeline.parameters.specgen-version>>
+            npm install @specgen.io/specgen.io@$SPECGEN_VERSION --save-dev
             npm install
             npm run specgen
             npm run build
