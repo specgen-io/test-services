@@ -32,92 +32,101 @@ func checkOperationErrors(err error, w http.ResponseWriter, operationId string, 
 }
 
 func AddEchoRoutes(router *vestigo.Router, echoService IEchoService) {
+	logEchoBody := log.Fields{"operationId": "echo.echo_body", "method": "POST", "url": "/echo/body"}
 	router.Post("/echo/body", func(w http.ResponseWriter, r *http.Request) {
-		operationId := "http.echo.echo_body"
-		url := "/echo/body"
-		log.WithFields(log.Fields{
-			"operationId": operationId,
-			"url":         url,
-		}).Info("Running the Post Method")
-
+		log.WithFields(logEchoBody).Info("Received request")
 		var body Message
-		json.NewDecoder(r.Body).Decode(&body)
-		response, err := echoService.EchoBody(&body)
-		if !checkOperationErrors(err, w, operationId, url) {
+		err := json.NewDecoder(r.Body).Decode(&body)
+		if err != nil {
+			log.Warnf("Decoding body JSON failed: %s", err.Error())
+			w.WriteHeader(400)
+			log.WithFields(logEchoBody).WithField("status", 400).Info("Completed request")
 			return
 		}
-		if response.Ok == nil {
+		response, err := echoService.EchoBody(&body)
+		if err != nil {
+			log.Errorf("Error returned from service implementation: %s", err.Error())
+			w.WriteHeader(500)
+			log.WithFields(logEchoBody).WithField("status", 500).Info("Completed request")
+			return
+		}
+		if response.Ok != nil {
 			w.WriteHeader(200)
 			json.NewEncoder(w).Encode(response.Ok)
-			log.WithFields(log.Fields{
-				"json": *response.Ok,
-			}).Info("Status code: 200")
-			log.Info("Completing the Post Method")
+			log.WithFields(logEchoBody).WithField("status", 200).Info("Completed request")
 			return
 		}
-		log.Info("Completing the Post Method")
+		log.Error("Failed request - operation implementation did not provide result")
+		w.WriteHeader(500)
+		log.WithFields(logEchoBody).WithField("status", 500).Info("Completed request")
 	})
-	router.Get("/echo/query", func(w http.ResponseWriter, r *http.Request) {
-		operationId := "http.echo.echo_query"
-		url := "/echo/query"
-		log.WithFields(log.Fields{
-			"operationId": operationId,
-			"url":         url,
-		}).Info("Running the Get Method")
 
+	logEchoQuery := log.Fields{"operationId": "echo.echo_query", "method": "GET", "url": "/echo/query"}
+	router.Get("/echo/query", func(w http.ResponseWriter, r *http.Request) {
+		log.WithFields(logEchoQuery).Info("Received request")
 		queryParams := NewParamsParser(r.URL.Query())
 		intQuery := queryParams.Int("int_query")
 		stringQuery := queryParams.String("string_query")
-		if !checkErrors(queryParams, w, operationId, url) {
+		if len(queryParams.Errors) > 0 {
+			// TODO: Convert Errors collection to single string message
+			log.Warnf("Can't parse query params: %s", queryParams.Errors)
+			w.WriteHeader(400)
+			log.WithFields(logEchoQuery).WithField("status", 400).Info("Completed request")
 			return
 		}
 		response, err := echoService.EchoQuery(intQuery, stringQuery)
-		if !checkOperationErrors(err, w, operationId, url) {
+		if err != nil {
+			log.Errorf("Error returned from service implementation: %s", err.Error())
+			w.WriteHeader(500)
+			log.WithFields(logEchoQuery).WithField("status", 500).Info("Completed request")
 			return
 		}
 		if response.Ok != nil {
 			w.WriteHeader(200)
 			json.NewEncoder(w).Encode(response.Ok)
-			log.WithFields(log.Fields{
-				"json": *response.Ok,
-			}).Info("Status code: 200")
-			log.Info("Completing the Get Method")
+			log.WithFields(logEchoQuery).WithField("status", 200).Info("Completed request")
 			return
 		}
-		log.Info("Completing the Get Method")
+		// TODO: Move this to response errors checks
+		log.Error("Failed request - operation implementation did not provide result")
+		w.WriteHeader(500)
+		log.WithFields(logEchoQuery).WithField("status", 500).Info("Completed request")
 	})
-	router.Get("/echo/header", func(w http.ResponseWriter, r *http.Request) {
-		operationId := "http.echo.echo_header"
-		url := "/echo/header"
-		log.WithFields(log.Fields{
-			"operationId": operationId,
-			"url":         url,
-		}).Info("Running the Get Method")
 
+	logEchoHeader := log.Fields{"operationId": "echo.echo_header", "method": "GET", "url": "/echo/header"}
+	router.Get("/echo/header", func(w http.ResponseWriter, r *http.Request) {
+		log.WithFields(logEchoHeader).Info("Received request")
 		headerParams := NewParamsParser(r.Header)
 		intHeader := headerParams.Int("Int-Header")
 		stringHeader := headerParams.String("String-Header")
-		if !checkErrors(headerParams, w, operationId, url) {
+		if len(headerParams.Errors) > 0 {
+			// TODO: Convert Errors collection to single string message
+			log.Warnf("Can't parse header params: %s", headerParams.Errors)
+			w.WriteHeader(400)
+			log.WithFields(logEchoHeader).WithField("status", 400).Warn(headerParams.Errors)
 			return
 		}
 		response, err := echoService.EchoHeader(intHeader, stringHeader)
-		if !checkOperationErrors(err, w, operationId, url) {
+		if err != nil {
+			log.Errorf("Error returned from service implementation: %s", err.Error())
+			w.WriteHeader(500)
+			log.WithFields(logEchoHeader).WithField("status", 500).Error(err.Error())
 			return
 		}
 		if response.Ok != nil {
-			w.WriteHeader(200)
 			json.NewEncoder(w).Encode(response.Ok)
-			log.WithFields(log.Fields{
-				"json": *response.Ok,
-			}).Info("Status code: 200")
-			log.Info("Completing the Get Method")
+			w.WriteHeader(200)
+			log.WithFields(logEchoHeader).WithField("status", 200).Info("Completed request")
 			return
 		}
-		log.Info("Completing the Get Method")
+		log.Error("Failed request - operation implementation did not provide result")
+		w.WriteHeader(500)
+		log.WithFields(logEchoHeader).WithField("status", 500).Info("Completed request")
 	})
 	router.SetCors("/echo/header", &vestigo.CorsAccessControl{
 		AllowHeaders: []string{"Int-Header", "String-Header"},
 	})
+
 	router.Get("/echo/url_params/:int_url/:string_url", func(w http.ResponseWriter, r *http.Request) {
 		operationId := "http.echo.echo_url_params"
 		url := "/echo/url_params/:int_url/:string_url"
