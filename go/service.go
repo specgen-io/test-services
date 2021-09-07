@@ -4,9 +4,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/husobee/vestigo"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"test-service/services"
 	"test-service/services/v2"
@@ -33,6 +32,6 @@ func main() {
 
 	router.Get("/docs/*", http.StripPrefix("/docs/", http.FileServer(http.Dir("docs"))).ServeHTTP)
 
-	fmt.Println("Starting service on port: " + *port)
+	log.Infof("Starting service on port: %s", *port)
 	log.Fatal(http.ListenAndServe(":"+*port, router))
 }
