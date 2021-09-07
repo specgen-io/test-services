@@ -7,54 +7,39 @@ import (
 	"net/http"
 )
 
-func checkErrors(params *ParamsParser, w http.ResponseWriter, operationId string, url string) bool {
-	if len(params.Errors) > 0 {
-		w.WriteHeader(400)
-		log.WithFields(log.Fields{
-			"operationId": operationId,
-			"url":         url,
-		}).Warn(params.Errors)
-		return false
-	}
-	return true
-}
-
-func checkOperationErrors(err error, w http.ResponseWriter, operationId string, url string) bool {
-	if err != nil {
-		w.WriteHeader(500)
-		log.WithFields(log.Fields{
-			"operationId": operationId,
-			"url":         url,
-		}).Error(err.Error())
-		return false
-	}
-	return true
-}
-
 func AddEchoRoutes(router *vestigo.Router, echoService IEchoService) {
-	router.Post("/v2/echo/body", func(w http.ResponseWriter, r *http.Request) {
-		operationId := "v2.http.echo.echo_body"
-		url := "/v2/echo/body"
-		log.WithFields(log.Fields{
-			"operationId": operationId,
-			"url":         url,
-		}).Info("Running the Post Method")
 
+	logEchoBody := log.Fields{"operationId": "echo.echo_body", "method": "POST", "url": "/v2/echo/body"}
+	router.Post("/v2/echo/body", func(w http.ResponseWriter, r *http.Request) {
+		log.WithFields(logEchoBody).Info("Received request")
 		var body Message
-		json.NewDecoder(r.Body).Decode(&body)
+		err := json.NewDecoder(r.Body).Decode(&body)
+		if err != nil {
+			log.Warnf("Decoding body JSON failed: %s", err.Error())
+			w.WriteHeader(400)
+			log.WithFields(logEchoBody).WithField("status", 400).Info("Completed request")
+			return
+		}
 		response, err := echoService.EchoBody(&body)
-		if !checkOperationErrors(err, w, operationId, url) {
+		if response == nil || err != nil {
+			if err != nil {
+				log.Errorf("Error returned from service implementation: %s", err.Error())
+			} else {
+				log.Errorf("No result returned from service implementation")
+			}
+			w.WriteHeader(500)
+			log.WithFields(logEchoBody).WithField("status", 500).Info("Completed request")
 			return
 		}
 		if response.Ok != nil {
 			w.WriteHeader(200)
 			json.NewEncoder(w).Encode(response.Ok)
-			log.WithFields(log.Fields{
-				"json": *response.Ok,
-			}).Info("Status code: 200")
-			log.Info("Completing the Post Method")
+			log.WithFields(logEchoBody).WithField("status", 200).Info("Completed request")
 			return
 		}
-		log.Info("Completing the Post Method")
+		log.Error("Result from service implementation does not have anything in it")
+		w.WriteHeader(500)
+		log.WithFields(logEchoBody).WithField("status", 500).Info("Completed request")
+		return
 	})
 }
