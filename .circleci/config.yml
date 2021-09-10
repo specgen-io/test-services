@@ -90,7 +90,7 @@ jobs:
             go run service.go --port 8081
           background: true
       - wait-url:
-          url: http://localhost:8081/
+          url: http://localhost:8081/docs/
       - go-tests:
           command: ./tests/service-tests -test.v
 
