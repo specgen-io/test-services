@@ -1,4 +1,6 @@
 .idea/
 vendor/
+spec/
+docs/swagger.yaml
 dist/
 zips/
