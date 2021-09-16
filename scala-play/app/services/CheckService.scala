@@ -38,7 +38,7 @@ class CheckService @Inject()()(implicit ec: ExecutionContext) extends ICheckServ
       CheckForbiddenResponse.Forbidden()
     }
 
-  override def checkUrlParams(intUrl: Long, stringUrl: String, floatUrl: Float, boolUrl: Boolean, uuidUrl: UUID, decimalUrl: BigDecimal, dateUrl: LocalDate): Future[CheckUrlParamsResponse] =
+  override def checkUrlParams(intUrl: Long, stringUrl: String, floatUrl: Float, boolUrl: Boolean, uuidUrl: UUID, decimalUrl: BigDecimal, dateUrl: LocalDate, enumUrl: Choice): Future[CheckUrlParamsResponse] =
     Future {
       CheckUrlParamsResponse.Ok()
     }
