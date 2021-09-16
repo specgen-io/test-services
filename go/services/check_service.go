@@ -31,7 +31,8 @@ func (service *CheckService) CheckUrlParams(
 	boolUrl bool,
 	uuidUrl uuid.UUID,
 	decimalUrl decimal.Decimal,
-	dateUrl civil.Date) (*spec.CheckUrlParamsResponse, error) {
+	dateUrl civil.Date,
+	enumUrl spec.Choice) (*spec.CheckUrlParamsResponse, error) {
 
 	return &spec.CheckUrlParamsResponse{Ok: &spec.Empty}, nil
 }

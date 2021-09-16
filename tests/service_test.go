@@ -121,7 +121,7 @@ func Test_Check_Query_Params(t *testing.T) {
 }
 
 func Test_Check_Url_Params(t *testing.T) {
-	req, err := http.NewRequest("GET", service_url+`/check/url_params/123/value/1.23/true/123e4567-e89b-12d3-a456-426655440000/1.23/2019-11-30`, nil)
+	req, err := http.NewRequest("GET", service_url+`/check/url_params/123/value/1.23/true/123e4567-e89b-12d3-a456-426655440000/1.23/2019-11-30/SECOND_CHOICE`, nil)
 	assert.NilError(t, err)
 
 	resp, err := http.DefaultClient.Do(req)

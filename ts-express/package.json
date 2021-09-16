@@ -29,7 +29,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@specgen.io/specgen.io": "^2.0.527",
+    "@specgen.io/specgen.io": "^2.0.571",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.12",
     "@types/node": "^15.12.2",
