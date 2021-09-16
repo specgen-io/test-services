@@ -30,7 +30,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@specgen.io/specgen.io": "^2.0.527",
+    "@specgen.io/specgen.io": "^2.0.571",
     "@types/koa": "^2.13.1",
     "@types/koa__router": "^8.0.4",
     "@types/koa-bodyparser": "^4.3.0",
