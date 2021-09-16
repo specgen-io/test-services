@@ -1,5 +1,6 @@
 .idea/
 vendor/
+test-service
 spec/
 docs/swagger.yaml
 dist/
