@@ -6,8 +6,6 @@ version := "0.0.1"
 scalaVersion := "2.13.2"
 name := "echo"
 
-useJCenter := true
-
 specFile := file("./../spec.yaml")
 
 libraryDependencies ++= specPlayDependencies ++ Seq(
