@@ -42,4 +42,9 @@ class CheckService @Inject()()(implicit ec: ExecutionContext) extends ICheckServ
     Future {
       CheckUrlParamsResponse.Ok()
     }
+
+  override def sameOperationName(): Future[SameOperationNameResponse] =
+    Future {
+      SameOperationNameResponse.Ok()
+    }
 }
