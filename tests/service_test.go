@@ -95,6 +95,16 @@ func Test_Echo_Url_Params(t *testing.T) {
 	assert.Equal(t, strings.TrimSuffix(string(body), "\n"), `{"int_field":123,"string_field":"value"}`)
 }
 
+func Test_Check_Response_Empty(t *testing.T) {
+	req, err := http.NewRequest("GET", service_url+`/check/empty`, nil)
+	assert.NilError(t, err)
+
+	resp, err := http.DefaultClient.Do(req)
+	assert.NilError(t, err)
+
+	assert.Equal(t, resp.StatusCode, 200)
+}
+
 func Test_Check_Query_Params(t *testing.T) {
 	req, err := http.NewRequest("GET", service_url+`/check/query`, nil)
 	assert.NilError(t, err)
