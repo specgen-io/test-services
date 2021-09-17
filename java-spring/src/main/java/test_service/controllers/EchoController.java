@@ -37,7 +37,7 @@ public class EchoController {
 	}
 
 	@GetMapping("/echo/query")
-	public ResponseEntity<String> echoQueryController(@RequestParam(name = "int_query") int intQuery, @RequestParam(name = "string_query") String stringQuery) throws IOException {
+	public ResponseEntity<String> echoQueryController(@RequestParam("int_query") int intQuery, @RequestParam("string_query") String stringQuery) throws IOException {
 		var result = echoService.echoQuery(intQuery, stringQuery);
 		if (result.ok != null) {
 			HttpHeaders headers = new HttpHeaders();
@@ -50,7 +50,7 @@ public class EchoController {
 	}
 
 	@GetMapping("/echo/header")
-	public ResponseEntity<String> echoHeaderController(@RequestHeader(name = "Int-Header") int intHeader, @RequestHeader(name = "String-Header") String stringHeader) throws IOException {
+	public ResponseEntity<String> echoHeaderController(@RequestHeader("Int-Header") int intHeader, @RequestHeader("String-Header") String stringHeader) throws IOException {
 		var result = echoService.echoHeader(intHeader, stringHeader);
 		if (result.ok != null) {
 			HttpHeaders headers = new HttpHeaders();
@@ -63,7 +63,7 @@ public class EchoController {
 	}
 
 	@GetMapping("/echo/url_params/{int_url}/{string_url}")
-	public ResponseEntity<String> echoUrlParamsController(@PathVariable(name = "int_url") int intUrl, @PathVariable(name = "string_url") String stringUrl) throws IOException {
+	public ResponseEntity<String> echoUrlParamsController(@PathVariable("int_url") int intUrl, @PathVariable("string_url") String stringUrl) throws IOException {
 		var result = echoService.echoUrlParams(intUrl, stringUrl);
 		if (result.ok != null) {
 			HttpHeaders headers = new HttpHeaders();
