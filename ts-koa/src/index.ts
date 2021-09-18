@@ -9,7 +9,7 @@ import {specRouter} from './spec/spec_router';
 
 import {echoService} from './echo_service';
 import {checkService} from './check_service';
-import {echoService as echoServiceV2} from './echo_service_v2';
+import {echoService as echoServiceV2} from './v2/echo_service';
 
 const app = new Koa();
 app.use(bodyParser());
