@@ -3,9 +3,7 @@ package test_service.controllers;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import test_service.models.*;
-import test_service.responses.CheckForbiddenResponse;
-import test_service.responses.CheckUnionResponse;
-import test_service.services.ICheckService;
+import test_service.services.check.ICheckService;
 
 import java.math.BigDecimal;
 import java.time.*;
@@ -13,8 +11,7 @@ import java.util.UUID;
 
 @RestController
 public class CheckController {
-	final
-	ICheckService checkService;
+	final ICheckService checkService;
 
 	public CheckController(ICheckService checkService) {
 		this.checkService = checkService;

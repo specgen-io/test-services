@@ -1,7 +1,6 @@
-package test_service.services;
+package test_service.services.check;
 
 import test_service.models.Choice;
-import test_service.responses.*;
 
 import java.math.BigDecimal;
 import java.time.*;

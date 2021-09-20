@@ -2,8 +2,7 @@ package test_service.implementations;
 
 import org.springframework.stereotype.Service;
 import test_service.models.Message;
-import test_service.responses.*;
-import test_service.services.IEchoService;
+import test_service.services.echo.*;
 
 @Service
 public class EchoService implements IEchoService {

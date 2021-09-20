@@ -1,8 +1,8 @@
-package test_service.responses;
+package test_service.services.check;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import test_service.models.Empty;
 import test_service.models.Message;
 
 @JsonTypeInfo(

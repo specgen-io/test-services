@@ -1,7 +1,6 @@
-package test_service.services;
+package test_service.services.echo;
 
 import test_service.models.Message;
-import test_service.responses.*;
 
 public interface IEchoService {
 	EchoBodyResponse echoBody(Message body);

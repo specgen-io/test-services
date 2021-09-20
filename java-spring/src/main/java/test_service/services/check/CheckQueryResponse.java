@@ -1,4 +1,6 @@
-package test_service.responses;
+package test_service.services.check;
+
+import test_service.models.Empty;
 
 public class CheckQueryResponse {
 	public Empty ok;
