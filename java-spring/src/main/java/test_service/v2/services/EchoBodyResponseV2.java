@@ -1,6 +1,6 @@
-package test_service.responses.v2;
+package test_service.v2.services;
 
-import test_service.models.v2.Message;
+import test_service.v2.models.Message;
 
 public class EchoBodyResponseV2 {
 	public Message ok;

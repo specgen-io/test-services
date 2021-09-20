@@ -1,6 +1,7 @@
-package test_service.responses;
+package test_service.services.check;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import test_service.models.Empty;
 
 public class CheckForbiddenResponse implements CheckUnionResponse {
 	@JsonUnwrapped

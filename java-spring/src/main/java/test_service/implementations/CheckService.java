@@ -1,10 +1,8 @@
 package test_service.implementations;
 
 import org.springframework.stereotype.Service;
-import test_service.models.Choice;
-import test_service.responses.Empty;
-import test_service.responses.*;
-import test_service.services.ICheckService;
+import test_service.models.*;
+import test_service.services.check.*;
 
 import java.math.BigDecimal;
 import java.time.*;

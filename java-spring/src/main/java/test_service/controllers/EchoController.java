@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import test_service.models.*;
-import test_service.services.IEchoService;
+import test_service.services.echo.IEchoService;
 
 import java.io.IOException;
 

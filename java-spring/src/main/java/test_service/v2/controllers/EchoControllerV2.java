@@ -1,11 +1,11 @@
-package test_service.controllers.v2;
+package test_service.v2.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import test_service.models.Jsoner;
-import test_service.models.v2.Message;
-import test_service.services.v2.IEchoServiceV2;
+import test_service.v2.models.Message;
+import test_service.v2.services.IEchoServiceV2;
 
 import java.io.IOException;
 

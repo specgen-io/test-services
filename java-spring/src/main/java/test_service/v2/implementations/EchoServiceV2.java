@@ -1,9 +1,8 @@
-package test_service.implementations.v2;
+package test_service.v2.implementations;
 
 import org.springframework.stereotype.Service;
-import test_service.models.v2.Message;
-import test_service.responses.v2.EchoBodyResponseV2;
-import test_service.services.v2.IEchoServiceV2;
+import test_service.v2.models.Message;
+import test_service.v2.services.*;
 
 @Service
 public class EchoServiceV2 implements IEchoServiceV2 {

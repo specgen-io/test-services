@@ -1,4 +1,4 @@
-package test_service.responses;
+package test_service.services.echo;
 
 import test_service.models.Message;
 
