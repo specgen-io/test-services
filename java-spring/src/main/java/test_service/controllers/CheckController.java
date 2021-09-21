@@ -1,5 +1,6 @@
 package test_service.controllers;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import test_service.models.*;
@@ -30,9 +31,9 @@ public class CheckController {
 	public ResponseEntity<String> checkQueryController(@RequestParam("p_string") String pString,
 													   @RequestParam("p_string_opt") String pStringOpt,
 													   @RequestParam("p_string_array") String[] pStringArray,
-													   @RequestParam("p_date") LocalDate pDate,
-													   @RequestParam("p_date_array") LocalDate[] pDateArray,
-													   @RequestParam("p_datetime") LocalDateTime pDatetime,
+													   @RequestParam("p_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate pDate,
+													   @RequestParam("p_date_array") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate[] pDateArray,
+													   @RequestParam("p_datetime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime pDatetime,
 													   @RequestParam("p_int") int pInt,
 													   @RequestParam("p_long") long pLong,
 													   @RequestParam("p_decimal") BigDecimal pDecimal,
@@ -53,7 +54,7 @@ public class CheckController {
 														   @PathVariable("bool_url") boolean boolUrl,
 														   @PathVariable("uuid_url") UUID uuidUrl,
 														   @PathVariable("decimal_url") BigDecimal decimalUrl,
-														   @PathVariable("date_url") LocalDate dateUrl,
+														   @PathVariable("date_url") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateUrl,
 														   @PathVariable("enum_url") Choice enumUrl
 	) {
 		var result = checkService.checkUrlParams(intUrl, stringUrl, floatUrl, boolUrl, uuidUrl, decimalUrl, dateUrl, enumUrl);
