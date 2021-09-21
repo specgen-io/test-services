@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static org.apache.tomcat.util.http.fileupload.FileUploadBase.CONTENT_TYPE;
 
-@RestController
+@RestController("EchoControllerV2")
 public class EchoController {
 	final IEchoService echoService;
 
@@ -22,7 +22,7 @@ public class EchoController {
 	ObjectMapper objectMapper = new ObjectMapper();
 
 	@PostMapping("/v2/echo/body")
-	public ResponseEntity<String> echoBodyController(@RequestBody String jsonStr) throws IOException {
+	public ResponseEntity<String> echoBodyControllerV2(@RequestBody String jsonStr) throws IOException {
 		Message requestBody = Jsoner.deserialize(objectMapper, jsonStr, Message.class);
 
 		var result = echoService.echoBody(requestBody);

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import test_service.v2.models.Message;
 import test_service.v2.services.*;
 
-@Service
+@Service("EchoServiceV2")
 public class EchoService implements IEchoService {
 
 	@Override
