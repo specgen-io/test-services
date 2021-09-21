@@ -22,7 +22,7 @@ public class EchoController {
 	ObjectMapper objectMapper = new ObjectMapper();
 
 	@PostMapping("/v2/echo/body")
-	public ResponseEntity<String> echoBodyControllerV2(@RequestBody String jsonStr) throws IOException {
+	public ResponseEntity<String> echoBodyController(@RequestBody String jsonStr) throws IOException {
 		Message requestBody = Jsoner.deserialize(objectMapper, jsonStr, Message.class);
 
 		var result = echoService.echoBody(requestBody);
