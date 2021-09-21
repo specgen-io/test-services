@@ -8,7 +8,7 @@ import test_service.v2.services.*;
 public class EchoService implements IEchoService {
 
 	@Override
-	public EchoBodyResponse echoBodyV2(Message body) {
+	public EchoBodyResponse echoBody(Message body) {
 		return new EchoBodyResponse(body);
 	}
 }
