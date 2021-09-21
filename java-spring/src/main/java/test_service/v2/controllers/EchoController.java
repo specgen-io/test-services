@@ -5,17 +5,17 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import test_service.models.Jsoner;
 import test_service.v2.models.Message;
-import test_service.v2.services.IEchoServiceV2;
+import test_service.v2.services.IEchoService;
 
 import java.io.IOException;
 
 import static org.apache.tomcat.util.http.fileupload.FileUploadBase.CONTENT_TYPE;
 
 @RestController
-public class EchoControllerV2 {
-	final IEchoServiceV2 echoService;
+public class EchoController {
+	final IEchoService echoService;
 
-	public EchoControllerV2(IEchoServiceV2 echoService) {
+	public EchoController(IEchoService echoService) {
 		this.echoService = echoService;
 	}
 
