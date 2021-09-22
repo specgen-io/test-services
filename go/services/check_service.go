@@ -13,30 +13,10 @@ type CheckService struct{}
 func (service *CheckService) CheckEmpty() (*check.CheckEmptyResponse, error) {
 	return &check.CheckEmptyResponse{Ok: &check.Empty}, nil
 }
-func (service *CheckService) CheckQuery(pString string,
-	pStringOpt *string,
-	pStringArray []string,
-	pDate civil.Date,
-	pDateArray []civil.Date,
-	pDatetime civil.DateTime,
-	pInt int,
-	pLong int64,
-	pDecimal decimal.Decimal,
-	pEnum models.Choice,
-	pStringDefaulted string) (*check.CheckQueryResponse, error) {
-
+func (service *CheckService) CheckQuery(pString string, pStringOpt *string, pStringArray []string, pDate civil.Date, pDateArray []civil.Date, pDatetime civil.DateTime, pInt int, pLong int64, pDecimal decimal.Decimal, pEnum models.Choice, pStringDefaulted string) (*check.CheckQueryResponse, error) {
 	return &check.CheckQueryResponse{Ok: &check.Empty}, nil
 }
-func (service *CheckService) CheckUrlParams(
-	intUrl int64,
-	stringUrl string,
-	floatUrl float32,
-	boolUrl bool,
-	uuidUrl uuid.UUID,
-	decimalUrl decimal.Decimal,
-	dateUrl civil.Date,
-	enumUrl models.Choice) (*check.CheckUrlParamsResponse, error) {
-
+func (service *CheckService) CheckUrlParams(intUrl int64, stringUrl string, floatUrl float32, boolUrl bool, uuidUrl uuid.UUID, decimalUrl decimal.Decimal, dateUrl civil.Date, enumUrl models.Choice) (*check.CheckUrlParamsResponse, error) {
 	return &check.CheckUrlParamsResponse{Ok: &check.Empty}, nil
 }
 func (service *CheckService) CheckForbidden() (*check.CheckForbiddenResponse, error) {
