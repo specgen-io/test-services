@@ -1,10 +1,17 @@
 package test_service.services.echo;
 
-import test_service.models.Message;
+import java.math.BigDecimal;
+import java.time.*;
+import java.util.UUID;
+
+import test_service.models.*;
 
 public interface IEchoService {
-	EchoBodyResponse echoBody(Message body);
-	EchoQueryResponse echoQuery(int intQuery, String stringQuery);
-	EchoHeaderResponse echoHeader(int intHeader, String stringHeader);
-	EchoUrlParamsResponse echoUrlParams(int intUrl, String stringUrl);
+	Message echoBody(Message body);
+
+	Message echoQuery(int intQuery, String stringQuery);
+
+	Message echoHeader(int intHeader, String stringHeader);
+
+	Message echoUrlParams(int intUrl, String stringUrl);
 }
