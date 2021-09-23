@@ -1,21 +1,25 @@
-import * as services from './spec/services'
+import * as service from './spec/check_service'
 
-export let checkService = (): services.CheckService => {
-    let checkEmpty = async (): Promise<services.CheckEmptyResponse> => {
+export let checkService = (): service.CheckService => {
+    let checkEmpty = async (): Promise<service.CheckEmptyResponse> => {
         return {status: 'ok'}
     }
     
-    let checkQuery = async (params: services.CheckQueryParams): Promise<services.CheckQueryResponse> => {
+    let checkQuery = async (params: service.CheckQueryParams): Promise<service.CheckQueryResponse> => {
         return {status: 'ok'}
     }
 
-    let checkUrlParams = async (params: services.CheckUrlParamsParams): Promise<services.CheckUrlParamsResponse> => {
+    let checkUrlParams = async (params: service.CheckUrlParamsParams): Promise<service.CheckUrlParamsResponse> => {
         return {status: 'ok'}
     }
 
-    let checkForbidden = async (): Promise<services.CheckForbiddenResponse> => {
+    let checkForbidden = async (): Promise<service.CheckForbiddenResponse> => {
         return {status: 'forbidden'}
     }
 
-    return {checkEmpty, checkQuery, checkUrlParams, checkForbidden}
+    let sameOperationName = async (): Promise<service.SameOperationNameResponse> => {
+        return {status: 'ok'}
+    }
+
+    return {checkEmpty, checkQuery, checkUrlParams, checkForbidden, sameOperationName}
 }
