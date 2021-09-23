@@ -4,11 +4,11 @@ import org.springframework.stereotype.Service;
 import test_service.v2.models.Message;
 import test_service.v2.services.*;
 
-@Service
-public class EchoServiceV2 implements IEchoServiceV2 {
+@Service("EchoServiceV2")
+public class EchoService implements IEchoService {
 
 	@Override
-	public EchoBodyResponseV2 echoBodyV2(Message body) {
-		return new EchoBodyResponseV2(body);
+	public EchoBodyResponse echoBody(Message body) {
+		return new EchoBodyResponse(body);
 	}
 }
