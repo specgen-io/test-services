@@ -1,29 +1,33 @@
 package test_service.implementations;
 
+import java.math.BigDecimal;
+import java.time.*;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
-import test_service.models.Message;
+import test_service.models.*;
 import test_service.services.echo.*;
 
-@Service
+@Service("EchoService")
 public class EchoService implements IEchoService {
 
 	@Override
-	public EchoBodyResponse echoBody(Message body) {
-		return new EchoBodyResponse(body);
+	public Message echoBody(Message body) {
+		return body;
 	}
 
 	@Override
-	public EchoQueryResponse echoQuery(int intQuery, String stringQuery) {
-		return new EchoQueryResponse(new Message(intQuery, stringQuery));
+	public Message echoQuery(int intQuery, String stringQuery) {
+		return new Message(intQuery, stringQuery);
 	}
 
 	@Override
-	public EchoHeaderResponse echoHeader(int intHeader, String stringHeader) {
-		return new EchoHeaderResponse(new Message(intHeader, stringHeader));
+	public Message echoHeader(int intHeader, String stringHeader) {
+		return new Message(intHeader, stringHeader);
 	}
 
 	@Override
-	public EchoUrlParamsResponse echoUrlParams(int intUrl, String stringUrl) {
-		return new EchoUrlParamsResponse(new Message(intUrl, stringUrl));
+	public Message echoUrlParams(int intUrl, String stringUrl) {
+		return new Message(intUrl, stringUrl);
 	}
 }

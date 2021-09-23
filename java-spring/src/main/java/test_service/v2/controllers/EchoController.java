@@ -1,15 +1,20 @@
 package test_service.v2.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
-import test_service.models.Jsoner;
-import test_service.v2.models.Message;
-import test_service.v2.services.IEchoService;
-
+import java.math.BigDecimal;
+import java.time.*;
+import java.util.UUID;
 import java.io.IOException;
 
 import static org.apache.tomcat.util.http.fileupload.FileUploadBase.CONTENT_TYPE;
+import static test_service.models.Jsoner.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+
+import test_service.v2.models.*;
+import test_service.v2.services.echo.*;
 
 @RestController("EchoControllerV2")
 public class EchoController {
@@ -23,17 +28,14 @@ public class EchoController {
 
 	@PostMapping("/v2/echo/body")
 	public ResponseEntity<String> echoBodyController(@RequestBody String jsonStr) throws IOException {
-		Message requestBody = Jsoner.deserialize(objectMapper, jsonStr, Message.class);
+		var requestBody = deserialize(objectMapper, jsonStr, Message.class);
 
 		var result = echoService.echoBody(requestBody);
-		if (result.ok != null) {
-			HttpHeaders headers = new HttpHeaders();
-			headers.add(CONTENT_TYPE, "application/json");
-			String responseJson = Jsoner.serialize(objectMapper, result.ok);
 
-			return new ResponseEntity<>(responseJson, headers, HttpStatus.OK);
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(CONTENT_TYPE, "application/json");
+		String responseJson = serialize(objectMapper, result);
 
-		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(responseJson, headers, HttpStatus.OK);
 	}
 }

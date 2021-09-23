@@ -1,16 +1,22 @@
 package test_service.controllers;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
-import test_service.models.*;
-import test_service.services.check.*;
-
 import java.math.BigDecimal;
 import java.time.*;
 import java.util.UUID;
+import java.io.IOException;
 
-@RestController
+import static org.apache.tomcat.util.http.fileupload.FileUploadBase.CONTENT_TYPE;
+import static test_service.models.Jsoner.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+
+import test_service.models.*;
+import test_service.services.check.*;
+
+@RestController("CheckController")
 public class CheckController {
 	final ICheckService checkService;
 
@@ -18,13 +24,13 @@ public class CheckController {
 		this.checkService = checkService;
 	}
 
+	ObjectMapper objectMapper = new ObjectMapper();
+
 	@GetMapping("/check/empty")
 	public ResponseEntity<String> checkEmptyController() {
-		var result = checkService.checkEmpty();
-		if (result.ok != null) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		checkService.checkEmpty();
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping("/check/query")
@@ -41,11 +47,9 @@ public class CheckController {
 		@RequestParam("p_enum") Choice pEnum,
 		@RequestParam("p_string_defaulted") String pStringDefaulted
 	) {
-		var result = checkService.checkQuery(pString, pStringOpt, pStringArray, pDate, pDateArray, pDatetime, pInt, pLong, pDecimal, pEnum, pStringDefaulted);
-		if (result.ok != null) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		checkService.checkQuery(pString, pStringOpt, pStringArray, pDate, pDateArray, pDatetime, pInt, pLong, pDecimal, pEnum, pStringDefaulted);
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping("/check/url_params/{int_url}/{string_url}/{float_url}/{bool_url}/{uuid_url}/{decimal_url}/{date_url}/{enum_url}")
@@ -59,21 +63,20 @@ public class CheckController {
 		@PathVariable("date_url") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateUrl,
 		@PathVariable("enum_url") Choice enumUrl
 	) {
-		var result = checkService.checkUrlParams(intUrl, stringUrl, floatUrl, boolUrl, uuidUrl, decimalUrl, dateUrl, enumUrl);
-		if (result.ok != null) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		checkService.checkUrlParams(intUrl, stringUrl, floatUrl, boolUrl, uuidUrl, decimalUrl, dateUrl, enumUrl);
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@GetMapping("/check/forbidden")
 	public ResponseEntity<String> checkForbiddenController() {
 		var result = checkService.checkForbidden();
 
-		if (result instanceof CheckForbiddenResponse) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-		} else if (result instanceof CheckOkResponse) {
+		if (result instanceof CheckForbiddenResponseOk) {
 			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		if (result instanceof CheckForbiddenResponseForbidden) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 
 		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
