@@ -23,4 +23,8 @@ class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoServic
   override def echoUrlParams(intUrl: Int, stringUrl: String): Future[EchoUrlParamsResponse] = Future {
     EchoUrlParamsResponse.Ok(Message(intField = intUrl, stringField = stringUrl))
   }
+
+  override def sameOperationName(): Future[SameOperationNameResponse] = Future {
+    SameOperationNameResponse.Ok()
+  }
 }

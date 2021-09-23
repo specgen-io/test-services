@@ -1,41 +1,28 @@
 package services
 
-import "cloud.google.com/go/civil"
+import (
+	"cloud.google.com/go/civil"
+	"test-service/spec/check"
+	"test-service/spec/models"
+)
 import "github.com/google/uuid"
 import "github.com/shopspring/decimal"
-import "test-service/spec"
 
 type CheckService struct{}
 
-func (service *CheckService) CheckEmpty() (*spec.CheckEmptyResponse, error) {
-	return &spec.CheckEmptyResponse{Ok: &spec.Empty}, nil
+func (service *CheckService) CheckEmpty() (*check.CheckEmptyResponse, error) {
+	return &check.CheckEmptyResponse{Ok: &check.Empty}, nil
 }
-func (service *CheckService) CheckQuery(pString string,
-	pStringOpt *string,
-	pStringArray []string,
-	pDate civil.Date,
-	pDateArray []civil.Date,
-	pDatetime civil.DateTime,
-	pInt int,
-	pLong int64,
-	pDecimal decimal.Decimal,
-	pEnum spec.Choice,
-	pStringDefaulted string) (*spec.CheckQueryResponse, error) {
+func (service *CheckService) CheckQuery(pString string, pStringOpt *string, pStringArray []string, pDate civil.Date, pDateArray []civil.Date, pDatetime civil.DateTime, pInt int, pLong int64, pDecimal decimal.Decimal, pEnum models.Choice, pStringDefaulted string) (*check.CheckQueryResponse, error) {
+	return &check.CheckQueryResponse{Ok: &check.Empty}, nil
+}
+func (service *CheckService) CheckUrlParams(intUrl int64, stringUrl string, floatUrl float32, boolUrl bool, uuidUrl uuid.UUID, decimalUrl decimal.Decimal, dateUrl civil.Date, enumUrl models.Choice) (*check.CheckUrlParamsResponse, error) {
+	return &check.CheckUrlParamsResponse{Ok: &check.Empty}, nil
+}
+func (service *CheckService) CheckForbidden() (*check.CheckForbiddenResponse, error) {
+	return &check.CheckForbiddenResponse{Forbidden: &check.Empty}, nil
+}
 
-	return &spec.CheckQueryResponse{Ok: &spec.Empty}, nil
-}
-func (service *CheckService) CheckUrlParams(
-	intUrl int64,
-	stringUrl string,
-	floatUrl float32,
-	boolUrl bool,
-	uuidUrl uuid.UUID,
-	decimalUrl decimal.Decimal,
-	dateUrl civil.Date,
-	enumUrl spec.Choice) (*spec.CheckUrlParamsResponse, error) {
-
-	return &spec.CheckUrlParamsResponse{Ok: &spec.Empty}, nil
-}
-func (service *CheckService) CheckForbidden() (*spec.CheckForbiddenResponse, error) {
-	return &spec.CheckForbiddenResponse{Forbidden: &spec.Empty}, nil
+func (service *CheckService) SameOperationName() (*check.SameOperationNameResponse, error) {
+	return &check.SameOperationNameResponse{Ok: &check.Empty}, nil
 }
