@@ -98,6 +98,8 @@ jobs:
             cd ./java-spring
             ./mvnw spring-boot:run
           background: true
+      - wait-url:
+          url: http://localhost:8081/check/empty
       - save_cache:
           key: cache-{{ checksum "./java-spring/pom.xml" }}
           paths:
