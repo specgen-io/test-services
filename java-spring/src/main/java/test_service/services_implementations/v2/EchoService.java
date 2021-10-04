@@ -13,6 +13,6 @@ import test_service.v2.services.echo.*;
 public class EchoService implements IEchoService {
 	@Override
 	public Message echoBody(Message body) {
-		throw new UnsupportedOperationException("Implementation has not added yet");
+		return body;
 	}
 }
