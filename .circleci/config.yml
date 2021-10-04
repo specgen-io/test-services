@@ -37,7 +37,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: .      
+          at: .
       - restore_cache:
           keys:
             - cache-{{ checksum "./scala-play/build.sbt" }}
@@ -68,6 +68,43 @@ jobs:
       - go-tests:
           command: ./tests/service-tests -test.v
 
+  java-spring:
+    environment:
+      SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+    working_directory: ~/specgen-tests
+    docker:
+      - image: circleci/openjdk:11-jdk
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "./java-spring/pom.xml" }}
+      - run:
+          name: Create temp folder for tests results
+          command: mkdir -p /tmp/test-results
+      - artifactory/setup-maven:
+          jfrog-server-url: specgen.jfrog.io
+          repo-name: maven
+      - run:
+          name: Build service
+          command: |
+            cd ./java-spring
+            mvn clean compile -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+      - run:
+          name: Run service
+          command: |
+            cd ./java-spring
+            ./mvnw spring-boot:run
+          background: true
+      - save_cache:
+          key: cache-{{ checksum "./java-spring/pom.xml" }}
+          paths:
+            - ~/.ivy2
+      - go-tests:
+          command: ./tests/service-tests -test.v
+
   go:
     working_directory: ~/specgen-tests
     docker:
@@ -75,7 +112,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: .      
+          at: .
       - run:
           name: Build service
           command: |
@@ -101,7 +138,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: .      
+          at: .
       - restore_cache:
           keys:
             - cache-{{ checksum "./ts-express/package.json" }}
@@ -142,7 +179,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: .      
+          at: .
       - restore_cache:
           keys:
             - cache-{{ checksum "./ts-koa/package.json" }}
