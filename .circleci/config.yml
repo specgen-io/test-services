@@ -101,7 +101,7 @@ jobs:
       - save_cache:
           key: cache-{{ checksum "./java-spring/pom.xml" }}
           paths:
-            - ~/.ivy2
+            - ~/.m2
       - go-tests:
           command: ./tests/service-tests -test.v
 
