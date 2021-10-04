@@ -13,22 +13,22 @@ import test_service.services.echo.*;
 public class EchoService implements IEchoService {
 	@Override
 	public Message echoBody(Message body) {
-		throw new UnsupportedOperationException("Implementation has not added yet");
+		return body;
 	}
 	@Override
 	public Message echoQuery(int intQuery, String stringQuery) {
-		throw new UnsupportedOperationException("Implementation has not added yet");
+		return new Message(intQuery, stringQuery);
 	}
 	@Override
 	public Message echoHeader(int intHeader, String stringHeader) {
-		throw new UnsupportedOperationException("Implementation has not added yet");
+		return new Message(intHeader, stringHeader);
 	}
 	@Override
 	public Message echoUrlParams(int intUrl, String stringUrl) {
-		throw new UnsupportedOperationException("Implementation has not added yet");
+		return new Message(intUrl, stringUrl);
 	}
 	@Override
 	public void sameOperationName() {
-		throw new UnsupportedOperationException("Implementation has not added yet");
+		return;
 	}
 }

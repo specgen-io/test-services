@@ -13,22 +13,22 @@ import test_service.services.check.*;
 public class CheckService implements ICheckService {
 	@Override
 	public void checkEmpty() {
-		throw new UnsupportedOperationException("Implementation has not added yet");
+		return;
 	}
 	@Override
 	public void checkQuery(String pString, String pStringOpt, String[] pStringArray, LocalDate pDate, LocalDate[] pDateArray, LocalDateTime pDatetime, int pInt, long pLong, BigDecimal pDecimal, Choice pEnum, String pStringDefaulted) {
-		throw new UnsupportedOperationException("Implementation has not added yet");
+		return;
 	}
 	@Override
 	public void checkUrlParams(long intUrl, String stringUrl, float floatUrl, boolean boolUrl, UUID uuidUrl, BigDecimal decimalUrl, LocalDate dateUrl, Choice enumUrl) {
-		throw new UnsupportedOperationException("Implementation has not added yet");
+		return;
 	}
 	@Override
 	public CheckForbiddenResponse checkForbidden() {
-		throw new UnsupportedOperationException("Implementation has not added yet");
+		return new CheckForbiddenResponseForbidden();
 	}
 	@Override
 	public void sameOperationName() {
-		throw new UnsupportedOperationException("Implementation has not added yet");
+		return;
 	}
 }
