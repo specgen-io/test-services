@@ -96,7 +96,7 @@ jobs:
           name: Run service
           command: |
             cd ./java-spring
-            ./mvnw spring-boot:run
+            ./mvnw spring-boot:run -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
       - wait-url:
           url: http://localhost:8081/check/empty
