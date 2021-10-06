@@ -99,7 +99,7 @@ jobs:
             ./mvnw spring-boot:run -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
       - wait-url:
-          url: http://localhost:8081/check/empty
+          url: http://localhost:8081/swagger-ui/
       - save_cache:
           key: cache-{{ checksum "./java-spring/pom.xml" }}
           paths:
