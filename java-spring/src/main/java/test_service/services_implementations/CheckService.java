@@ -28,7 +28,7 @@ public class CheckService implements ICheckService {
 		return new CheckForbiddenResponseForbidden();
 	}
 	@Override
-	public void sameOperationName() {
-		return;
+	public SameOperationNameResponse sameOperationName() {
+		return new SameOperationNameResponseOk();
 	}
 }
