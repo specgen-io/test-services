@@ -28,7 +28,7 @@ public class EchoService implements IEchoService {
 		return new Message(intUrl, stringUrl);
 	}
 	@Override
-	public void sameOperationName() {
-		return;
+	public SameOperationNameResponse sameOperationName() {
+		return new SameOperationNameResponseOk();
 	}
 }
