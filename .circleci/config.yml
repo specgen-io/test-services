@@ -6,7 +6,7 @@ orbs:
 parameters:
   specgen-version:
     type: string
-    default: 2.0.758
+    default: 2.0.782
   specgen-version-major:
     type: string
     default: v2
@@ -98,12 +98,12 @@ jobs:
             cd ./java-spring
             ./mvnw spring-boot:run -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
-      - wait-url:
-          url: http://localhost:8081/swagger-ui/
       - save_cache:
           key: cache-{{ checksum "./java-spring/pom.xml" }}
           paths:
             - ~/.m2
+      - wait-url:
+          url: http://localhost:8081/swagger-ui/
       - go-tests:
           command: ./tests/service-tests -test.v
 
