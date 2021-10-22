@@ -141,9 +141,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - restore_cache:
-          keys:
-            - cache-{{ checksum "./ts-express/package.json" }}
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
@@ -152,10 +149,17 @@ jobs:
           repo-name: npm
           scope: specgen.io
       - run:
-          name: Build service
+          name: Setup npm
           command: |
             cd ./ts-express
             npm install @specgen.io/specgen.io@$SPECGEN_VERSION --save-dev
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "./ts-express/package.json" }}
+      - run:
+          name: Build service
+          command: |
+            cd ./ts-express
             npm install
             npm run specgen
             npm run build
@@ -182,9 +186,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - restore_cache:
-          keys:
-            - cache-{{ checksum "./ts-koa/package.json" }}
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
@@ -193,10 +194,17 @@ jobs:
           repo-name: npm
           scope: specgen.io
       - run:
-          name: Build service
+          name: Setup npm
           command: |
             cd ./ts-koa
             npm install @specgen.io/specgen.io@$SPECGEN_VERSION --save-dev
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "./ts-koa/package.json" }}
+      - run:
+          name: Build service
+          command: |
+            cd ./ts-koa
             npm install
             npm run specgen
             npm run build
