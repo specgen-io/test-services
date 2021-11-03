@@ -5,3 +5,4 @@ spec/
 docs/swagger.yaml
 dist/
 zips/
+service
