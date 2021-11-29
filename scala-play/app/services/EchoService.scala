@@ -9,7 +9,7 @@ class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoServic
   import IEchoService._
 
   override def echoBodyString(body: String): Future[EchoBodyStringResponse] = Future {
-    return EchoBodyStringResponse.Ok(body)
+    EchoBodyStringResponse.Ok(body)
   }
 
   override def echoBody(body: Message): Future[EchoBodyResponse] = Future {
