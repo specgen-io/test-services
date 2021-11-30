@@ -12,7 +12,7 @@ import {checkService} from './check_service';
 import {echoService as echoServiceV2} from './v2/echo_service';
 
 const app = new Koa();
-app.use(bodyParser());
+app.use(bodyParser({enableTypes: ['json', 'form', 'text']}));
 
 let docsRouter = new Router()
 docsRouter.get('/docs', koaSwagger({swaggerOptions: {spec: yamljs.load("./docs/swagger.yaml")}}));
