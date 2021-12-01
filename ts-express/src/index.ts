@@ -14,6 +14,7 @@ const port = 8081;
 
 app.use(cors())
 app.use(express.json())
+app.use(express.text())
 
 app.use("/docs/swagger.yaml", express.static("docs/swagger.yaml"))
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(yamljs.load("./docs/swagger.yaml")))

@@ -2,6 +2,10 @@ import * as service from './spec/echo_service'
 import * as models from './spec/models'
 
 export let echoService = (): service.EchoService => {
+    let echoBodyString = async (params: service.EchoBodyStringParams): Promise<string> => {
+        return params.body
+    }
+
     let echoBody = async (params: service.EchoBodyParams): Promise<models.Message> => {
         return {int_field: params.body.int_field, string_field: params.body.string_field}
     }
@@ -22,5 +26,5 @@ export let echoService = (): service.EchoService => {
         return {status: 'ok'}
     }
     
-    return {echoBody, echoQuery, echoHeader, echoUrlParams, sameOperationName}
+    return {echoBodyString, echoBody, echoQuery, echoHeader, echoUrlParams, sameOperationName}
 }

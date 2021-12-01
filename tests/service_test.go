@@ -10,6 +10,26 @@ import (
 
 var service_url = "http://localhost:8081"
 
+func Test_Echo_Body_String(t *testing.T) {
+	data_text := "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu"
+
+	req, err := http.NewRequest("POST", service_url+`/echo/body_string`, strings.NewReader(data_text))
+	assert.NilError(t, err)
+
+	req.Header.Set("Content-Type", "text/plain")
+
+	resp, err := http.DefaultClient.Do(req)
+	assert.NilError(t, err)
+
+	body, err := ioutil.ReadAll(resp.Body)
+	assert.NilError(t, err)
+	err = resp.Body.Close()
+	assert.NilError(t, err)
+
+	assert.Equal(t, resp.StatusCode, 200)
+	assert.Equal(t, string(body), data_text)
+}
+
 func Test_Echo_Body(t *testing.T) {
 	data_json := `{"int_field":123,"string_field":"the value"}`
 
