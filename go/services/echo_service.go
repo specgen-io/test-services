@@ -7,6 +7,10 @@ import (
 
 type EchoService struct{}
 
+func (service *EchoService) EchoBodyString(body *string) (*string, error) {
+	return body, nil
+}
+
 func (service *EchoService) EchoBody(body *models.Message) (*models.Message, error) {
 	return body, nil
 }

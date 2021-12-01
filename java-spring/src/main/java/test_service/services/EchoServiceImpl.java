@@ -12,6 +12,10 @@ import test_service.services.echo.*;
 @Service("EchoService")
 public class EchoServiceImpl implements EchoService {
 	@Override
+	public String echoBodyString(String body) {
+		return body;
+	}
+	@Override
 	public Message echoBody(Message body) {
 		return body;
 	}

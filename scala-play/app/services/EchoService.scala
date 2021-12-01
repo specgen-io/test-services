@@ -8,6 +8,10 @@ import models._
 class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoService {
   import IEchoService._
 
+  override def echoBodyString(body: String): Future[EchoBodyStringResponse] = Future {
+    EchoBodyStringResponse.Ok(body)
+  }
+
   override def echoBody(body: Message): Future[EchoBodyResponse] = Future {
     EchoBodyResponse.Ok(body)
   }
