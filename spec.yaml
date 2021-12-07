@@ -87,7 +87,7 @@ http:
         Uuid-Header: uuid
         Datetime-Header: datetime
       response:
-        ok: MixedEndpointsResponse
+        ok: EverythingResponse
         forbidden: empty
 
     same_operation_name:
@@ -159,7 +159,7 @@ models:
       date_field: date
       datetime_field: datetime
       enum_field: Choice
-  MixedEndpointsResponse:
+  EverythingResponse:
     object:
       date_field: date
       decimal_field: decimal
