@@ -131,51 +131,51 @@ models:
       string_field: string
   QueryParamsResponse:
     object:
-      int_query: int
-      long_query: long
-      float_query: float
-      double_query: double
-      decimal_query: decimal
-      bool_query: boolean
-      string_query: string
-      string_opt_query: string?
-      string_defaulted_query: string
-      string_array_query: string[]
-      uuid_query: uuid
-      date_query: date
-      date_array: date[]
-      datetime_query: datetime
-      enum_query: Choice
+      int_field: int
+      long_field: long
+      float_field: float
+      double_field: double
+      decimal_field: decimal
+      bool_field: boolean
+      string_field: string
+      string_opt_field: string?
+      string_defaulted_field: string
+      string_array_field: string[]
+      uuid_field: uuid
+      date_field: date
+      date_array_field: date[]
+      datetime_field: datetime
+      enum_field: Choice
   HeaderParamsResponse:
     object:
-      Int-Header: int
-      Long-Header: long
-      Float-Header: float
-      Double-Header: double
-      Decimal-Header: decimal
-      Bool-Header: boolean
-      String-Header: string
-      String-Opt-Header: string?
-      String-Defaulted-Header: string = the default value
-      String-Array-Header: string[]
-      Uuid-Header: uuid
-      Date-Header: date
-      Date-Array-Header: date[]
-      Datetime-Header: datetime
-      Enum-Header: Choice
+      int_field: int
+      long_field: long
+      float_field: float
+      double_field: double
+      decimal_field: decimal
+      bool_field: boolean
+      string_field: string
+      string_opt_field: string?
+      string_defaulted_field: string
+      string_array_field: string[]
+      uuid_field: uuid
+      date_field: date
+      date_array_field: date[]
+      datetime_field: datetime
+      enum_field: Choice
   UrlParamsResponse:
     object:
-      int_query: int
-      long_query: long
-      float_query: float
-      double_query: double
-      decimal_query: decimal
-      bool_query: boolean
-      string_query: string
-      uuid_query: uuid
-      date_query: date
-      datetime_query: datetime
-      enum_query: Choice
+      int_field: int
+      long_field: long
+      float_field: float
+      double_field: double
+      decimal_field: decimal
+      bool_field: boolean
+      string_field: string
+      uuid_field: uuid
+      date_field: date
+      datetime_field: datetime
+      enum_field: Choice
   MixedEndpointsResponse:
     object:
       date_field: date
