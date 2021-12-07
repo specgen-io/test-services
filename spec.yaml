@@ -167,8 +167,8 @@ models:
       string_field: string
       float_query: float
       bool_query: boolean
-      Uuid-Header: uuid
-      Datetime-Header: datetime
+      uuid_header: uuid
+      datetime_header: datetime
   Choice:
     enum:
       first_choice: FIRST_CHOICE
