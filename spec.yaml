@@ -28,28 +28,54 @@ http:
       endpoint: POST /echo/body
       body: Message
       response:
-        ok: Message    
+        ok: Message
 
     echo_query:
       endpoint: GET /echo/query
       query:
         int_query: int
+        long_query: long
+        float_query: float
+        double_query: double
+        decimal_query: decimal
+        bool_query: boolean
         string_query: string
+        string_opt_query: string?
+        string_defaulted_query: string = the default value
+        string_array_query: string[]
+        uuid_query: uuid
+        date_query: date
+        date_array: date[]
+        datetime_query: datetime
+        enum_query: Choice
       response:
-        ok: Message
+        ok: QueryParamsResponse
 
     echo_header:
       endpoint: GET /echo/header
       header:
         Int-Header: int
+        Long-Header: long
+        Float-Header: float
+        Double-Header: double
+        Decimal-Header: decimal
+        Bool-Header: boolean
         String-Header: string
+        String-Opt-Header: string?
+        String-Defaulted-Header: string = the default value
+        String-Array-Header: string[]
+        Uuid-Header: uuid
+        Date-Header: date
+        Date-Array-Header: date[]
+        Datetime-Header: datetime
+        Enum-Header: Choice
       response:
-        ok: Message
+        ok: HeaderParamsResponse
 
     echo_url_params:
-      endpoint: GET /echo/url_params/{int_url:int}/{string_url:string}
+      endpoint: GET /echo/url_params/{int_url:int}/{long_url:long}/{float_url:float}/{double_url:double}/{decimal_url:decimal}/{bool_url:bool}/{string_url:string}/{uuid_url:uuid}/{date_url:date}/{datetime_url:datetime}/{enum_url:Choice}
       response:
-        ok: Message
+        ok: UrlParamsResponse
 
     same_operation_name:
       endpoint: GET /echo/same_operation_name
@@ -63,25 +89,13 @@ http:
       response:
         ok: empty
 
-    check_query:
-      endpoint: GET /check/query
-      query:
-        p_string: string
-        p_string_opt: string?
-        p_string_array: string[]
-        p_date: date
-        p_date_array: date[]
-        p_datetime: datetime
-        p_int: int
-        p_long: long
-        p_decimal: decimal
-        p_enum: Choice
-        p_string_defaulted: string = the default value
+    check_header:
+      endpoint: GET /check/header
       response:
         ok: empty
 
     check_url_params:
-      endpoint: GET /check/url_params/{int_url:long}/{string_url:string}/{float_url:float}/{bool_url:bool}/{uuid_url:uuid}/{decimal_url:decimal}/{date_url:date}/{enum_url:Choice}
+      endpoint: GET /check/url_params/{int_url:long}/first_static_part/{string_url:string}/second_static_part
       response:
         ok: empty
 
@@ -89,6 +103,19 @@ http:
       endpoint: GET /check/forbidden
       response:
         ok: Message
+        forbidden: empty
+
+    check_mixed_endpoints:
+      endpoint: POST /check/mixed_endpoints/{date_url:date}/{decimal_url:decimal}
+      body: Message
+      query:
+        float_query: float
+        bool_query: boolean
+      header:
+        Uuid-Header: uuid
+        Datetime-Header: datetime
+      response:
+        ok: MixedEndpointsResponse
         forbidden: empty
 
     same_operation_name:
@@ -102,7 +129,63 @@ models:
     object:
       int_field: int
       string_field: string
-
+  QueryParamsResponse:
+    object:
+      int_query: int
+      long_query: long
+      float_query: float
+      double_query: double
+      decimal_query: decimal
+      bool_query: boolean
+      string_query: string
+      string_opt_query: string?
+      string_defaulted_query: string
+      string_array_query: string[]
+      uuid_query: uuid
+      date_query: date
+      date_array: date[]
+      datetime_query: datetime
+      enum_query: Choice
+  HeaderParamsResponse:
+    object:
+      Int-Header: int
+      Long-Header: long
+      Float-Header: float
+      Double-Header: double
+      Decimal-Header: decimal
+      Bool-Header: boolean
+      String-Header: string
+      String-Opt-Header: string?
+      String-Defaulted-Header: string = the default value
+      String-Array-Header: string[]
+      Uuid-Header: uuid
+      Date-Header: date
+      Date-Array-Header: date[]
+      Datetime-Header: datetime
+      Enum-Header: Choice
+  UrlParamsResponse:
+    object:
+      int_query: int
+      long_query: long
+      float_query: float
+      double_query: double
+      decimal_query: decimal
+      bool_query: boolean
+      string_query: string
+      uuid_query: uuid
+      date_query: date
+      datetime_query: datetime
+      enum_query: Choice
+  MixedEndpointsResponse:
+    object:
+      date_field: date
+      decimal_field: decimal
+      int_field: int
+      string_field: string
+      float_query: float
+      bool_query: boolean
+      Uuid-Header: uuid
+      Datetime-Header: datetime
   Choice:
     enum:
       first_choice: FIRST_CHOICE
