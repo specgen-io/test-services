@@ -49,7 +49,7 @@ http:
         datetime_query: datetime
         enum_query: Choice
       response:
-        ok: ParamsResponse
+        ok: Parameters
 
     echo_header:
       endpoint: GET /echo/header
@@ -70,12 +70,12 @@ http:
         Datetime-Header: datetime
         Enum-Header: Choice
       response:
-        ok: ParamsResponse
+        ok: Parameters
 
     echo_url_params:
       endpoint: GET /echo/url_params/{int_url:int}/{long_url:long}/{float_url:float}/{double_url:double}/{decimal_url:decimal}/{bool_url:bool}/{string_url:string}/{uuid_url:uuid}/{date_url:date}/{datetime_url:datetime}/{enum_url:Choice}
       response:
-        ok: UrlParamsResponse
+        ok: UrlParameters
 
     echo_everything:
       endpoint: POST /echo/everything/{date_url:date}/{decimal_url:decimal}
@@ -87,7 +87,7 @@ http:
         Uuid-Header: uuid
         Datetime-Header: datetime
       response:
-        ok: EverythingResponse
+        ok: Everything
         forbidden: empty
 
     same_operation_name:
@@ -129,7 +129,7 @@ models:
     object:
       int_field: int
       string_field: string
-  ParamsResponse:
+  Parameters:
     object:
       int_field: int
       long_field: long
@@ -146,7 +146,7 @@ models:
       date_array_field: date[]
       datetime_field: datetime
       enum_field: Choice
-  UrlParamsResponse:
+  UrlParameters:
     object:
       int_field: int
       long_field: long
@@ -159,7 +159,7 @@ models:
       date_field: date
       datetime_field: datetime
       enum_field: Choice
-  EverythingResponse:
+  Everything:
     object:
       date_field: date
       decimal_field: decimal
