@@ -49,7 +49,7 @@ http:
         datetime_query: datetime
         enum_query: Choice
       response:
-        ok: QueryParamsResponse
+        ok: ParamsResponse
 
     echo_header:
       endpoint: GET /echo/header
@@ -70,12 +70,25 @@ http:
         Datetime-Header: datetime
         Enum-Header: Choice
       response:
-        ok: HeaderParamsResponse
+        ok: ParamsResponse
 
     echo_url_params:
       endpoint: GET /echo/url_params/{int_url:int}/{long_url:long}/{float_url:float}/{double_url:double}/{decimal_url:decimal}/{bool_url:bool}/{string_url:string}/{uuid_url:uuid}/{date_url:date}/{datetime_url:datetime}/{enum_url:Choice}
       response:
         ok: UrlParamsResponse
+
+    echo_everything:
+      endpoint: POST /echo/everything/{date_url:date}/{decimal_url:decimal}
+      body: Message
+      query:
+        float_query: float
+        bool_query: boolean
+      header:
+        Uuid-Header: uuid
+        Datetime-Header: datetime
+      response:
+        ok: MixedEndpointsResponse
+        forbidden: empty
 
     same_operation_name:
       endpoint: GET /echo/same_operation_name
@@ -105,19 +118,6 @@ http:
         ok: Message
         forbidden: empty
 
-    check_mixed_endpoints:
-      endpoint: POST /check/mixed_endpoints/{date_url:date}/{decimal_url:decimal}
-      body: Message
-      query:
-        float_query: float
-        bool_query: boolean
-      header:
-        Uuid-Header: uuid
-        Datetime-Header: datetime
-      response:
-        ok: MixedEndpointsResponse
-        forbidden: empty
-
     same_operation_name:
       endpoint: GET /check/same_operation_name
       response:
@@ -129,24 +129,7 @@ models:
     object:
       int_field: int
       string_field: string
-  QueryParamsResponse:
-    object:
-      int_field: int
-      long_field: long
-      float_field: float
-      double_field: double
-      decimal_field: decimal
-      bool_field: boolean
-      string_field: string
-      string_opt_field: string?
-      string_defaulted_field: string
-      string_array_field: string[]
-      uuid_field: uuid
-      date_field: date
-      date_array_field: date[]
-      datetime_field: datetime
-      enum_field: Choice
-  HeaderParamsResponse:
+  ParamsResponse:
     object:
       int_field: int
       long_field: long
