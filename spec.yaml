@@ -45,7 +45,7 @@ http:
         string_array_query: string[]
         uuid_query: uuid
         date_query: date
-        date_array: date[]
+        date_array_query: date[]
         datetime_query: datetime
         enum_query: Choice
       response:
@@ -161,14 +161,13 @@ models:
       enum_field: Choice
   Everything:
     object:
-      date_field: date
-      decimal_field: decimal
-      int_field: int
-      string_field: string
+      body_field: Message
       float_query: float
       bool_query: boolean
       uuid_header: uuid
       datetime_header: datetime
+      date_field: date
+      decimal_field: decimal
   Choice:
     enum:
       first_choice: FIRST_CHOICE
