@@ -2,6 +2,7 @@ package services
 
 import javax.inject._
 import scala.concurrent._
+import models._
 import java.time.LocalDate
 import java.util.UUID
 
@@ -10,7 +11,7 @@ class CheckService @Inject()()(implicit ec: ExecutionContext) extends ICheckServ
   import ICheckService._
 
   override def checkEmpty(): Future[CheckEmptyResponse] = Future {
-      CheckEmptyResponse.Ok()
+    CheckEmptyResponse.Ok()
   }
 
   override def checkHeader(): Future[CheckHeaderResponse] = Future {
@@ -18,14 +19,14 @@ class CheckService @Inject()()(implicit ec: ExecutionContext) extends ICheckServ
   }
 
   override def checkForbidden(): Future[CheckForbiddenResponse] = Future {
-      CheckForbiddenResponse.Forbidden()
+    CheckForbiddenResponse.Forbidden()
   }
 
   override def checkUrlParams(intUrl: Long, stringUrl: String): Future[CheckUrlParamsResponse] = Future {
-      CheckUrlParamsResponse.Ok()
-    }
+    CheckUrlParamsResponse.Ok()
+  }
 
   override def sameOperationName(): Future[SameOperationNameResponse] = Future {
-      SameOperationNameResponse.Ok()
+    SameOperationNameResponse.Ok()
   }
 }

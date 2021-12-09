@@ -2,10 +2,10 @@ package services
 
 import javax.inject._
 import scala.concurrent._
+import models._
 
 @Singleton
 class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoService {
-
   import IEchoService._
 
   override def echoBodyString(body: String): Future[EchoBodyStringResponse] = Future {
