@@ -29,7 +29,7 @@ class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoServic
   }
 
   override def echoEverything(uuidHeader: java.util.UUID, datetimeHeader: java.time.LocalDateTime, body: Message, dateUrl: java.time.LocalDate, decimalUrl: BigDecimal, floatQuery: Float, boolQuery: Boolean): Future[EchoEverythingResponse] = Future {
-    EchoEverethingResponse.Ok(Everything(uuidField = uuidHeader, datetimeField = datetimeHeader, bodyField = body, dateField = dateUrl, decimalField = decimalUrl, floatField = floatQuery, boolField = boolQuery))
+    EchoEverythingResponse.Ok(Everything(uuidField = uuidHeader, datetimeField = datetimeHeader, bodyField = body, dateField = dateUrl, decimalField = decimalUrl, floatField = floatQuery, boolField = boolQuery))
   }
 
   override def sameOperationName(): Future[SameOperationNameResponse] = Future {
