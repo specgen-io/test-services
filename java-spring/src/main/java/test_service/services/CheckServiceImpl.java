@@ -15,18 +15,22 @@ public class CheckServiceImpl implements CheckService {
 	public void checkEmpty() {
 		return;
 	}
+
 	@Override
-	public void checkQuery(String pString, String pStringOpt, String[] pStringArray, LocalDate pDate, LocalDate[] pDateArray, LocalDateTime pDatetime, int pInt, long pLong, BigDecimal pDecimal, Choice pEnum, String pStringDefaulted) {
+	public void checkHeader() {
 		return;
 	}
+
 	@Override
-	public void checkUrlParams(long intUrl, String stringUrl, float floatUrl, boolean boolUrl, UUID uuidUrl, BigDecimal decimalUrl, LocalDate dateUrl, Choice enumUrl) {
+	public void checkUrlParams(long intUrl, String stringUrl) {
 		return;
 	}
+
 	@Override
 	public CheckForbiddenResponse checkForbidden() {
 		return new CheckForbiddenResponseForbidden();
 	}
+
 	@Override
 	public SameOperationNameResponse sameOperationName() {
 		return new SameOperationNameResponseOk();
