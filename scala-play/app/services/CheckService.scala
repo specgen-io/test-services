@@ -4,9 +4,6 @@ import javax.inject._
 import scala.concurrent._
 import models._
 
-import java.time.LocalDate
-import java.util.UUID
-
 @Singleton
 class CheckService @Inject()()(implicit ec: ExecutionContext) extends ICheckService {
   import ICheckService._
