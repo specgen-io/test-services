@@ -152,7 +152,7 @@ jobs:
           name: Setup npm
           command: |
             cd ./ts-express
-            npm install @specgen.io/specgen.io@$SPECGEN_VERSION --save-dev
+            npm install @specgen.io/specgen.io@<<pipeline.parameters.specgen-version>> --save-dev
       - restore_cache:
           keys:
             - cache-{{ checksum "./ts-express/package.json" }}
@@ -197,7 +197,7 @@ jobs:
           name: Setup npm
           command: |
             cd ./ts-koa
-            npm install @specgen.io/specgen.io@$SPECGEN_VERSION --save-dev
+            npm install @specgen.io/specgen.io@<<pipeline.parameters.specgen-version>> --save-dev
       - restore_cache:
           keys:
             - cache-{{ checksum "./ts-koa/package.json" }}
