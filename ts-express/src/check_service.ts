@@ -2,8 +2,8 @@ import * as service from './spec/check_service'
 
 export let checkService = (): service.CheckService => {
     let checkEmpty = async (): Promise<void> => {}
-    
-    let checkQuery = async (params: service.CheckQueryParams): Promise<void> => {}
+
+    let checkHeader = async (): Promise<void> => {}
 
     let checkUrlParams = async (params: service.CheckUrlParamsParams): Promise<void> => {}
 
@@ -15,5 +15,5 @@ export let checkService = (): service.CheckService => {
         return {status: 'ok'}
     }
 
-    return {checkEmpty, checkQuery, checkUrlParams, checkForbidden, sameOperationName}
+    return {checkEmpty, checkHeader, checkUrlParams, checkForbidden, sameOperationName}
 }
