@@ -57,7 +57,7 @@ export let echoService = (): service.EchoService => {
             float_field: params.float_url,
             double_field: params.double_url,
             decimal_field: params.decimal_url,
-            ool_field: params.bool_url,
+            bool_field: params.bool_url,
             string_field: params.string_url,
             uuid_field: params.uuid_url,
             date_field: params.date_url,
