@@ -65,7 +65,7 @@ func Test_Echo_Body_Bad_Request(t *testing.T) {
 }
 
 func Test_Echo_Query_Params(t *testing.T) {
-	dataJson := `{"int_field":123,"long_field":12345,"float_field":1.23,"double_field":12.345,"decimal_field":"12345","bool_field":true,"string_field":"the value","string_opt_field":"the value","string_defaulted_field":"value","string_array_field":["the str1","the str2"],"uuid_field":"123e4567-e89b-12d3-a456-426655440000","date_field":"2020-01-01","date_array_field":["2020-01-01","2020-01-02"],"datetime_field":"2019-11-30T17:45:55","enum_field":"SECOND_CHOICE"}`
+	dataJson := `{"int_field":123,"long_field":12345,"float_field":1.23,"double_field":12.345,"decimal_field":12345,"bool_field":true,"string_field":"the value","string_opt_field":"the value","string_defaulted_field":"value","string_array_field":["the str1","the str2"],"uuid_field":"123e4567-e89b-12d3-a456-426655440000","date_field":"2020-01-01","date_array_field":["2020-01-01","2020-01-02"],"datetime_field":"2019-11-30T17:45:55","enum_field":"SECOND_CHOICE"}`
 
 	req, err := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
 	assert.NilError(t, err)
@@ -127,7 +127,7 @@ func Test_Echo_Query_Params_Missing(t *testing.T) {
 }
 
 func Test_Echo_Header_Params(t *testing.T) {
-	dataJson := `{"int_field":123,"long_field":12345,"float_field":1.23,"double_field":12.345,"decimal_field":"12345","bool_field":true,"string_field":"the value","string_opt_field":"the value","string_defaulted_field":"value","string_array_field":["the str1","the str2"],"uuid_field":"123e4567-e89b-12d3-a456-426655440000","date_field":"2020-01-01","date_array_field":["2020-01-01","2020-01-02"],"datetime_field":"2019-11-30T17:45:55","enum_field":"SECOND_CHOICE"}`
+	dataJson := `{"int_field":123,"long_field":12345,"float_field":1.23,"double_field":12.345,"decimal_field":12345,"bool_field":true,"string_field":"the value","string_opt_field":"the value","string_defaulted_field":"value","string_array_field":["the str1","the str2"],"uuid_field":"123e4567-e89b-12d3-a456-426655440000","date_field":"2020-01-01","date_array_field":["2020-01-01","2020-01-02"],"datetime_field":"2019-11-30T17:45:55","enum_field":"SECOND_CHOICE"}`
 
 	req, err := http.NewRequest("GET", serviceUrl+`/echo/header`, nil)
 	assert.NilError(t, err)
@@ -176,7 +176,7 @@ func Test_Echo_Header_Params_Bad_Request(t *testing.T) {
 }
 
 func Test_Echo_Url_Params(t *testing.T) {
-	dataJson := `{"int_field":123,"long_field":12345,"float_field":1.23,"double_field":12.345,"decimal_field":"12345","bool_field":true,"string_field":"the value","uuid_field":"123e4567-e89b-12d3-a456-426655440000","date_field":"2020-01-01","datetime_field":"2019-11-30T17:45:55","enum_field":"SECOND_CHOICE"}`
+	dataJson := `{"int_field":123,"long_field":12345,"float_field":1.23,"double_field":12.345,"decimal_field":12345,"bool_field":true,"string_field":"the value","uuid_field":"123e4567-e89b-12d3-a456-426655440000","date_field":"2020-01-01","datetime_field":"2019-11-30T17:45:55","enum_field":"SECOND_CHOICE"}`
 
 	req, err := http.NewRequest("GET", serviceUrl+`/echo/url_params/123/12345/1.23/12.345/12345/true/the value/123e4567-e89b-12d3-a456-426655440000/2020-01-01/2019-11-30T17:45:55/SECOND_CHOICE`, nil)
 	assert.NilError(t, err)
