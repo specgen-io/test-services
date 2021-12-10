@@ -68,14 +68,17 @@ export let echoService = (): service.EchoService => {
 
     let echoEverything = async (params: service.EchoEverythingParams): Promise<service.EchoEverythingResponse> => {
         return {
-            uuid_field: params['uuid-header'],
-            datetime_field: params['datetime-header'],
-            date_field: params.date_url,
-            decimal_field: params.decimal_url,
-            float_field: params.float_query,
-            bool_field: params.bool_query,
-            int_field: params.body.int_field, 
-            string_field: params.body.string_field
+            status: "ok",
+            data: {
+                uuid_field: params['uuid-header'],
+                datetime_field: params['datetime-header'],
+                date_field: params.date_url,
+                decimal_field: params.decimal_url,
+                float_field: params.float_query,
+                bool_field: params.bool_query,
+                int_field: params.body.int_field, 
+                string_field: params.body.string_field
+            }
         }
     }
 
