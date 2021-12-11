@@ -70,14 +70,13 @@ export let echoService = (): service.EchoService => {
         return {
             status: "ok",
             data: {
-                uuid_field: params['uuid-header'],
-                datetime_field: params['datetime-header'],
+                body_field: params.body,
+                float_query: params.float_query,
+                bool_query: params.bool_query,
+                uuid_header: params['uuid-header'],
+                datetime_header: params['datetime-header'],
                 date_field: params.date_url,
                 decimal_field: params.decimal_url,
-                float_field: params.float_query,
-                bool_field: params.bool_query,
-                int_field: params.body.int_field, 
-                string_field: params.body.string_field
             }
         }
     }
