@@ -32,21 +32,21 @@ export let echoService = (): service.EchoService => {
 
     let echoHeader = async (params: service.EchoHeaderParams): Promise<models.Parameters> => {
         return {
-            int_field: params['int-header'],
-            long_field: params['long-header'],
-            float_field: params['float-header'],
-            double_field: params['double-header'],
-            decimal_field: params['decimal-header'],
-            bool_field: params['bool-header'],
-            string_field: params['string-header'],
-            string_opt_field: params['string-opt-header'],
-            string_defaulted_field: params['string-defaulted-header'],
-            string_array_field: params['string-array-header'],
-            uuid_field: params['uuid-header'],
-            date_field: params['date-header'],
-            date_array_field: params['date-array-header'],
-            datetime_field: params['datetime-header'],
-            enum_field: params['enum-header'],
+            int_field: params['Int-Header'],
+            long_field: params['Long-Header'],
+            float_field: params['Float-Header'],
+            double_field: params['Double-Header'],
+            decimal_field: params['Decimal-Header'],
+            bool_field: params['Bool-Header'],
+            string_field: params['String-Header'],
+            string_opt_field: params['String-Opt-Header'],
+            string_defaulted_field: params['String-Defaulted-Header'],
+            string_array_field: params['String-Array-Header'],
+            uuid_field: params['Uuid-Header'],
+            date_field: params['Date-Header'],
+            date_array_field: params['Date-Array-Header'],
+            datetime_field: params['Datetime-Header'],
+            enum_field: params['Enum-Header'],
         }
     }
 
