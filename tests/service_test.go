@@ -213,16 +213,6 @@ func Test_Check_Response_Empty(t *testing.T) {
 	assert.Equal(t, resp.StatusCode, 200)
 }
 
-func Test_Check_Url_Params(t *testing.T) {
-	req, err := http.NewRequest("GET", serviceUrl+`/check/url_params/123/first_static_part/value/second_static_part`, nil)
-	assert.NilError(t, err)
-
-	resp, err := http.DefaultClient.Do(req)
-	assert.NilError(t, err)
-
-	assert.Equal(t, resp.StatusCode, 200)
-}
-
 func Test_Check_Response_Forbidden(t *testing.T) {
 	req, err := http.NewRequest("GET", serviceUrl+`/check/forbidden`, nil)
 	assert.NilError(t, err)

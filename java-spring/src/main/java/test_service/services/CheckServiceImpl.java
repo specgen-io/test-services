@@ -17,16 +17,6 @@ public class CheckServiceImpl implements CheckService {
 	}
 
 	@Override
-	public void checkHeader() {
-		return;
-	}
-
-	@Override
-	public void checkUrlParams(long intUrl, String stringUrl) {
-		return;
-	}
-
-	@Override
 	public CheckForbiddenResponse checkForbidden() {
 		return new CheckForbiddenResponseForbidden();
 	}
