@@ -205,9 +205,7 @@ func Test_Echo_Url_Params_Bad_Request(t *testing.T) {
 }
 
 func Test_Echo_Everything(t *testing.T) {
-	//EchoEverything(body *models.Message, floatQuery float32, boolQuery bool, uuidHeader uuid.UUID, datetimeHeader civil.DateTime, dateUrl civil.Date, decimalUrl decimal.Decimal)
-
-	dataJson := `{"ok":{"body_field":{"int_field":123,"string_field":"the value"},"float_field":1.23,"bool_field":true,"uuid_field":"123e4567-e89b-12d3-a456-426655440000","datetime_field":"2019-11-30T17:45:55","date_field":"2020-01-01","decimal_field":12345}}`
+	dataJson := `{"body_field":{"int_field":123,"string_field":"the value"},"float_field":1.23,"bool_field":true,"uuid_field":"123e4567-e89b-12d3-a456-426655440000","datetime_field":"2019-11-30T17:45:55","date_field":"2020-01-01","decimal_field":12345}`
 
 	req, err := http.NewRequest("POST", serviceUrl+`/echo/everything/2020-01-01/12345`, strings.NewReader(`{"int_field":123,"string_field":"the value"}`))
 	assert.NilError(t, err)
