@@ -12,16 +12,8 @@ class CheckService @Inject()()(implicit ec: ExecutionContext) extends ICheckServ
     CheckEmptyResponse.Ok()
   }
 
-  override def checkHeader(): Future[CheckHeaderResponse] = Future {
-    CheckHeaderResponse.Ok()
-  }
-
   override def checkForbidden(): Future[CheckForbiddenResponse] = Future {
     CheckForbiddenResponse.Forbidden()
-  }
-
-  override def checkUrlParams(intUrl: Long, stringUrl: String): Future[CheckUrlParamsResponse] = Future {
-    CheckUrlParamsResponse.Ok()
   }
 
   override def sameOperationName(): Future[SameOperationNameResponse] = Future {
