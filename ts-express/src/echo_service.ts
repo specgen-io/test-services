@@ -73,8 +73,8 @@ export let echoService = (): service.EchoService => {
                 body_field: params.body,
                 float_query: params.float_query,
                 bool_query: params.bool_query,
-                uuid_header: params['uuid-header'],
-                datetime_header: params['datetime-header'],
+                uuid_header: params['Uuid-Header'],
+                datetime_header: params['Datetime-Header'],
                 date_field: params.date_url,
                 decimal_field: params.decimal_url,
             }
