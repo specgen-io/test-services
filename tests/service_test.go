@@ -131,6 +131,7 @@ func Test_Echo_Header_Params(t *testing.T) {
 
 	req, err := http.NewRequest("GET", serviceUrl+`/echo/header`, nil)
 	assert.NilError(t, err)
+
 	h := req.Header
 	h.Add("Int-Header", "123")
 	h.Add("Long-Header", "12345")
@@ -201,6 +202,35 @@ func Test_Echo_Url_Params_Bad_Request(t *testing.T) {
 	assert.NilError(t, err)
 
 	assert.Equal(t, resp.StatusCode, 400)
+}
+
+func Test_Echo_Everything(t *testing.T) {
+	//EchoEverything(body *models.Message, floatQuery float32, boolQuery bool, uuidHeader uuid.UUID, datetimeHeader civil.DateTime, dateUrl civil.Date, decimalUrl decimal.Decimal)
+
+	dataJson := `{"ok":{"body_field":{"int_field":123,"string_field":"the value"},"float_field":1.23,"bool_field":true,"uuid_field":"123e4567-e89b-12d3-a456-426655440000","datetime_field":"2019-11-30T17:45:55","date_field":"2020-01-01","decimal_field":12345}}`
+
+	req, err := http.NewRequest("POST", serviceUrl+`/echo/everything/2020-01-01/12345`, strings.NewReader(`{"int_field":123,"string_field":"the value"}`))
+	assert.NilError(t, err)
+
+	q := req.URL.Query()
+	q.Add("float_query", "1.23")
+	q.Add("bool_query", "true")
+	req.URL.RawQuery = q.Encode()
+
+	h := req.Header
+	h.Add("Uuid-Header", "123e4567-e89b-12d3-a456-426655440000")
+	h.Add("Datetime-Header", "2019-11-30T17:45:55")
+
+	resp, err := http.DefaultClient.Do(req)
+	assert.NilError(t, err)
+
+	body, err := ioutil.ReadAll(resp.Body)
+	assert.NilError(t, err)
+	err = resp.Body.Close()
+	assert.NilError(t, err)
+
+	assert.Equal(t, resp.StatusCode, 200)
+	assert.Equal(t, strings.TrimSuffix(string(body), "\n"), dataJson)
 }
 
 func Test_Check_Response_Empty(t *testing.T) {
