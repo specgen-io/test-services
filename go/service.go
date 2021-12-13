@@ -5,6 +5,7 @@ package main
 import (
 	"flag"
 	"github.com/husobee/vestigo"
+	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"test-service/services"
@@ -15,6 +16,8 @@ import (
 func main() {
 	port := flag.String("port", "8081", "port number")
 	flag.Parse()
+
+	decimal.MarshalJSONWithoutQuotes = true
 
 	router := vestigo.NewRouter()
 

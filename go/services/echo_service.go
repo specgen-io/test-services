@@ -26,7 +26,7 @@ func (service *EchoService) EchoUrlParams(intUrl int, longUrl int64, floatUrl fl
 	return &models.UrlParameters{IntField: intUrl, LongField: longUrl, FloatField: floatUrl, DoubleField: doubleUrl, DecimalField: decimalUrl, BoolField: boolUrl, StringField: stringUrl, UuidField: uuidUrl, DateField: dateUrl, DatetimeField: datetimeUrl, EnumField: enumUrl}, nil
 }
 func (service *EchoService) EchoEverything(body *models.Message, floatQuery float32, boolQuery bool, uuidHeader uuid.UUID, datetimeHeader civil.DateTime, dateUrl civil.Date, decimalUrl decimal.Decimal) (*echo.EchoEverythingResponse, error) {
-	return &echo.EchoEverythingResponse{Ok: &models.Everything{BodyField: *body, FloatQuery: floatQuery, BoolQuery: boolQuery, UuidHeader: uuidHeader, DatetimeHeader: datetimeHeader, DateField: dateUrl, DecimalField: decimalUrl}}, nil
+	return &echo.EchoEverythingResponse{Ok: &models.Everything{BodyField: *body, FloatQuery: floatQuery, BoolQuery: boolQuery, UuidHeader: uuidHeader, DatetimeHeader: datetimeHeader, DateUrl: dateUrl, DecimalUrl: decimalUrl}}, nil
 }
 func (service *EchoService) SameOperationName() (*echo.SameOperationNameResponse, error) {
 	return &echo.SameOperationNameResponse{Ok: &echo.Empty}, nil

@@ -156,8 +156,8 @@ models:
       bool_query: boolean
       uuid_header: uuid
       datetime_header: datetime
-      date_field: date
-      decimal_field: decimal
+      date_url: date
+      decimal_url: decimal
   Choice:
     enum:
       first_choice: FIRST_CHOICE
