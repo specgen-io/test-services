@@ -131,8 +131,8 @@ class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoServic
         boolQuery = boolQuery,
         uuidHeader = uuidHeader,
         datetimeHeader = datetimeHeader,
-        dateField = dateUrl,
-        decimalField = decimalUrl,
+        dateUrl = dateUrl,
+        decimalUrl = decimalUrl,
       ))
   }
 
