@@ -102,16 +102,6 @@ http:
       response:
         ok: empty
 
-    check_header:
-      endpoint: GET /check/header
-      response:
-        ok: empty
-
-    check_url_params:
-      endpoint: GET /check/url_params/{int_url:long}/first_static_part/{string_url:string}/second_static_part
-      response:
-        ok: empty
-
     check_forbidden:
       endpoint: GET /check/forbidden
       response:
