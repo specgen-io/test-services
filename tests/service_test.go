@@ -209,6 +209,7 @@ func Test_Echo_Everything(t *testing.T) {
 
 	req, err := http.NewRequest("POST", serviceUrl+`/echo/everything/2020-01-01/12345`, strings.NewReader(`{"int_field":123,"string_field":"the value"}`))
 	assert.NilError(t, err)
+	req.Header.Set("Content-Type", "application/json")
 
 	q := req.URL.Query()
 	q.Add("float_query", "1.23")
