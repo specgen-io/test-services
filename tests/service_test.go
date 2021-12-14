@@ -140,7 +140,7 @@ func Test_Echo_Query_Params_Missing_Defaulted_Param(t *testing.T) {
 	q.Add("bool_query", "true")
 	q.Add("string_query", "the value")
 	q.Add("string_opt_query", "the value")
-	q.Add("string_defaulted_query", "value") //<- this is defaulted param and it's not provided
+	//q.Add("string_defaulted_query", "value") //<- this is defaulted param and it's not provided
 	q.Add("string_array_query", "the str1")
 	q.Add("string_array_query", "the str2")
 	q.Add("uuid_query", "123e4567-e89b-12d3-a456-426655440000")
