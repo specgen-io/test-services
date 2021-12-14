@@ -38,11 +38,11 @@ public class EchoServiceImpl implements EchoService {
 
 	@Override
 	public EchoEverythingResponse echoEverything(Message body, float floatQuery, boolean boolQuery, UUID uuidHeader, LocalDateTime datetimeHeader, LocalDate dateUrl, BigDecimal decimalUrl) {
-		return new EchoEverythingResponseOk(new Everything(body, floatQuery, boolQuery, uuidHeader, datetimeHeader, dateUrl, decimalUrl));
+		return new EchoEverythingResponse.Ok(new Everything(body, floatQuery, boolQuery, uuidHeader, datetimeHeader, dateUrl, decimalUrl));
 	}
 
 	@Override
 	public SameOperationNameResponse sameOperationName() {
-		return new SameOperationNameResponseOk();
+		return new SameOperationNameResponse.Ok();
 	}
 }

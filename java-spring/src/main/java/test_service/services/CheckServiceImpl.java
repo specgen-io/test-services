@@ -18,11 +18,11 @@ public class CheckServiceImpl implements CheckService {
 
 	@Override
 	public CheckForbiddenResponse checkForbidden() {
-		return new CheckForbiddenResponseForbidden();
+		return new CheckForbiddenResponse.Forbidden();
 	}
 
 	@Override
 	public SameOperationNameResponse sameOperationName() {
-		return new SameOperationNameResponseOk();
+		return new SameOperationNameResponse.Ok();
 	}
 }
