@@ -79,18 +79,93 @@ func Test_Echo_Query_Params(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataJson)
 }
 
+func Test_Echo_Query_Params_Missing_Required_Param(t *testing.T) {
+	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
+	q := req.URL.Query()
+	q.Add("int_query", "123")
+	q.Add("long_query", "12345")
+	q.Add("float_query", "1.23")
+	q.Add("double_query", "12.345")
+	q.Add("decimal_query", "12345")
+	q.Add("bool_query", "true")
+	//q.Add("string_query", "the value")  //<- this is required param and it's not provided
+	q.Add("string_opt_query", "the value")
+	q.Add("string_defaulted_query", "value")
+	q.Add("string_array_query", "the str1")
+	q.Add("string_array_query", "the str2")
+	q.Add("uuid_query", "123e4567-e89b-12d3-a456-426655440000")
+	q.Add("date_query", "2020-01-01")
+	q.Add("date_array_query", "2020-01-01")
+	q.Add("date_array_query", "2020-01-02")
+	q.Add("datetime_query", "2019-11-30T17:45:55")
+	q.Add("enum_query", "SECOND_CHOICE")
+	req.URL.RawQuery = q.Encode()
+
+	assertResponseSuccess(t, req, 400, "")
+}
+
+func Test_Echo_Query_Params_Missing_Optional_Param(t *testing.T) {
+	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
+	q := req.URL.Query()
+	q.Add("int_query", "123")
+	q.Add("long_query", "12345")
+	q.Add("float_query", "1.23")
+	q.Add("double_query", "12.345")
+	q.Add("decimal_query", "12345")
+	q.Add("bool_query", "true")
+	q.Add("string_query", "the value")
+	//q.Add("string_opt_query", "the value")  //<- this is optional param and it's not provided
+	q.Add("string_defaulted_query", "value")
+	q.Add("string_array_query", "the str1")
+	q.Add("string_array_query", "the str2")
+	q.Add("uuid_query", "123e4567-e89b-12d3-a456-426655440000")
+	q.Add("date_query", "2020-01-01")
+	q.Add("date_array_query", "2020-01-01")
+	q.Add("date_array_query", "2020-01-02")
+	q.Add("datetime_query", "2019-11-30T17:45:55")
+	q.Add("enum_query", "SECOND_CHOICE")
+	req.URL.RawQuery = q.Encode()
+
+	assertResponseSuccess(t, req, 200, "")
+}
+
+func Test_Echo_Query_Params_Missing_Defaulted_Param(t *testing.T) {
+	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
+	q := req.URL.Query()
+	q.Add("int_query", "123")
+	q.Add("long_query", "12345")
+	q.Add("float_query", "1.23")
+	q.Add("double_query", "12.345")
+	q.Add("decimal_query", "12345")
+	q.Add("bool_query", "true")
+	q.Add("string_query", "the value")
+	q.Add("string_opt_query", "the value")
+	q.Add("string_defaulted_query", "value") //<- this is defaulted param and it's not provided
+	q.Add("string_array_query", "the str1")
+	q.Add("string_array_query", "the str2")
+	q.Add("uuid_query", "123e4567-e89b-12d3-a456-426655440000")
+	q.Add("date_query", "2020-01-01")
+	q.Add("date_array_query", "2020-01-01")
+	q.Add("date_array_query", "2020-01-02")
+	q.Add("datetime_query", "2019-11-30T17:45:55")
+	q.Add("enum_query", "SECOND_CHOICE")
+	req.URL.RawQuery = q.Encode()
+
+	assertResponseSuccess(t, req, 200, "")
+}
+
+func Test_Echo_Query_Params_Missing(t *testing.T) {
+	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
+
+	assertResponseSuccess(t, req, 400, "")
+}
+
 func Test_Echo_Query_Params_Bad_Request(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
 	q := req.URL.Query()
 	q.Add("int_query", "the value")
 	q.Add("string_query", "the value")
 	req.URL.RawQuery = q.Encode()
-
-	assertResponseSuccess(t, req, 400, "")
-}
-
-func Test_Echo_Query_Params_Missing(t *testing.T) {
-	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
 
 	assertResponseSuccess(t, req, 400, "")
 }
@@ -156,6 +231,19 @@ func Test_Echo_Everything(t *testing.T) {
 	req.URL.RawQuery = q.Encode()
 
 	assertResponseSuccess(t, req, 200, dataJson)
+}
+
+func Test_Echo_Everything_Bad_Request(t *testing.T) {
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/everything/2020-01-01/12345`, strings.NewReader(`{"int_field":123,"string_field":"the value"}`))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Add("Uuid-Header", "123e4567-e89b-12d3-a456-426655440000")
+	req.Header.Add("Datetime-Header", "2019-11-30T17:45:55")
+	q := req.URL.Query()
+	q.Add("float_query", "value")
+	q.Add("bool_query", "true")
+	req.URL.RawQuery = q.Encode()
+
+	assertResponseSuccess(t, req, 400, "")
 }
 
 func Test_Check_Response_Empty(t *testing.T) {
