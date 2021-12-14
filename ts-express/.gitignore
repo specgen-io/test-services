@@ -1,4 +1,4 @@
 node_modules/
-src/spec/
+src/spec
 docs/swagger.yaml
 dist/

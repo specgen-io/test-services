@@ -15,20 +15,14 @@ public class CheckServiceImpl implements CheckService {
 	public void checkEmpty() {
 		return;
 	}
-	@Override
-	public void checkQuery(String pString, String pStringOpt, String[] pStringArray, LocalDate pDate, LocalDate[] pDateArray, LocalDateTime pDatetime, int pInt, long pLong, BigDecimal pDecimal, Choice pEnum, String pStringDefaulted) {
-		return;
-	}
-	@Override
-	public void checkUrlParams(long intUrl, String stringUrl, float floatUrl, boolean boolUrl, UUID uuidUrl, BigDecimal decimalUrl, LocalDate dateUrl, Choice enumUrl) {
-		return;
-	}
+
 	@Override
 	public CheckForbiddenResponse checkForbidden() {
-		return new CheckForbiddenResponseForbidden();
+		return new CheckForbiddenResponse.Forbidden();
 	}
+
 	@Override
 	public SameOperationNameResponse sameOperationName() {
-		return new SameOperationNameResponseOk();
+		return new SameOperationNameResponse.Ok();
 	}
 }
