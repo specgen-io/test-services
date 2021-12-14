@@ -75,8 +75,8 @@ export let echoService = (): service.EchoService => {
                 bool_query: params.bool_query,
                 uuid_header: params['Uuid-Header'],
                 datetime_header: params['Datetime-Header'],
-                date_field: params.date_url,
-                decimal_field: params.decimal_url,
+                date_url: params.date_url,
+                decimal_url: params.decimal_url,
             }
         }
     }
