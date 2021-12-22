@@ -9,13 +9,9 @@ import models._
 
 @Singleton
 class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoService {
-  override def echoBodyString(body: String): Future[EchoBodyStringResponse] = Future {
-    EchoBodyStringResponse.Ok(body)
-  }
+  override def echoBodyString(body: String): Future[String] = Future { body }
 
-  override def echoBody(body: Message): Future[EchoBodyResponse] = Future {
-    EchoBodyResponse.Ok(body)
-  }
+  override def echoBody(body: Message): Future[Message] = Future { body }
 
   override def echoQuery(
                           intQuery: Int,
@@ -32,24 +28,24 @@ class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoServic
                           dateQuery: java.time.LocalDate,
                           dateArrayQuery: List[java.time.LocalDate],
                           datetimeQuery: java.time.LocalDateTime,
-                          enumQuery: Choice): Future[EchoQueryResponse] = Future {
-    EchoQueryResponse.Ok(
-      Parameters(
-        intField = intQuery,
-        longField = longQuery,
-        floatField = floatQuery,
-        doubleField = doubleQuery,
-        decimalField = decimalQuery,
-        boolField = boolQuery,
-        stringField = stringQuery,
-        stringOptField = stringOptQuery,
-        stringDefaultedField = stringDefaultedQuery,
-        stringArrayField = stringArrayQuery,
-        uuidField = uuidQuery,
-        dateField = dateQuery,
-        dateArrayField = dateArrayQuery,
-        datetimeField = datetimeQuery,
-        enumField = enumQuery))
+                          enumQuery: Choice): Future[Parameters] = Future {
+    Parameters(
+      intField = intQuery,
+      longField = longQuery,
+      floatField = floatQuery,
+      doubleField = doubleQuery,
+      decimalField = decimalQuery,
+      boolField = boolQuery,
+      stringField = stringQuery,
+      stringOptField = stringOptQuery,
+      stringDefaultedField = stringDefaultedQuery,
+      stringArrayField = stringArrayQuery,
+      uuidField = uuidQuery,
+      dateField = dateQuery,
+      dateArrayField = dateArrayQuery,
+      datetimeField = datetimeQuery,
+      enumField = enumQuery
+    )
   }
 
   override def echoHeader(
@@ -67,24 +63,24 @@ class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoServic
                            dateHeader: java.time.LocalDate,
                            dateArrayHeader: List[java.time.LocalDate],
                            datetimeHeader: java.time.LocalDateTime,
-                           enumHeader: Choice): Future[EchoHeaderResponse] = Future {
-    EchoHeaderResponse.Ok(
-      Parameters(
-        intField = intHeader,
-        longField = longHeader,
-        floatField = floatHeader,
-        doubleField = doubleHeader,
-        decimalField = decimalHeader,
-        boolField = boolHeader,
-        stringField = stringHeader,
-        stringOptField = stringOptHeader,
-        stringDefaultedField = stringDefaultedHeader,
-        stringArrayField = stringArrayHeader,
-        uuidField = uuidHeader,
-        dateField = dateHeader,
-        dateArrayField = dateArrayHeader,
-        datetimeField = datetimeHeader,
-        enumField = enumHeader))
+                           enumHeader: Choice): Future[Parameters] = Future {
+    Parameters(
+      intField = intHeader,
+      longField = longHeader,
+      floatField = floatHeader,
+      doubleField = doubleHeader,
+      decimalField = decimalHeader,
+      boolField = boolHeader,
+      stringField = stringHeader,
+      stringOptField = stringOptHeader,
+      stringDefaultedField = stringDefaultedHeader,
+      stringArrayField = stringArrayHeader,
+      uuidField = uuidHeader,
+      dateField = dateHeader,
+      dateArrayField = dateArrayHeader,
+      datetimeField = datetimeHeader,
+      enumField = enumHeader
+    )
   }
 
   override def echoUrlParams(
@@ -98,20 +94,20 @@ class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoServic
                               uuidUrl: java.util.UUID,
                               dateUrl: java.time.LocalDate,
                               datetimeUrl: java.time.LocalDateTime,
-                              enumUrl: Choice): Future[EchoUrlParamsResponse] = Future {
-    EchoUrlParamsResponse.Ok(
-      UrlParameters(
-        intField = intUrl,
-        longField = longUrl,
-        floatField = floatUrl,
-        doubleField = doubleUrl,
-        decimalField = decimalUrl,
-        boolField = boolUrl,
-        stringField = stringUrl,
-        uuidField = uuidUrl,
-        dateField = dateUrl,
-        datetimeField = datetimeUrl,
-        enumField = enumUrl))
+                              enumUrl: Choice): Future[UrlParameters] = Future {
+    UrlParameters(
+      intField = intUrl,
+      longField = longUrl,
+      floatField = floatUrl,
+      doubleField = doubleUrl,
+      decimalField = decimalUrl,
+      boolField = boolUrl,
+      stringField = stringUrl,
+      uuidField = uuidUrl,
+      dateField = dateUrl,
+      datetimeField = datetimeUrl,
+      enumField = enumUrl
+    )
   }
 
   override def echoEverything(
@@ -130,8 +126,9 @@ class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoServic
         uuidHeader = uuidHeader,
         datetimeHeader = datetimeHeader,
         dateUrl = dateUrl,
-        decimalUrl = decimalUrl,
-      ))
+        decimalUrl = decimalUrl
+      )
+    )
   }
 
   override def sameOperationName(): Future[SameOperationNameResponse] = Future {
