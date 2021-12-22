@@ -1,4 +1,4 @@
-package v2.services.echo
+package v2.services
 
 import javax.inject._
 import scala.concurrent._
