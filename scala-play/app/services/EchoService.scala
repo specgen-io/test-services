@@ -1,16 +1,14 @@
 package services
 
-import javax.inject._
-import scala.concurrent._
-import models._
-
 import java.time.LocalDate
 import java.util.UUID
+import javax.inject._
+import scala.concurrent._
+import services.echo._
+import models._
 
 @Singleton
 class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoService {
-  import IEchoService._
-
   override def echoBodyString(body: String): Future[EchoBodyStringResponse] = Future {
     EchoBodyStringResponse.Ok(body)
   }
