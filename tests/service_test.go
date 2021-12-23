@@ -246,13 +246,21 @@ func Test_Echo_Everything_Bad_Request(t *testing.T) {
 	assertResponseSuccess(t, req, 400, "")
 }
 
-func Test_Check_Response_Empty(t *testing.T) {
+func Test_Check_Empty(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/check/empty`, nil)
 
 	assertResponseSuccess(t, req, 200, "")
 }
 
-func Test_Check_Response_Forbidden(t *testing.T) {
+func Test_Check_Empty_Response(t *testing.T) {
+	dataJson := `{"int_field":123,"string_field":"the value"}`
+
+	req, _ := http.NewRequest("GET", serviceUrl+`/check/empty_response`, strings.NewReader(dataJson))
+
+	assertResponseSuccess(t, req, 200, "")
+}
+
+func Test_Check_Forbidden(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/check/forbidden`, nil)
 
 	assertResponseSuccess(t, req, 403, "")
