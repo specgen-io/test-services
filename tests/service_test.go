@@ -255,7 +255,7 @@ func Test_Check_Empty(t *testing.T) {
 func Test_Check_Empty_Response(t *testing.T) {
 	dataJson := `{"int_field":123,"string_field":"the value"}`
 
-	req, _ := http.NewRequest("GET", serviceUrl+`/check/empty_response`, strings.NewReader(dataJson))
+	req, _ := http.NewRequest("POST", serviceUrl+`/check/empty_response`, strings.NewReader(dataJson))
 
 	assertResponseSuccess(t, req, 200, "")
 }
