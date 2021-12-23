@@ -17,7 +17,7 @@ public class CheckServiceImpl implements CheckService {
 	}
 
 	@Override
-	public void checkEmptyResponse(body Message) {
+	public void checkEmptyResponse(Message body) {
 		return;
 	}
 	
