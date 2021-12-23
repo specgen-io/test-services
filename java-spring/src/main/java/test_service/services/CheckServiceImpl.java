@@ -17,6 +17,11 @@ public class CheckServiceImpl implements CheckService {
 	}
 
 	@Override
+	public void checkEmptyResponse(body Message) {
+		return;
+	}
+	
+	@Override
 	public CheckForbiddenResponse checkForbidden() {
 		return new CheckForbiddenResponse.Forbidden();
 	}
