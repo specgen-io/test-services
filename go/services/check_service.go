@@ -2,6 +2,7 @@ package services
 
 import (
 	"test-service/spec/check"
+	"test-service/spec/models"
 )
 
 type CheckService struct{}
