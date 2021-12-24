@@ -9,6 +9,8 @@ import models._
 class CheckService @Inject()()(implicit ec: ExecutionContext) extends ICheckService {
   override def checkEmpty(): Future[Unit] = Future {}
 
+  override def checkEmptyResponse(body: Message): Future[Unit] = Future {}
+
   override def checkForbidden(): Future[CheckForbiddenResponse] = Future {
     CheckForbiddenResponse.Forbidden()
   }
