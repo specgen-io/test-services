@@ -2,6 +2,7 @@ package services
 
 import (
 	"test-service/spec/check"
+	"test-service/spec/empty"
 	"test-service/spec/models"
 )
 
@@ -16,9 +17,9 @@ func (service *CheckService) CheckEmptyResponse(body *models.Message) error {
 }
 
 func (service *CheckService) CheckForbidden() (*check.CheckForbiddenResponse, error) {
-	return &check.CheckForbiddenResponse{Forbidden: &check.Empty}, nil
+	return &check.CheckForbiddenResponse{Forbidden: &empty.Value}, nil
 }
 
 func (service *CheckService) SameOperationName() (*check.SameOperationNameResponse, error) {
-	return &check.SameOperationNameResponse{Ok: &check.Empty}, nil
+	return &check.SameOperationNameResponse{Ok: &empty.Value}, nil
 }
