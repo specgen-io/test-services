@@ -70,7 +70,7 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>service-java-spring</goal>
+                            <goal>service-java</goal>
                         </goals>
                     </execution>
                 </executions>
