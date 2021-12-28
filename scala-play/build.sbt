@@ -8,6 +8,7 @@ name := "echo"
 
 specgenSpecFile := file("./../spec.yaml")
 specgenServer := "play"
+specgenJsonlib := "circe"
 
 libraryDependencies ++= Seq(
   "io.circe" %% "circe-core" % "0.12.3",
