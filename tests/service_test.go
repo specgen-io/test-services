@@ -34,21 +34,11 @@ func Test_Echo_Body_String(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataText)
 }
 
-func Test_Echo_Body_String_Check_Missing_ContentType(t *testing.T) {
-	dataText := "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu"
-
-	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(dataText))
-
-	assertResponseSuccess(t, req, 200, dataText)
-}
-
 func Test_Echo_Body_String_Check_Empty_ContentType(t *testing.T) {
-	dataText := "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu"
-
-	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(dataText))
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, nil)
 	req.Header.Set("Content-Type", "")
 
-	assertResponseSuccess(t, req, 200, dataText)
+	assertResponseSuccess(t, req, 400, "")
 }
 
 func Test_Echo_Body(t *testing.T) {
@@ -60,21 +50,11 @@ func Test_Echo_Body(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataJson)
 }
 
-func Test_Echo_Body_Check_Missing_ContentType(t *testing.T) {
-	dataJson := `{"int_field":123,"string_field":"the value"}`
-
-	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, strings.NewReader(dataJson))
-
-	assertResponseSuccess(t, req, 200, dataJson)
-}
-
 func Test_Echo_Body_Check_Empty_ContentType(t *testing.T) {
-	dataJson := `{"int_field":123,"string_field":"the value"}`
-
-	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, strings.NewReader(dataJson))
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, nil)
 	req.Header.Set("Content-Type", "")
 
-	assertResponseSuccess(t, req, 200, dataJson)
+	assertResponseSuccess(t, req, 400, "")
 }
 
 func Test_Echo_Body_Bad_Request(t *testing.T) {
