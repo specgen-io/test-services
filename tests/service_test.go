@@ -10,7 +10,16 @@ import (
 
 var serviceUrl = "http://localhost:8081"
 
-func assertResponseSuccess(t *testing.T, req *http.Request, expectedStatusCode int, expectedBody string, expectedContentType string) {
+func contents(what string, where []string) bool {
+	for _, item := range where {
+		if what == item {
+			return true
+		}
+	}
+	return false
+}
+
+func assertResponseSuccess(t *testing.T, req *http.Request, expectedStatusCode int, expectedBody string, expectedContentType []string) {
 	resp, err := http.DefaultClient.Do(req)
 	assert.NilError(t, err)
 
@@ -23,7 +32,17 @@ func assertResponseSuccess(t *testing.T, req *http.Request, expectedStatusCode i
 		assert.NilError(t, err)
 		assert.Equal(t, strings.TrimSuffix(string(body), "\n"), expectedBody)
 
-		assert.Equal(t, resp.Header.Get("Content-Type"), expectedContentType)
+		if expectedContentType != nil {
+			actualContentTypeValue := resp.Header.Get("Content-Type")
+			actualContentType := []string{}
+			for _, part := range strings.Split(actualContentTypeValue, ";") {
+				actualContentType = append(actualContentType, strings.ToLower(strings.TrimSpace(part)))
+			}
+
+			for _, expectedPart := range expectedContentType {
+				assert.Equal(t, contents(strings.ToLower(expectedPart), actualContentType), true, `Content-Type should contain %s'`, expectedPart)
+			}
+		}
 	}
 }
 
@@ -33,14 +52,14 @@ func Test_Echo_Body_String(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(dataText))
 	req.Header.Set("Content-Type", "text/plain")
 
-	assertResponseSuccess(t, req, 200, dataText, "text/plain; charset=utf-8")
+	assertResponseSuccess(t, req, 200, dataText, []string{"text/plain", "charset=utf-8"})
 }
 
 func Test_Echo_Body_String_Check_Empty_ContentType(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, nil)
 	req.Header.Set("Content-Type", "")
 
-	assertResponseSuccess(t, req, 400, "", "")
+	assertResponseSuccess(t, req, 400, "", nil)
 }
 
 func Test_Echo_Body(t *testing.T) {
@@ -49,14 +68,14 @@ func Test_Echo_Body(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, strings.NewReader(dataJson))
 	req.Header.Set("Content-Type", "application/json")
 
-	assertResponseSuccess(t, req, 200, dataJson, "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Body_Check_Empty_ContentType(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, nil)
 	req.Header.Set("Content-Type", "")
 
-	assertResponseSuccess(t, req, 400, "", "")
+	assertResponseSuccess(t, req, 400, "", nil)
 }
 
 func Test_Echo_Body_Bad_Request(t *testing.T) {
@@ -65,7 +84,7 @@ func Test_Echo_Body_Bad_Request(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, strings.NewReader(dataJson))
 	req.Header.Set("Content-Type", "application/json")
 
-	assertResponseSuccess(t, req, 400, "", "")
+	assertResponseSuccess(t, req, 400, "", nil)
 }
 
 func Test_Echo_Query_Params(t *testing.T) {
@@ -92,7 +111,7 @@ func Test_Echo_Query_Params(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponseSuccess(t, req, 200, dataJson, "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Query_Params_Missing_Required_Param(t *testing.T) {
@@ -117,7 +136,7 @@ func Test_Echo_Query_Params_Missing_Required_Param(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponseSuccess(t, req, 400, "", "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 400, "", []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Query_Params_Missing_Optional_Param(t *testing.T) {
@@ -142,7 +161,7 @@ func Test_Echo_Query_Params_Missing_Optional_Param(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponseSuccess(t, req, 200, "", "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 200, "", []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Query_Params_Missing_Defaulted_Param(t *testing.T) {
@@ -167,13 +186,13 @@ func Test_Echo_Query_Params_Missing_Defaulted_Param(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponseSuccess(t, req, 200, "", "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 200, "", []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Query_Params_Missing(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
 
-	assertResponseSuccess(t, req, 400, "", "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 400, "", []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Query_Params_Bad_Request(t *testing.T) {
@@ -183,7 +202,7 @@ func Test_Echo_Query_Params_Bad_Request(t *testing.T) {
 	q.Add("string_query", "the value")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponseSuccess(t, req, 400, "", "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 400, "", []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Header_Params(t *testing.T) {
@@ -209,7 +228,7 @@ func Test_Echo_Header_Params(t *testing.T) {
 	h.Add("Datetime-Header", "2019-11-30T17:45:55")
 	h.Add("Enum-Header", "SECOND_CHOICE")
 
-	assertResponseSuccess(t, req, 200, dataJson, "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Header_Params_Bad_Request(t *testing.T) {
@@ -217,7 +236,7 @@ func Test_Echo_Header_Params_Bad_Request(t *testing.T) {
 	req.Header.Add("Int-Header", "the value")
 	req.Header.Add("String-Header", "the value")
 
-	assertResponseSuccess(t, req, 400, "", "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 400, "", []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Url_Params(t *testing.T) {
@@ -225,13 +244,13 @@ func Test_Echo_Url_Params(t *testing.T) {
 
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/url_params/123/12345/1.23/12.345/12345/true/the value/123e4567-e89b-12d3-a456-426655440000/2020-01-01/2019-11-30T17:45:55/SECOND_CHOICE`, nil)
 
-	assertResponseSuccess(t, req, 200, dataJson, "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Url_Params_Bad_Request(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/url_params/value/12345/1.23/12.345/12345/true/the value/123e4567-e89b-12d3-a456-426655440000/2020-01-01/2019-11-30T17:45:55/SECOND_CHOICE`, nil)
 
-	assertResponseSuccess(t, req, 400, "", "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 400, "", []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Everything(t *testing.T) {
@@ -246,7 +265,7 @@ func Test_Echo_Everything(t *testing.T) {
 	q.Add("bool_query", "true")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponseSuccess(t, req, 200, dataJson, "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Everything_Bad_Request(t *testing.T) {
@@ -259,13 +278,13 @@ func Test_Echo_Everything_Bad_Request(t *testing.T) {
 	q.Add("bool_query", "true")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponseSuccess(t, req, 400, "", "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 400, "", []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Check_Empty(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/check/empty`, nil)
 
-	assertResponseSuccess(t, req, 200, "", "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 200, "", []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Check_Empty_Response(t *testing.T) {
@@ -274,13 +293,13 @@ func Test_Check_Empty_Response(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/check/empty_response`, strings.NewReader(dataJson))
 	req.Header.Set("Content-Type", "application/json")
 
-	assertResponseSuccess(t, req, 200, "", "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 200, "", []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Check_Forbidden(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/check/forbidden`, nil)
 
-	assertResponseSuccess(t, req, 403, "", "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 403, "", []string{"application/json", "charset=utf-8"})
 }
 
 func Test_Echo_Body_V2(t *testing.T) {
@@ -289,5 +308,5 @@ func Test_Echo_Body_V2(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/v2/echo/body`, strings.NewReader(dataJson))
 	req.Header.Set("Content-Type", "application/json")
 
-	assertResponseSuccess(t, req, 200, dataJson, "application/json; charset=utf-8")
+	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json", "charset=utf-8"})
 }
