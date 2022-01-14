@@ -22,9 +22,9 @@ func assertResponseSuccess(t *testing.T, req *http.Request, expectedStatusCode i
 		err = resp.Body.Close()
 		assert.NilError(t, err)
 		assert.Equal(t, strings.TrimSuffix(string(body), "\n"), expectedBody)
-	}
 
-	assert.Equal(t, resp.Header.Get("Content-Type"), expectedContentType)
+		assert.Equal(t, resp.Header.Get("Content-Type"), expectedContentType)
+	}
 }
 
 func Test_Echo_Body_String(t *testing.T) {
