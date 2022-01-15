@@ -57,7 +57,7 @@ func Test_Echo_Body_String(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataText, []string{"text/plain"})
 }
 
-func Test_Echo_Body_String_ContentType_Charset(t *testing.T) {
+func Test_Echo_Body_String_Request_ContentType_Charset(t *testing.T) {
 	dataText := "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu"
 
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(dataText))
@@ -66,9 +66,15 @@ func Test_Echo_Body_String_ContentType_Charset(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataText, []string{"text/plain"})
 }
 
-func Test_Echo_Body_String_Request_Empty_ContentType(t *testing.T) {
+func Test_Echo_Body_String_Request_ContentType_Empty(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, nil)
 	req.Header.Set("Content-Type", "")
+
+	assertResponseSuccess(t, req, 400, "", nil)
+}
+
+func Test_Echo_Body_String_Request_ContentType_Missing(t *testing.T) {
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, nil)
 
 	assertResponseSuccess(t, req, 400, "", nil)
 }
@@ -82,7 +88,7 @@ func Test_Echo_Body(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json"})
 }
 
-func Test_Echo_Body_ContentType_Charset(t *testing.T) {
+func Test_Echo_Body_Request_ContentType_Charset(t *testing.T) {
 	dataJson := `{"int_field":123,"string_field":"the value"}`
 
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, strings.NewReader(dataJson))
@@ -91,14 +97,20 @@ func Test_Echo_Body_ContentType_Charset(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json"})
 }
 
-func Test_Echo_Body_Request_Empty_ContentType(t *testing.T) {
+func Test_Echo_Body_Request_ContentType_Empty(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, nil)
 	req.Header.Set("Content-Type", "")
 
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Echo_Body_Bad_Request(t *testing.T) {
+func Test_Echo_Body_Request_ContentType_Missing(t *testing.T) {
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, nil)
+
+	assertResponseSuccess(t, req, 400, "", nil)
+}
+
+func Test_Echo_Body_Bad_Json(t *testing.T) {
 	dataJson := `{"int_field":"the string","string_field":"the value"}`
 
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, strings.NewReader(dataJson))
