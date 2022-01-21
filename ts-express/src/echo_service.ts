@@ -6,8 +6,16 @@ export let echoService = (): service.EchoService => {
         return params.body
     }
 
-    let echoBody = async (params: service.EchoBodyParams): Promise<models.Message> => {
+    let echoBodyModel = async (params: service.EchoBodyModelParams): Promise<models.Message> => {
         return {int_field: params.body.int_field, string_field: params.body.string_field}
+    }
+
+    let echoBodyArray = async (params: service.EchoBodyArrayParams): Promise<string[]> => {
+        return params.body
+    }
+
+    let echoBodyMap = async (params: service.EchoBodyMapParams): Promise<Record<string, string>> => {
+        return params.body
     }
 
     let echoQuery = async (params: service.EchoQueryParams): Promise<models.Parameters> => {
@@ -85,5 +93,5 @@ export let echoService = (): service.EchoService => {
         return {status: 'ok'}
     }
 
-    return {echoBodyString, echoBody, echoQuery, echoHeader, echoUrlParams, echoEverything, sameOperationName}
+    return {echoBodyString, echoBodyModel, echoBodyArray, echoBodyMap, echoQuery, echoHeader, echoUrlParams, echoEverything, sameOperationName}
 }

@@ -17,7 +17,17 @@ public class EchoServiceImpl implements EchoService {
 	}
 
 	@Override
-	public Message echoBody(Message body) {
+	public Message echoBodyModel(Message body) {
+		return body;
+	}
+
+	@Override
+	public String[] echoBodyArray(String[] body) {
+		return body;
+	}
+
+	@Override
+	public Map<String, String> echoBodyMap(Map<String, String> body) {
 		return body;
 	}
 
