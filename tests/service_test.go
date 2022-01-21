@@ -88,23 +88,23 @@ func Test_Echo_Body_Json(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json"})
 }
 
-//func Test_Echo_Body_Array(t *testing.T) {
-//	dataJson := `["the str1", "the str2"]`
-//
-//	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_array`, strings.NewReader(dataJson))
-//	req.Header.Set("Content-Type", "application/json")
-//
-//	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json"})
-//}
-//
-//func Test_Echo_Body_Map(t *testing.T) {
-//	dataJson := `{"string_field":"the value","string_field_2":"the value_2"}`
-//
-//	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_map`, strings.NewReader(dataJson))
-//	req.Header.Set("Content-Type", "application/json")
-//
-//	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json"})
-//}
+func Test_Echo_Body_Array(t *testing.T) {
+	dataJson := `["the str1", "the str2"]`
+
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_array`, strings.NewReader(dataJson))
+	req.Header.Set("Content-Type", "application/json")
+
+	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json"})
+}
+
+func Test_Echo_Body_Map(t *testing.T) {
+	dataJson := `{"string_field":"the value","string_field_2":"the value_2"}`
+
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_map`, strings.NewReader(dataJson))
+	req.Header.Set("Content-Type", "application/json")
+
+	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json"})
+}
 
 func Test_Echo_Body_Request_ContentType_Charset(t *testing.T) {
 	dataJson := `{"int_field":123,"string_field":"the value"}`
