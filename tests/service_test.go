@@ -89,7 +89,7 @@ func Test_Echo_Body_Json(t *testing.T) {
 }
 
 func Test_Echo_Body_Array(t *testing.T) {
-	dataJson := `["the str1", "the str2"]`
+	dataJson := `["the str1","the str2"]`
 
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_array`, strings.NewReader(dataJson))
 	req.Header.Set("Content-Type", "application/json")
