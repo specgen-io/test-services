@@ -17,7 +17,7 @@ public class EchoServiceImpl implements EchoService {
 	}
 
 	@Override
-	public Message echoBodyJson(Message body) {
+	public Message echoBodyModel(Message body) {
 		return body;
 	}
 

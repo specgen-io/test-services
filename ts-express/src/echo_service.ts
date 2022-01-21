@@ -6,7 +6,7 @@ export let echoService = (): service.EchoService => {
         return params.body
     }
 
-    let echoBodyJson = async (params: service.EchoBodyJsonParams): Promise<models.Message> => {
+    let echoBodyModel = async (params: service.EchoBodyModelParams): Promise<models.Message> => {
         return {int_field: params.body.int_field, string_field: params.body.string_field}
     }
 
@@ -93,5 +93,5 @@ export let echoService = (): service.EchoService => {
         return {status: 'ok'}
     }
 
-    return {echoBodyString, echoBodyJson, echoBodyArray, echoBodyMap, echoQuery, echoHeader, echoUrlParams, echoEverything, sameOperationName}
+    return {echoBodyString, echoBodyModel, echoBodyArray, echoBodyMap, echoQuery, echoHeader, echoUrlParams, echoEverything, sameOperationName}
 }

@@ -5,8 +5,8 @@ version: 1
 v2:
   http:
     echo:
-      echo_body:
-        endpoint: POST /echo/body
+      echo_body_model:
+        endpoint: POST /echo/body_model
         body: Message
         response:
           ok: Message
@@ -24,8 +24,8 @@ http:
       response:
         ok: string
 
-    echo_body_json:
-      endpoint: POST /echo/body_json
+    echo_body_model:
+      endpoint: POST /echo/body_model
       body: Message
       response:
         ok: Message    

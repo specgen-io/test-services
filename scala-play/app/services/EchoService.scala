@@ -11,7 +11,7 @@ import models._
 class EchoService @Inject()()(implicit ec: ExecutionContext) extends IEchoService {
   override def echoBodyString(body: String): Future[String] = Future { body }
 
-  override def echoBodyJson(body: Message): Future[Message] = Future { body }
+  override def echoBodyModel(body: Message): Future[Message] = Future { body }
 
   override def echoBodyArray(body: List[String]): Future[List[String]] = Future { body }
 
