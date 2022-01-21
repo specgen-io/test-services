@@ -48,7 +48,7 @@ func assertResponseSuccess(t *testing.T, req *http.Request, expectedStatusCode i
 	}
 }
 
-func Test_Echo_Body_String(t *testing.T) {
+func Test_EchoBodyString(t *testing.T) {
 	dataText := "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu"
 
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(dataText))
@@ -57,7 +57,7 @@ func Test_Echo_Body_String(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataText, []string{"text/plain"})
 }
 
-func Test_Echo_Body_String_Request_ContentType_Charset(t *testing.T) {
+func Test_EchoBodyString_Request_ContentType_Charset(t *testing.T) {
 	dataText := "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu"
 
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(dataText))
@@ -66,60 +66,78 @@ func Test_Echo_Body_String_Request_ContentType_Charset(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataText, []string{"text/plain"})
 }
 
-func Test_Echo_Body_String_Request_ContentType_Empty(t *testing.T) {
+func Test_EchoBodyString_Request_ContentType_Empty(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, nil)
 	req.Header.Set("Content-Type", "")
 
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Echo_Body_String_Request_ContentType_Missing(t *testing.T) {
+func Test_EchoBodyString_Request_ContentType_Missing(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, nil)
 
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Echo_Body(t *testing.T) {
+func Test_EchoBodyModel(t *testing.T) {
 	dataJson := `{"int_field":123,"string_field":"the value"}`
 
-	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, strings.NewReader(dataJson))
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, strings.NewReader(dataJson))
 	req.Header.Set("Content-Type", "application/json")
 
 	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json"})
 }
 
-func Test_Echo_Body_Request_ContentType_Charset(t *testing.T) {
+func Test_EchoBodyArray(t *testing.T) {
+	dataJson := `["the str1","the str2"]`
+
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_array`, strings.NewReader(dataJson))
+	req.Header.Set("Content-Type", "application/json")
+
+	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json"})
+}
+
+func Test_EchoBodyMap(t *testing.T) {
+	dataJson := `{"string_field":"the value","string_field_2":"the value_2"}`
+
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_map`, strings.NewReader(dataJson))
+	req.Header.Set("Content-Type", "application/json")
+
+	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json"})
+}
+
+func Test_EchoBodyModel_Request_ContentType_Charset(t *testing.T) {
 	dataJson := `{"int_field":123,"string_field":"the value"}`
 
-	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, strings.NewReader(dataJson))
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, strings.NewReader(dataJson))
 	req.Header.Set("Content-Type", "application/json;charset=utf-8")
 
 	assertResponseSuccess(t, req, 200, dataJson, []string{"application/json"})
 }
 
-func Test_Echo_Body_Request_ContentType_Empty(t *testing.T) {
-	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, nil)
+func Test_EchoBodyModel_Request_ContentType_Empty(t *testing.T) {
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, nil)
 	req.Header.Set("Content-Type", "")
 
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Echo_Body_Request_ContentType_Missing(t *testing.T) {
-	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, nil)
+func Test_EchoBodyModel_Request_ContentType_Missing(t *testing.T) {
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, nil)
 
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Echo_Body_Bad_Json(t *testing.T) {
+func Test_EchoBodyModel_Bad_Json(t *testing.T) {
 	dataJson := `{"int_field":"the string","string_field":"the value"}`
 
-	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body`, strings.NewReader(dataJson))
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, strings.NewReader(dataJson))
 	req.Header.Set("Content-Type", "application/json")
 
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Echo_Query_Params(t *testing.T) {
+func Test_EchoQuery(t *testing.T) {
 	dataJson := `{"int_field":123,"long_field":12345,"float_field":1.23,"double_field":12.345,"decimal_field":12345,"bool_field":true,"string_field":"the value","string_opt_field":"the value","string_defaulted_field":"value","string_array_field":["the str1","the str2"],"uuid_field":"123e4567-e89b-12d3-a456-426655440000","date_field":"2020-01-01","date_array_field":["2020-01-01","2020-01-02"],"datetime_field":"2019-11-30T17:45:55","enum_field":"SECOND_CHOICE"}`
 
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
@@ -146,7 +164,7 @@ func Test_Echo_Query_Params(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataJson, nil)
 }
 
-func Test_Echo_Query_Params_Missing_Required_Param(t *testing.T) {
+func Test_EchoQuery_Missing_Required_Param(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
 	q := req.URL.Query()
 	q.Add("int_query", "123")
@@ -171,7 +189,7 @@ func Test_Echo_Query_Params_Missing_Required_Param(t *testing.T) {
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Echo_Query_Params_Missing_Optional_Param(t *testing.T) {
+func Test_EchoQuery_Missing_Optional_Param(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
 	q := req.URL.Query()
 	q.Add("int_query", "123")
@@ -196,7 +214,7 @@ func Test_Echo_Query_Params_Missing_Optional_Param(t *testing.T) {
 	assertResponseSuccess(t, req, 200, "", nil)
 }
 
-func Test_Echo_Query_Params_Missing_Defaulted_Param(t *testing.T) {
+func Test_EchoQuery_Missing_Defaulted_Param(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
 	q := req.URL.Query()
 	q.Add("int_query", "123")
@@ -221,13 +239,13 @@ func Test_Echo_Query_Params_Missing_Defaulted_Param(t *testing.T) {
 	assertResponseSuccess(t, req, 200, "", nil)
 }
 
-func Test_Echo_Query_Params_Missing(t *testing.T) {
+func Test_EchoQuery_Missing(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
 
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Echo_Query_Params_Bad_Request(t *testing.T) {
+func Test_EchoQuery_Bad_Request(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
 	q := req.URL.Query()
 	q.Add("int_query", "the value")
@@ -237,7 +255,7 @@ func Test_Echo_Query_Params_Bad_Request(t *testing.T) {
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Echo_Header_Params(t *testing.T) {
+func Test_EchoHeader(t *testing.T) {
 	dataJson := `{"int_field":123,"long_field":12345,"float_field":1.23,"double_field":12.345,"decimal_field":12345,"bool_field":true,"string_field":"the value","string_opt_field":"the value","string_defaulted_field":"value","string_array_field":["the str1","the str2"],"uuid_field":"123e4567-e89b-12d3-a456-426655440000","date_field":"2020-01-01","date_array_field":["2020-01-01","2020-01-02"],"datetime_field":"2019-11-30T17:45:55","enum_field":"SECOND_CHOICE"}`
 
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/header`, nil)
@@ -263,7 +281,7 @@ func Test_Echo_Header_Params(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataJson, nil)
 }
 
-func Test_Echo_Header_Params_Bad_Request(t *testing.T) {
+func Test_EchoHeader_Bad_Request(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/header`, nil)
 	req.Header.Add("Int-Header", "the value")
 	req.Header.Add("String-Header", "the value")
@@ -271,7 +289,7 @@ func Test_Echo_Header_Params_Bad_Request(t *testing.T) {
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Echo_Url_Params(t *testing.T) {
+func Test_EchoUrlParams(t *testing.T) {
 	dataJson := `{"int_field":123,"long_field":12345,"float_field":1.23,"double_field":12.345,"decimal_field":12345,"bool_field":true,"string_field":"the value","uuid_field":"123e4567-e89b-12d3-a456-426655440000","date_field":"2020-01-01","datetime_field":"2019-11-30T17:45:55","enum_field":"SECOND_CHOICE"}`
 
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/url_params/123/12345/1.23/12.345/12345/true/the value/123e4567-e89b-12d3-a456-426655440000/2020-01-01/2019-11-30T17:45:55/SECOND_CHOICE`, nil)
@@ -279,13 +297,13 @@ func Test_Echo_Url_Params(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataJson, nil)
 }
 
-func Test_Echo_Url_Params_Bad_Request(t *testing.T) {
+func Test_EchoUrlParams_Bad_Request(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/url_params/value/12345/1.23/12.345/12345/true/the value/123e4567-e89b-12d3-a456-426655440000/2020-01-01/2019-11-30T17:45:55/SECOND_CHOICE`, nil)
 
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Echo_Everything(t *testing.T) {
+func Test_EchoEverything(t *testing.T) {
 	dataJson := `{"body_field":{"int_field":123,"string_field":"the value"},"float_query":1.23,"bool_query":true,"uuid_header":"123e4567-e89b-12d3-a456-426655440000","datetime_header":"2019-11-30T17:45:55","date_url":"2020-01-01","decimal_url":12345}`
 
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/everything/2020-01-01/12345`, strings.NewReader(`{"int_field":123,"string_field":"the value"}`))
@@ -300,7 +318,7 @@ func Test_Echo_Everything(t *testing.T) {
 	assertResponseSuccess(t, req, 200, dataJson, nil)
 }
 
-func Test_Echo_Everything_Bad_Request(t *testing.T) {
+func Test_EchoEverything_Bad_Request(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/everything/2020-01-01/12345`, strings.NewReader(`{"int_field":123,"string_field":"the value"}`))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("Uuid-Header", "123e4567-e89b-12d3-a456-426655440000")
@@ -313,13 +331,13 @@ func Test_Echo_Everything_Bad_Request(t *testing.T) {
 	assertResponseSuccess(t, req, 400, "", nil)
 }
 
-func Test_Check_Empty(t *testing.T) {
+func Test_CheckEmpty(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/check/empty`, nil)
 
 	assertResponseSuccess(t, req, 200, "", nil)
 }
 
-func Test_Check_Empty_Response(t *testing.T) {
+func Test_CheckEmpty_Response(t *testing.T) {
 	dataJson := `{"int_field":123,"string_field":"the value"}`
 
 	req, _ := http.NewRequest("POST", serviceUrl+`/check/empty_response`, strings.NewReader(dataJson))
@@ -328,16 +346,16 @@ func Test_Check_Empty_Response(t *testing.T) {
 	assertResponseSuccess(t, req, 200, "", nil)
 }
 
-func Test_Check_Forbidden(t *testing.T) {
+func Test_CheckForbidden(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/check/forbidden`, nil)
 
 	assertResponseSuccess(t, req, 403, "", nil)
 }
 
-func Test_Echo_Body_V2(t *testing.T) {
+func Test_V2_EchoBodyModel(t *testing.T) {
 	dataJson := `{"bool_field":true,"string_field":"the value"}`
 
-	req, _ := http.NewRequest("POST", serviceUrl+`/v2/echo/body`, strings.NewReader(dataJson))
+	req, _ := http.NewRequest("POST", serviceUrl+`/v2/echo/body_model`, strings.NewReader(dataJson))
 	req.Header.Set("Content-Type", "application/json")
 
 	assertResponseSuccess(t, req, 200, dataJson, nil)
