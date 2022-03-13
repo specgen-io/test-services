@@ -308,8 +308,6 @@ func Test_EchoHeader_Missing_Defaulted_Param(t *testing.T) {
 }
 
 func Test_EchoHeader_Missing_Optional_Param(t *testing.T) {
-	dataJson := `{"int_field":123,"long_field":12345,"float_field":1.23,"double_field":12.345,"decimal_field":12345,"bool_field":true,"string_field":"the value","string_defaulted_field":"value","string_array_field":["the str1","the str2"],"uuid_field":"123e4567-e89b-12d3-a456-426655440000","date_field":"2020-01-01","date_array_field":["2020-01-01","2020-01-02"],"datetime_field":"2019-11-30T17:45:55","enum_field":"SECOND_CHOICE"}`
-
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/header`, nil)
 	h := req.Header
 	h.Add("Int-Header", "123")
@@ -330,7 +328,7 @@ func Test_EchoHeader_Missing_Optional_Param(t *testing.T) {
 	h.Add("Datetime-Header", "2019-11-30T17:45:55")
 	h.Add("Enum-Header", "SECOND_CHOICE")
 
-	assertResponseSuccess(t, req, 200, dataJson, nil)
+	assertResponseSuccess(t, req, 200, "", nil)
 }
 
 func Test_EchoHeader_Bad_Request(t *testing.T) {
