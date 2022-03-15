@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: io.specgen
+testFramework: junit
+sourceLanguage: java
+buildTool: maven
+features: [ annotation-api, app-name, http-client, jackson-databind, java, java-application, junit, log4j2, maven, netty-server, openapi, readme, serialization-jackson, shade, yaml ]

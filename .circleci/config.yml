@@ -6,7 +6,7 @@ orbs:
 parameters:
   specgen-version:
     type: string
-    default: 2.1.1567
+    default: 2.1.1581
   specgen-version-major:
     type: string
     default: v2
@@ -106,6 +106,43 @@ jobs:
           url: http://localhost:8081/swagger-ui/
       - go-tests:
           command: ./tests/service-tests -test.v
+
+  java-micronaut:
+    environment:
+      SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+    working_directory: ~/specgen-tests
+    docker:
+      - image: circleci/openjdk:11-jdk
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "./java-micronaut/pom.xml" }}
+      - run:
+          name: Create temp folder for tests results
+          command: mkdir -p /tmp/test-results
+      - artifactory/setup-maven:
+          jfrog-server-url: specgen.jfrog.io
+          repo-name: maven
+      - run:
+          name: Build service
+          command: |
+            cd ./java-micronaut
+            mvn clean compile -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+      - run:
+          name: Run service
+          command: |
+            cd ./java-micronaut
+            ./mvnw mn:run -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+          background: true
+      - save_cache:
+          key: cache-{{ checksum "./java-micronaut/pom.xml" }}
+          paths:
+            - ~/.m2
+      - go-tests:
+          command: ./tests/service-tests -test.v        
 
   go:
     working_directory: ~/specgen-tests
@@ -282,6 +319,10 @@ workflows:
           context: specgen
           requires:
             - tests
+      - java-micronaut:
+          context: specgen
+          requires:
+            - tests      
       - go:
           context: specgen
           requires:
