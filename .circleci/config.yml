@@ -142,7 +142,7 @@ jobs:
           paths:
             - ~/.m2
       - wait-url:
-          url: http://localhost:8081/
+          url: http://localhost:8081/docs/swagger.yaml
       - go-tests:
           command: ./tests/service-tests -test.v        
 
