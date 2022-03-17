@@ -367,7 +367,11 @@ workflows:
       - java-micronaut:
           context: specgen
           requires:
-            - tests      
+            - tests  
+      - kotlin-micronaut:
+          context: specgen
+          requires:
+            - tests          
       - go:
           context: specgen
           requires:
