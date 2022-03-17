@@ -40,10 +40,12 @@ java {
 }
 
 specgen {
-    clientKotlin {
+    serviceKotlin {
         jsonlib.set("moshi")
         packageName.set("test_service")
         specFile.set(file("../spec.yaml"))
+        servicesPath.set("src/main/kotlin")
+        swaggerPath.set("src/main/resources/static/docs/swagger.yaml")
     }
 }
 
