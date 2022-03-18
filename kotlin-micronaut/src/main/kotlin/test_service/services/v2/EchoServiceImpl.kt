@@ -1,4 +1,4 @@
-package test_service.v2
+package test_service.services.v2
 
 import io.micronaut.context.annotation.Bean
 import test_service.v2.models.Message
