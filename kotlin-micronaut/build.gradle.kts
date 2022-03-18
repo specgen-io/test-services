@@ -44,8 +44,8 @@ specgen {
         jsonlib.set("moshi")
         packageName.set("test_service")
         specFile.set(file("../spec.yaml"))
-        servicesPath.set("src/main/kotlin")
-        swaggerPath.set("src/main/resources/static/docs/swagger.yaml")
+        servicesPath.set(file("src/main/kotlin"))
+        swaggerPath.set(file("src/main/resources/static/docs/swagger.yaml"))
     }
 }
 
