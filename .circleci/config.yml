@@ -161,9 +161,6 @@ jobs:
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
-      - artifactory/setup-maven:
-          jfrog-server-url: specgen.jfrog.io
-          repo-name: maven
       - run:
           name: Build service
           command: |
