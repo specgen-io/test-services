@@ -1,0 +1,15 @@
+micronaut:
+  server:
+    port: 8081
+  application:
+    name: kotlinMicronaut
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:static/docs
+        mapping: /docs/**
+
+netty:
+  default:
+    allocator:
+      max-order: 3
