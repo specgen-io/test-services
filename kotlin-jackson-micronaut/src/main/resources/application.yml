@@ -3,6 +3,12 @@ micronaut:
     port: 8081
   application:
     name: kotlinJacksonMicronaut
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:static/docs
+        mapping: /docs/**
+
 netty:
   default:
     allocator:
