@@ -16,4 +16,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "kotlin-micronaut"
+rootProject.name = "kotlin-jackson-micronaut"

@@ -146,7 +146,7 @@ jobs:
       - go-tests:
           command: ./tests/service-tests -test.v  
           
-  kotlin-micronaut:
+  kotlin-moshi-micronaut:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
     working_directory: ~/specgen-tests
@@ -157,14 +157,14 @@ jobs:
       - attach_workspace:
           at: .
       - restore_cache:
-          key: cache-{{ checksum "./kotlin-micronaut/build.gradle.kts" }}-{{ checksum "./kotlin-micronaut/settings.gradle.kts" }}
+          key: cache-{{ checksum "./kotlin-moshi-micronaut/build.gradle.kts" }}-{{ checksum "./kotlin-moshi-micronaut/settings.gradle.kts" }}
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
       - run:
           name: Build service
           command: |
-            cd ./kotlin-micronaut
+            cd ./kotlin-moshi-micronaut
             ./gradlew --build-cache --no-daemon --stacktrace build \
             -Djfrog.user=$JFROG_USER \
             -Djfrog.pass=$JFROG_PASS \
@@ -172,19 +172,59 @@ jobs:
       - run:
           name: Run service
           command: |
-            cd ./kotlin-micronaut
+            cd ./kotlin-moshi-micronaut
             ./gradlew --build-cache --no-daemon --stacktrace run \
             -Djfrog.user=$JFROG_USER \
             -Djfrog.pass=$JFROG_PASS \
             -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
       - save_cache:
-          key: cache-{{ checksum "./kotlin-micronaut/build.gradle.kts" }}-{{ checksum "./kotlin-micronaut/settings.gradle.kts" }}
+          key: cache-{{ checksum "./kotlin-moshi-micronaut/build.gradle.kts" }}-{{ checksum "./kotlin-moshi-micronaut/settings.gradle.kts" }}
           paths: [ ~/.gradle ]  
       - wait-url:
           url: http://localhost:8081/docs/swagger.yaml
       - go-tests:
-          command: ./tests/service-tests -test.v                 
+          command: ./tests/service-tests -test.v     
+
+  kotlin-jackson-micronaut:
+    environment:
+      SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+    working_directory: ~/specgen-tests
+    docker:
+      - image: circleci/openjdk:11-jdk
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          key: cache-{{ checksum "./kotlin-jackson-micronaut/build.gradle.kts" }}-{{ checksum "./kotlin-jackson-micronaut/settings.gradle.kts" }}
+      - run:
+          name: Create temp folder for tests results
+          command: mkdir -p /tmp/test-results
+      - run:
+          name: Build service
+          command: |
+            cd ./kotlin-jackson-micronaut
+            ./gradlew --build-cache --no-daemon --stacktrace build \
+            -Djfrog.user=$JFROG_USER \
+            -Djfrog.pass=$JFROG_PASS \
+            -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+      - run:
+          name: Run service
+          command: |
+            cd ./kotlin-jackson-micronaut
+            ./gradlew --build-cache --no-daemon --stacktrace run \
+            -Djfrog.user=$JFROG_USER \
+            -Djfrog.pass=$JFROG_PASS \
+            -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+          background: true
+      - save_cache:
+          key: cache-{{ checksum "./kotlin-jackson-micronaut/build.gradle.kts" }}-{{ checksum "./kotlin-jackson-micronaut/settings.gradle.kts" }}
+          paths: [ ~/.gradle ]  
+      - wait-url:
+          url: http://localhost:8081/docs/swagger.yaml
+      - go-tests:
+          command: ./tests/service-tests -test.v                         
 
   go:
     working_directory: ~/specgen-tests
@@ -365,10 +405,14 @@ workflows:
           context: specgen
           requires:
             - tests  
-      - kotlin-micronaut:
+      - kotlin-moshi-micronaut:
           context: specgen
           requires:
-            - tests          
+            - tests    
+      - kotlin-jackson-micronaut:
+          context: specgen
+          requires:
+            - tests            
       - go:
           context: specgen
           requires:

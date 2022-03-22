@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: io.specgen
+testFramework: junit
+sourceLanguage: kotlin
+buildTool: gradle_kotlin
+features: [ annotation-api, app-name, gradle, http-client, jackson-databind, junit, kotlin, kotlin-application, kotlin-build, micronaut-build, netty-server, readme, serialization-jackson, shade, slf4j-simple, yaml ]
