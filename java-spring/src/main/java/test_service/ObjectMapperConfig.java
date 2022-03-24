@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.*;
 import test_service.json.Json;
 
+@Configuration
 public class ObjectMapperConfig {
 	@Bean
 	@Primary
