@@ -10,7 +10,7 @@ import java.io.*
 
 @Bean
 class EchoServiceImpl : EchoService {
-    override fun echoBodyModel(body: Message): Message {
+	override fun echoBodyModel(body: Message): Message {
         return body
-    }
+	}
 }
