@@ -72,7 +72,12 @@ func assertResponseSuccess(t *testing.T, req *http.Request, expectedStatusCode i
 		assert.NilError(t, err)
 		err = resp.Body.Close()
 		assert.NilError(t, err)
-		assertEqualJson(t, actualBody, expectedBody)
+
+		if contents("application/json", expectedContentType) {
+			assertEqualJson(t, actualBody, expectedBody)
+		} else {
+			assert.Equal(t, expectedBody, actualBody)
+		}
 
 		if expectedContentType != nil {
 			actualContentTypeValue := resp.Header.Get("Content-Type")
