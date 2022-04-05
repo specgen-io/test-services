@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"gotest.tools/assert"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -19,6 +21,24 @@ func contents(what string, where []string) bool {
 	return false
 }
 
+func assertEqualJson(t *testing.T, actual []byte, expected string) {
+	actualData := map[string]interface{}{}
+	err := json.Unmarshal(actual, &actualData)
+	if err != nil {
+		return
+	}
+
+	expectedData := map[string]interface{}{}
+	err = json.Unmarshal([]byte(expected), &expectedData)
+	if err != nil {
+		return
+	}
+
+	if !reflect.DeepEqual(actualData, expectedData) {
+		t.Errorf("\nexpected: %s\nactual: %s", expectedData, actualData)
+	}
+}
+
 func assertResponseSuccess(t *testing.T, req *http.Request, expectedStatusCode int, expectedBody string, expectedContentType []string) {
 	resp, err := http.DefaultClient.Do(req)
 	assert.NilError(t, err)
@@ -26,11 +46,11 @@ func assertResponseSuccess(t *testing.T, req *http.Request, expectedStatusCode i
 	assert.Equal(t, resp.StatusCode, expectedStatusCode)
 
 	if expectedBody != "" {
-		body, err := ioutil.ReadAll(resp.Body)
+		actualBody, err := ioutil.ReadAll(resp.Body)
 		assert.NilError(t, err)
 		err = resp.Body.Close()
 		assert.NilError(t, err)
-		assert.Equal(t, strings.TrimSuffix(string(body), "\n"), expectedBody)
+		assertEqualJson(t, actualBody, expectedBody)
 
 		if expectedContentType != nil {
 			actualContentTypeValue := resp.Header.Get("Content-Type")
