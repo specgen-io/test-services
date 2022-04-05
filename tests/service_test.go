@@ -76,7 +76,7 @@ func assertResponseSuccess(t *testing.T, req *http.Request, expectedStatusCode i
 		if contents("application/json", expectedContentType) {
 			assertEqualJson(t, actualBody, expectedBody)
 		} else {
-			assert.Equal(t, expectedBody, actualBody)
+			assert.Equal(t, strings.TrimSuffix(string(actualBody), "\n"), expectedBody)
 		}
 
 		if expectedContentType != nil {
