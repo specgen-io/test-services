@@ -6,7 +6,7 @@ orbs:
 parameters:
   specgen-version:
     type: string
-    default: 2.1.1612
+    default: 2.1.1620
   specgen-version-major:
     type: string
     default: v2
@@ -68,7 +68,7 @@ jobs:
       - go-tests:
           command: ./tests/service-tests -test.v
 
-  java-spring:
+  java-jackson-spring:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
     working_directory: ~/specgen-tests
@@ -80,7 +80,7 @@ jobs:
           at: .
       - restore_cache:
           keys:
-            - cache-{{ checksum "./java-spring/pom.xml" }}
+            - cache-{{ checksum "./java-jackson-spring/pom.xml" }}
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
@@ -90,22 +90,62 @@ jobs:
       - run:
           name: Build service
           command: |
-            cd ./java-spring
+            cd ./java-jackson-spring
             mvn clean compile -Dspecgen.version=<<pipeline.parameters.specgen-version>>
       - run:
           name: Run service
           command: |
-            cd ./java-spring
+            cd ./java-jackson-spring
             ./mvnw spring-boot:run -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
       - save_cache:
-          key: cache-{{ checksum "./java-spring/pom.xml" }}
+          key: cache-{{ checksum "./java-jackson-spring/pom.xml" }}
           paths:
             - ~/.m2
       - wait-url:
           url: http://localhost:8081/swagger-ui/
       - go-tests:
           command: ./tests/service-tests -test.v
+
+  java-moshi-spring:
+    environment:
+      SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+    working_directory: ~/specgen-tests
+    docker:
+      - image: circleci/openjdk:11-jdk
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          key: cache-{{ checksum "./java-moshi-spring/build.gradle.kts" }}-{{ checksum "./java-moshi-spring/settings.gradle.kts" }}
+      - run:
+          name: Create temp folder for tests results
+          command: mkdir -p /tmp/test-results
+      - run:
+          name: Build service
+          command: |
+            cd ./java-moshi-spring
+            ./gradlew --build-cache --no-daemon --stacktrace build \
+            -Djfrog.user=$JFROG_USER \
+            -Djfrog.pass=$JFROG_PASS \
+            -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+      - run:
+          name: Run service
+          command: |
+            cd ./java-moshi-spring
+            ./gradlew --build-cache --no-daemon --stacktrace bootRun \
+            -Djfrog.user=$JFROG_USER \
+            -Djfrog.pass=$JFROG_PASS \
+            -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+          background: true
+      - save_cache:
+          key: cache-{{ checksum "./java-moshi-spring/build.gradle.kts" }}-{{ checksum "./java-moshi-spring/settings.gradle.kts" }}
+          paths: [ ~/.gradle ]  
+      - wait-url:
+          url: http://localhost:8081/docs/swagger.yaml
+      - go-tests:
+          command: ./tests/service-tests -test.v         
 
   java-micronaut:
     environment:
@@ -397,10 +437,14 @@ workflows:
           context: specgen
           requires:
             - tests
-      - java-spring:
+      - java-jackson-spring:
           context: specgen
           requires:
             - tests
+      - java-moshi-spring:
+          context: specgen
+          requires:
+            - tests      
       - java-micronaut:
           context: specgen
           requires:
