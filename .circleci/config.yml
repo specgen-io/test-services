@@ -107,7 +107,7 @@ jobs:
       - go-tests:
           command: ./tests/service-tests -test.v
 
-  java-moshi-spring:
+  java-moshi-micronaut:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
     working_directory: ~/specgen-tests
@@ -118,33 +118,34 @@ jobs:
       - attach_workspace:
           at: .
       - restore_cache:
-          keys:
-            - cache-{{ checksum "./java-moshi-spring/pom.xml" }}
+          key: cache-{{ checksum "./java-moshi-micronaut/build.gradle.kts" }}-{{ checksum "./java-moshi-micronaut/settings.gradle.kts" }}
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
-      - artifactory/setup-maven:
-          jfrog-server-url: specgen.jfrog.io
-          repo-name: maven
       - run:
           name: Build service
           command: |
-            cd ./java-moshi-spring
-            mvn clean compile -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+            cd ./java-moshi-micronaut
+            ./gradlew --build-cache --no-daemon --stacktrace build \
+            -Djfrog.user=$JFROG_USER \
+            -Djfrog.pass=$JFROG_PASS \
+            -Dspecgen.version=<<pipeline.parameters.specgen-version>>
       - run:
           name: Run service
           command: |
-            cd ./java-moshi-spring
-            ./mvnw spring-boot:run -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+            cd ./java-moshi-micronaut
+            ./gradlew --build-cache --no-daemon --stacktrace run \
+            -Djfrog.user=$JFROG_USER \
+            -Djfrog.pass=$JFROG_PASS \
+            -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
       - save_cache:
-          key: cache-{{ checksum "./java-moshi-spring/pom.xml" }}
-          paths:
-            - ~/.m2
+          key: cache-{{ checksum "./java-moshi-micronaut/build.gradle.kts" }}-{{ checksum "./java-moshi-micronaut/settings.gradle.kts" }}
+          paths: [ ~/.gradle ]  
       - wait-url:
-          url: http://localhost:8081/swagger-ui/
+          url: http://localhost:8081/docs/swagger.yaml
       - go-tests:
-          command: ./tests/service-tests -test.v        
+          command: ./tests/service-tests -test.v         
 
   java-micronaut:
     environment:

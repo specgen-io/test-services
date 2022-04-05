@@ -34,11 +34,9 @@ func assertEqualJson(t *testing.T, actual []byte, expected string) {
 		return
 	}
 
-	if err != nil {
+	if !reflect.DeepEqual(actualData, expectedData) {
 		t.Errorf("\nexpected: %s\nactual: %s", expectedData, actualData)
 	}
-
-	reflect.DeepEqual(actualData, expectedData)
 }
 
 func assertResponseSuccess(t *testing.T, req *http.Request, expectedStatusCode int, expectedBody string, expectedContentType []string) {

@@ -2,7 +2,7 @@ plugins {
     id("java")
     id("org.springframework.boot") version "2.6.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("io.specgen.gradle")
+//    id("io.specgen.gradle")
 }
 
 group = "io.specgen"
@@ -22,18 +22,19 @@ dependencies {
     implementation("com.squareup.moshi:moshi-adapters:${moshiVersion}")
     implementation("com.squareup.moshi:moshi-kotlin:${moshiVersion}")
     implementation("jakarta.annotation:jakarta.annotation-api")
+    implementation("io.springfox:springfox-boot-starter:3.0.0")
 }
 
 java {
     sourceCompatibility = JavaVersion.toVersion("11")
 }
 
-specgen {
-    serviceJava {
-        jsonlib.set("moshi")
-        packageName.set("test_service")
-        specFile.set(file("../spec.yaml"))
-        servicesPath.set(file("src/main/java"))
-        swaggerPath.set(file("src/main/resources/static/docs/swagger.yaml"))
-    }
-}
+//specgen {
+//    serviceJava {
+//        jsonlib.set("moshi")
+//        packageName.set("test_service")
+//        specFile.set(file("../spec.yaml"))
+//        servicesPath.set(file("src/main/java"))
+//        swaggerPath.set(file("src/main/resources/static/docs/swagger.yaml"))
+//    }
+//}
