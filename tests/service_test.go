@@ -23,9 +23,17 @@ func contents(what string, where []string) bool {
 
 func assertEqualJson(t *testing.T, actual []byte, expected string) {
 	actualData := map[string]interface{}{}
-	expectedData := map[string]interface{}{}
 	err := json.Unmarshal(actual, &actualData)
+	if err != nil {
+		return
+	}
+
+	expectedData := map[string]interface{}{}
 	err = json.Unmarshal([]byte(expected), &expectedData)
+	if err != nil {
+		return
+	}
+
 	if err != nil {
 		t.Errorf("\nexpected: %s\nactual: %s", expectedData, actualData)
 	}
