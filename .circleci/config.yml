@@ -134,7 +134,7 @@ jobs:
           name: Run service
           command: |
             cd ./java-moshi-spring
-            ./gradlew --build-cache --no-daemon --stacktrace spring-boot:run \
+            ./gradlew --build-cache --no-daemon --stacktrace bootRun \
             -Djfrog.user=$JFROG_USER \
             -Djfrog.pass=$JFROG_PASS \
             -Dspecgen.version=<<pipeline.parameters.specgen-version>>
