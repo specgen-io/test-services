@@ -22,22 +22,42 @@ func contents(what string, where []string) bool {
 }
 
 func assertEqualJson(t *testing.T, actual []byte, expected string) {
-	actualData := map[string]interface{}{}
-	err := json.Unmarshal(actual, &actualData)
-	if err != nil {
-		t.Fatalf(`failed to read actual json: "%s", error: %s`, string(actual), err.Error())
-		return
-	}
+	if strings.HasPrefix(strings.TrimSpace(expected), "[") {
+		actualData := []interface{}{}
+		err := json.Unmarshal(actual, &actualData)
+		if err != nil {
+			t.Fatalf(`failed to read actual json: "%s", error: %s`, string(actual), err.Error())
+			return
+		}
 
-	expectedData := map[string]interface{}{}
-	err = json.Unmarshal([]byte(expected), &expectedData)
-	if err != nil {
-		t.Fatalf(`failed to read actual json: "%s", error: %s`, string(actual), err.Error())
-		return
-	}
+		expectedData := []interface{}{}
+		err = json.Unmarshal([]byte(expected), &expectedData)
+		if err != nil {
+			t.Fatalf(`failed to read actual json: "%s", error: %s`, string(actual), err.Error())
+			return
+		}
 
-	if !reflect.DeepEqual(actualData, expectedData) {
-		t.Errorf("\nexpected: %s\nactual: %s", expectedData, actualData)
+		if !reflect.DeepEqual(actualData, expectedData) {
+			t.Errorf("\nexpected: %s\nactual: %s", expectedData, actualData)
+		}
+	} else {
+		actualData := map[string]interface{}{}
+		err := json.Unmarshal(actual, &actualData)
+		if err != nil {
+			t.Fatalf(`failed to read actual json: "%s", error: %s`, string(actual), err.Error())
+			return
+		}
+
+		expectedData := map[string]interface{}{}
+		err = json.Unmarshal([]byte(expected), &expectedData)
+		if err != nil {
+			t.Fatalf(`failed to read actual json: "%s", error: %s`, string(actual), err.Error())
+			return
+		}
+
+		if !reflect.DeepEqual(actualData, expectedData) {
+			t.Errorf("\nexpected: %s\nactual: %s", expectedData, actualData)
+		}
 	}
 }
 
