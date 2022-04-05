@@ -2,6 +2,7 @@ plugins {
     id("java")
     id("org.springframework.boot") version "2.6.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("io.specgen.gradle")
 }
 
 group = "io.specgen"
@@ -25,4 +26,14 @@ dependencies {
 
 java {
     sourceCompatibility = JavaVersion.toVersion("11")
+}
+
+specgen {
+    serviceJava {
+        jsonlib.set("moshi")
+        packageName.set("test_service")
+        specFile.set(file("../spec.yaml"))
+        servicesPath.set(file("src/main/java"))
+        swaggerPath.set(file("src/main/resources/static/docs/swagger.yaml"))
+    }
 }
