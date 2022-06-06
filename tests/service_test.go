@@ -248,7 +248,16 @@ func Test_EchoQuery_Missing_Required_Param(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponse(t, req, 400, "", "")
+	//	dataJson := `
+	//{
+	//	"message":"Can't parse query",
+	//	"params":[
+	//		{"name":"string_query","message":"missing"}
+	//	]
+	//}
+	//`
+	//	assertResponse(t, req, 400, dataJson, "application/json")
+	assertResponse(t, req, 400, ``, ``)
 }
 
 func Test_EchoQuery_Missing_Optional_Param(t *testing.T) {
@@ -303,16 +312,6 @@ func Test_EchoQuery_Missing_Defaulted_Param(t *testing.T) {
 
 func Test_EchoQuery_Missing(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
-
-	assertResponse(t, req, 400, "", "")
-}
-
-func Test_EchoQuery_Bad_Request(t *testing.T) {
-	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
-	q := req.URL.Query()
-	q.Add("int_query", "the value")
-	q.Add("string_query", "the value")
-	req.URL.RawQuery = q.Encode()
 
 	assertResponse(t, req, 400, "", "")
 }

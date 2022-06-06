@@ -1,4 +1,4 @@
-import * as service from '../spec/v2/echo_service'
+import * as service from '../spec/v2/echo'
 import * as models from '../spec/v2/models'
 
 export let echoService = (): service.EchoService => {
