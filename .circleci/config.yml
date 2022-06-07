@@ -31,6 +31,7 @@ jobs:
   scala-play:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:8-jdk
@@ -71,6 +72,7 @@ jobs:
   java-jackson-spring:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:11-jdk
@@ -110,6 +112,7 @@ jobs:
   java-moshi-spring:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:11-jdk
@@ -150,6 +153,7 @@ jobs:
   java-micronaut:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:11-jdk
@@ -189,6 +193,7 @@ jobs:
   kotlin-moshi-micronaut:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:11-jdk
@@ -229,6 +234,7 @@ jobs:
   kotlin-jackson-micronaut:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:11-jdk

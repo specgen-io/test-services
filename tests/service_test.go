@@ -5,12 +5,19 @@ import (
 	"gotest.tools/assert"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
 )
 
 var serviceUrl = "http://localhost:8081"
+
+const ERRORS = "TEST_ERRORS"
+
+func check(name string) bool {
+	return os.Getenv(name) != "false"
+}
 
 func contains(what string, where []string) bool {
 	for _, item := range where {
@@ -248,16 +255,19 @@ func Test_EchoQuery_Missing_Required_Param(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	//	dataJson := `
-	//{
-	//	"message":"Can't parse query",
-	//	"params":[
-	//		{"name":"string_query","message":"missing"}
-	//	]
-	//}
-	//`
-	//	assertResponse(t, req, 400, dataJson, "application/json")
-	assertResponse(t, req, 400, ``, ``)
+	if check(ERRORS) {
+		dataJson := `
+{
+	"message":"Can't parse query",
+	"params":[
+		{"name":"string_query","message":"missing"}
+	]
+}
+`
+		assertResponse(t, req, 400, dataJson, "application/json")
+	} else {
+		assertResponse(t, req, 400, ``, ``)
+	}
 }
 
 func Test_EchoQuery_Missing_Optional_Param(t *testing.T) {
@@ -455,10 +465,14 @@ func Test_EchoUrlParams(t *testing.T) {
 	assertResponse(t, req, 200, dataJson, "application/json")
 }
 
-func Test_EchoUrlParams_Bad_Request(t *testing.T) {
+func Test_EchoUrlParams_Unparsable(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/url_params/value/12345/1.23/12.345/12345/true/the value/123e4567-e89b-12d3-a456-426655440000/2020-01-01/2019-11-30T17:45:55/SECOND_CHOICE`, nil)
 
-	assertResponse(t, req, 400, "", "")
+	if check(ERRORS) {
+		assertResponse(t, req, 404, "", "")
+	} else {
+		assertResponse(t, req, 400, "", "")
+	}
 }
 
 func Test_EchoEverything(t *testing.T) {
