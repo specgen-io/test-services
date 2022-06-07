@@ -1,16 +1,21 @@
 package main
 
 import (
-	"encoding/json"
 	"gotest.tools/assert"
 	"io/ioutil"
 	"net/http"
-	"reflect"
+	"os"
 	"strings"
 	"testing"
 )
 
 var serviceUrl = "http://localhost:8081"
+
+const ERRORS = "TEST_ERRORS"
+
+func check(name string) bool {
+	return os.Getenv(name) != "false"
+}
 
 func contains(what string, where []string) bool {
 	for _, item := range where {
@@ -21,43 +26,29 @@ func contains(what string, where []string) bool {
 	return false
 }
 
-func assertEqualJson(t *testing.T, actual []byte, expected string) {
-	if strings.HasPrefix(strings.TrimSpace(expected), "[") {
-		actualData := []interface{}{}
-		err := json.Unmarshal(actual, &actualData)
-		if err != nil {
-			t.Fatalf(`failed to read actual json: "%s", error: %s`, string(actual), err.Error())
-			return
-		}
+func assertJsonResponse(t *testing.T, req *http.Request, expectedStatusCode int, expectedPaths map[string]interface{}) {
+	resp, err := http.DefaultClient.Do(req)
+	assert.NilError(t, err)
 
-		expectedData := []interface{}{}
-		err = json.Unmarshal([]byte(expected), &expectedData)
-		if err != nil {
-			t.Fatalf(`failed to read actual json: "%s", error: %s`, string(actual), err.Error())
-			return
-		}
+	assert.Equal(t, resp.StatusCode, expectedStatusCode)
 
-		if !reflect.DeepEqual(actualData, expectedData) {
-			t.Errorf("\nexpected: %s\nactual: %s", expectedData, actualData)
-		}
-	} else {
-		actualData := map[string]interface{}{}
-		err := json.Unmarshal(actual, &actualData)
-		if err != nil {
-			t.Fatalf(`failed to read actual json: "%s", error: %s`, string(actual), err.Error())
-			return
-		}
+	actualContentTypeValue := resp.Header.Get("Content-Type")
+	actualContentType := []string{}
+	for _, part := range strings.Split(actualContentTypeValue, ";") {
+		actualContentType = append(actualContentType, strings.ToLower(strings.TrimSpace(part)))
+	}
 
-		expectedData := map[string]interface{}{}
-		err = json.Unmarshal([]byte(expected), &expectedData)
-		if err != nil {
-			t.Fatalf(`failed to read actual json: "%s", error: %s`, string(actual), err.Error())
-			return
-		}
+	if !contains("application/json", actualContentType) {
+		t.Errorf(`Content-Type should contain application/json, but received %s'`, actualContentTypeValue)
+	}
 
-		if !reflect.DeepEqual(actualData, expectedData) {
-			t.Errorf("\nexpected: %s\nactual: %s", expectedData, actualData)
-		}
+	if expectedPaths != nil {
+		actualBody, err := ioutil.ReadAll(resp.Body)
+		assert.NilError(t, err)
+		err = resp.Body.Close()
+		assert.NilError(t, err)
+
+		assertJsonPaths(t, expectedPaths, actualBody)
 	}
 }
 
@@ -179,7 +170,16 @@ func Test_EchoBodyModel_Bad_Json(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, strings.NewReader(dataJson))
 	req.Header.Add("Content-Type", "application/json")
 
-	assertResponse(t, req, 400, "", "")
+	if check(ERRORS) {
+		assertJsonResponse(t, req, 400, map[string]interface{}{
+			"$.message":  "Failed to parse body JSON",
+			"$.location": "body",
+			//"$.errors[0].path": "int_field",
+			//"$.errors[0].code": "parsing_failed",
+		})
+	} else {
+		assertResponse(t, req, 400, "", "")
+	}
 }
 
 func Test_EchoQuery(t *testing.T) {
@@ -248,7 +248,16 @@ func Test_EchoQuery_Missing_Required_Param(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponse(t, req, 400, "", "")
+	if check(ERRORS) {
+		assertJsonResponse(t, req, 400, map[string]interface{}{
+			"$.message":        "Failed to parse query parameters",
+			"$.location":       "query",
+			"$.errors[0].path": "string_query",
+			"$.errors[0].code": "missing",
+		})
+	} else {
+		assertResponse(t, req, 400, ``, ``)
+	}
 }
 
 func Test_EchoQuery_Missing_Optional_Param(t *testing.T) {
@@ -301,17 +310,32 @@ func Test_EchoQuery_Missing_Defaulted_Param(t *testing.T) {
 	assertResponse(t, req, 200, "", "")
 }
 
-func Test_EchoQuery_Missing(t *testing.T) {
+func Test_EchoQuery_MissingParams(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
 
 	assertResponse(t, req, 400, "", "")
 }
 
-func Test_EchoQuery_Bad_Request(t *testing.T) {
+func Test_EchoQuery_WrongFormat(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/query`, nil)
 	q := req.URL.Query()
-	q.Add("int_query", "the value")
+	q.Add("int_query", "abc")
+	q.Add("long_query", "12345")
+	q.Add("float_query", "1.23")
+	q.Add("double_query", "12.345")
+	q.Add("decimal_query", "12345")
+	q.Add("bool_query", "true")
 	q.Add("string_query", "the value")
+	q.Add("string_opt_query", "the value")
+	q.Add("string_defaulted_query", "value")
+	q.Add("string_array_query", "the str1")
+	q.Add("string_array_query", "the str2")
+	q.Add("uuid_query", "123e4567-e89b-12d3-a456-426655440000")
+	q.Add("date_query", "2020-01-01")
+	q.Add("date_array_query", "2020-01-01")
+	q.Add("date_array_query", "2020-01-02")
+	q.Add("datetime_query", "2019-11-30T17:45:55")
+	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
 	assertResponse(t, req, 400, "", "")
@@ -456,10 +480,16 @@ func Test_EchoUrlParams(t *testing.T) {
 	assertResponse(t, req, 200, dataJson, "application/json")
 }
 
-func Test_EchoUrlParams_Bad_Request(t *testing.T) {
+func Test_EchoUrlParams_Unparsable(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/url_params/value/12345/1.23/12.345/12345/true/the value/123e4567-e89b-12d3-a456-426655440000/2020-01-01/2019-11-30T17:45:55/SECOND_CHOICE`, nil)
 
-	assertResponse(t, req, 400, "", "")
+	if check(ERRORS) {
+		assertJsonResponse(t, req, 404, map[string]interface{}{
+			"$.message": "Failed to parse url parameters",
+		})
+	} else {
+		assertResponse(t, req, 400, "", "")
+	}
 }
 
 func Test_EchoEverything(t *testing.T) {

@@ -1,4 +1,4 @@
-import * as service from './spec/check_service'
+import * as service from './spec/check'
 import * as models from './spec/models'
 
 export let checkService = (): service.CheckService => {
