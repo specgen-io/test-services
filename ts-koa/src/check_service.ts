@@ -1,4 +1,4 @@
-import * as service from './spec/check_service'
+import * as service from './spec/check'
 
 export let checkService = (): service.CheckService => {
     let checkEmpty = async (): Promise<void> => {}
