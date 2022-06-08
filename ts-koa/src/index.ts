@@ -18,7 +18,8 @@ let docsRouter = new Router()
 docsRouter.get('/docs', koaSwagger({swaggerOptions: {spec: yamljs.load("./docs/swagger.yaml")}}));
 app.use(docsRouter.routes());
 
-let router = specRouter(echoServiceV2(), echoService(), checkService())
+const services = {echoService: echoService(), checkService: checkService(), echoServiceV2: echoServiceV2()}
+let router = specRouter(services)
 app.use(router.routes()).use(router.allowedMethods())
 
 const port = 8081;

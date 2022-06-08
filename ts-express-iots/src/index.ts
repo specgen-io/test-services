@@ -19,7 +19,8 @@ app.use(express.text())
 app.use("/docs/swagger.yaml", express.static("docs/swagger.yaml"))
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(yamljs.load("./docs/swagger.yaml")))
 
-let router = specRouter(echoServiceV2(), echoService(), checkService())
+const services = {echoService: echoService(), checkService: checkService(), echoServiceV2: echoServiceV2()}
+let router = specRouter(services)
 app.use("/", router)
 
 app.listen(port, () => {
