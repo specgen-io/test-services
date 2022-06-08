@@ -343,6 +343,51 @@ jobs:
       - go-tests:
           command: ./tests/service-tests -test.v
 
+  ts-express-iots:
+    working_directory: ~/specgen-tests
+    docker:
+      - image: cimg/node:16.8.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Create temp folder for tests results
+          command: mkdir -p /tmp/test-results
+      - artifactory/setup-npm:
+          jfrog-server-url: specgen.jfrog.io
+          repo-name: npm
+          scope: specgen.io
+      - run:
+          name: Setup npm
+          command: |
+            cd ./ts-express-iots
+            npm install @specgen.io/specgen.io@<<pipeline.parameters.specgen-version>> --save-dev
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "./ts-express-iots/package.json" }}
+      - run:
+          name: Build service
+          command: |
+            cd ./ts-express-iots
+            npm install
+            npm run specgen
+            npm run build
+      - run:
+          name: Run service
+          command: |
+            cd ./ts-express-iots
+            npm run start
+          background: true
+      - save_cache:
+          key: cache-{{ checksum "./ts-express-iots/package.json" }}
+          paths:
+            - ~/specgen-tests/ts-express-iots/node_modules
+      - wait-url:
+          url: http://localhost:8081/docs/
+      - go-tests:
+          command: ./tests/service-tests -test.v
+
   ts-koa:
     working_directory: ~/specgen-tests
     docker:
@@ -468,6 +513,10 @@ workflows:
           requires:
             - tests
       - ts-express:
+          context: specgen
+          requires:
+            - tests
+      - ts-express-iots:
           context: specgen
           requires:
             - tests
