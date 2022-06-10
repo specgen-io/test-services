@@ -298,7 +298,7 @@ jobs:
       - go-tests:
           command: ./tests/service-tests -test.v
 
-  ts-express:
+  ts-express-superstruct:
     working_directory: ~/specgen-tests
     docker:
       - image: cimg/node:16.8.0
@@ -316,28 +316,28 @@ jobs:
       - run:
           name: Setup npm
           command: |
-            cd ./ts-express
+            cd ./ts-express-superstruct
             npm install @specgen.io/specgen.io@<<pipeline.parameters.specgen-version>> --save-dev
       - restore_cache:
           keys:
-            - cache-{{ checksum "./ts-express/package.json" }}
+            - cache-{{ checksum "./ts-express-superstruct/package.json" }}
       - run:
           name: Build service
           command: |
-            cd ./ts-express
+            cd ./ts-express-superstruct
             npm install
             npm run specgen
             npm run build
       - run:
           name: Run service
           command: |
-            cd ./ts-express
+            cd ./ts-express-superstruct
             npm run start
           background: true
       - save_cache:
-          key: cache-{{ checksum "./ts-express/package.json" }}
+          key: cache-{{ checksum "./ts-express-superstruct/package.json" }}
           paths:
-            - ~/specgen-tests/ts-express/node_modules
+            - ~/specgen-tests/ts-express-superstruct/node_modules
       - wait-url:
           url: http://localhost:8081/docs/
       - go-tests:
@@ -388,7 +388,7 @@ jobs:
       - go-tests:
           command: ./tests/service-tests -test.v
 
-  ts-koa:
+  ts-koa-superstruct:
     working_directory: ~/specgen-tests
     docker:
       - image: cimg/node:16.8.0
@@ -406,28 +406,28 @@ jobs:
       - run:
           name: Setup npm
           command: |
-            cd ./ts-koa
+            cd ./ts-koa-superstruct
             npm install @specgen.io/specgen.io@<<pipeline.parameters.specgen-version>> --save-dev
       - restore_cache:
           keys:
-            - cache-{{ checksum "./ts-koa/package.json" }}
+            - cache-{{ checksum "./ts-koa-superstruct/package.json" }}
       - run:
           name: Build service
           command: |
-            cd ./ts-koa
+            cd ./ts-koa-superstruct
             npm install
             npm run specgen
             npm run build
       - run:
           name: Run service
           command: |
-            cd ./ts-koa
+            cd ./ts-koa-superstruct
             npm run start
           background: true
       - save_cache:
-          key: cache-{{ checksum "./ts-koa/package.json" }}
+          key: cache-{{ checksum "./ts-koa-superstruct/package.json" }}
           paths:
-            - ~/specgen-tests/ts-koa/node_modules
+            - ~/specgen-tests/ts-koa-superstruct/node_modules
       - wait-url:
           url: http://localhost:8081/docs/
       - go-tests:
@@ -512,7 +512,7 @@ workflows:
           context: specgen
           requires:
             - tests
-      - ts-express:
+      - ts-express-superstruct:
           context: specgen
           requires:
             - tests
@@ -520,7 +520,7 @@ workflows:
           context: specgen
           requires:
             - tests
-      - ts-koa:
+      - ts-koa-superstruct:
           context: specgen
           requires:
             - tests

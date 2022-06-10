@@ -1,10 +1,10 @@
 {
-  "name": "test-service-express",
+  "name": "test-service-koa-superstruct",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "specgen": "specgen service-ts --server express --validation superstruct --spec-file ./../spec.yaml --generate-path ./src/spec --swagger-path ./docs/swagger.yaml --services-path ./src",
+    "specgen": "specgen service-ts --server koa  --validation superstruct --spec-file ./../spec.yaml --generate-path ./src/spec --swagger-path ./docs/swagger.yaml --services-path ./src",
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node .",
@@ -22,18 +22,19 @@
   },
   "homepage": "https://github.com/specgen-io/test-service-express#readme",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "@koa/router": "^10.0.0",
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa2-swagger-ui": "^5.2.0",
     "superstruct": "^0.15.2",
-    "swagger-ui-express": "^4.1.6",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@specgen.io/specgen.io": "^2.0.571",
-    "@types/cors": "^2.8.10",
-    "@types/express": "^4.17.12",
+    "@types/koa": "^2.13.1",
+    "@types/koa__router": "^8.0.4",
+    "@types/koa-bodyparser": "^4.3.0",
     "@types/node": "^15.12.2",
-    "@types/swagger-ui-express": "^4.1.3",
     "@types/yamljs": "^0.2.31",
     "typescript": "^4.3.2"
   }
