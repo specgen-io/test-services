@@ -17,7 +17,7 @@ class EchoServiceImpl : EchoService {
         return body
     }
 
-    override fun echoBodyArray(body: Array<String>): Array<String> {
+    override fun echoBodyArray(body: List<String>): List<String> {
         return body
     }
 
@@ -35,10 +35,10 @@ class EchoServiceImpl : EchoService {
         stringQuery: String,
         stringOptQuery: String?,
         stringDefaultedQuery: String,
-        stringArrayQuery: Array<String>,
+        stringArrayQuery: List<String>,
         uuidQuery: UUID,
         dateQuery: LocalDate,
-        dateArrayQuery: Array<LocalDate>,
+        dateArrayQuery: List<LocalDate>,
         datetimeQuery: LocalDateTime,
         enumQuery: Choice
     ): Parameters {
@@ -71,10 +71,10 @@ class EchoServiceImpl : EchoService {
         stringHeader: String,
         stringOptHeader: String?,
         stringDefaultedHeader: String,
-        stringArrayHeader: Array<String>,
+        stringArrayHeader: List<String>,
         uuidHeader: UUID,
         dateHeader: LocalDate,
-        dateArrayHeader: Array<LocalDate>,
+        dateArrayHeader: List<LocalDate>,
         datetimeHeader: LocalDateTime,
         enumHeader: Choice
     ): Parameters {
