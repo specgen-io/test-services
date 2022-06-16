@@ -172,10 +172,10 @@ func Test_EchoBodyModel_Bad_Json(t *testing.T) {
 
 	if check(ERRORS) {
 		assertJsonResponse(t, req, 400, map[string]interface{}{
-			"$.message":  "Failed to parse body JSON",
-			"$.location": "body",
-			//"$.errors[0].path": "int_field",
-			//"$.errors[0].code": "parsing_failed",
+			"$.message":        "Failed to parse body",
+			"$.location":       "body",
+			"$.errors[0].path": "$.int_field",
+			"$.errors[0].code": "parsing_failed",
 		})
 	} else {
 		assertResponse(t, req, 400, "", "")
@@ -250,7 +250,7 @@ func Test_EchoQuery_Missing_Required_Param(t *testing.T) {
 
 	if check(ERRORS) {
 		assertJsonResponse(t, req, 400, map[string]interface{}{
-			"$.message":        "Failed to parse query parameters",
+			"$.message":        "Failed to parse query",
 			"$.location":       "query",
 			"$.errors[0].path": "string_query",
 			"$.errors[0].code": "missing",
