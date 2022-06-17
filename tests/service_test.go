@@ -174,7 +174,7 @@ func Test_EchoBodyModel_Bad_Json(t *testing.T) {
 		assertJsonResponse(t, req, 400, map[string]interface{}{
 			"$.message":        "Failed to parse body",
 			"$.location":       "body",
-			"$.errors[0].path": "$.int_field",
+			"$.errors[0].path": "int_field",
 			"$.errors[0].code": "parsing_failed",
 		})
 	} else {
