@@ -6,7 +6,7 @@ orbs:
 parameters:
   specgen-version:
     type: string
-    default: 2.1.1750
+    default: 2.1.1754
   specgen-version-major:
     type: string
     default: v2
@@ -188,7 +188,46 @@ jobs:
           url: http://localhost:8081/swagger-ui/
       - go-tests:
           command: ./tests/service-tests -test.v  
-          
+
+  java-micronaut-moshi:
+    environment:
+      SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+    working_directory: ~/specgen-tests
+    docker:
+      - image: circleci/openjdk:11-jdk
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys:
+            - cache-{{ checksum "./java-micronaut-moshi/pom.xml" }}
+      - run:
+          name: Create temp folder for tests results
+          command: mkdir -p /tmp/test-results
+      - artifactory/setup-maven:
+          jfrog-server-url: specgen.jfrog.io
+          repo-name: maven
+      - run:
+          name: Build service
+          command: |
+            cd ./java-micronaut-moshi
+            mvn clean compile -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+      - run:
+          name: Run service
+          command: |
+            cd ./java-micronaut-moshi
+            ./mvnw mn:run -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+          background: true
+      - save_cache:
+          key: cache-{{ checksum "./java-micronaut-moshi/pom.xml" }}
+          paths:
+            - ~/.m2
+      - wait-url:
+          url: http://localhost:8081/swagger-ui/
+      - go-tests:
+          command: ./tests/service-tests -test.v  
+
   kotlin-moshi-micronaut:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
@@ -494,19 +533,23 @@ workflows:
       - java-moshi-spring:
           context: specgen
           requires:
-            - tests      
+            - tests
       - java-micronaut:
           context: specgen
           requires:
-            - tests  
+            - tests
+      - java-micronaut-moshi:
+          context: specgen
+          requires:
+            - tests
       - kotlin-moshi-micronaut:
           context: specgen
           requires:
-            - tests    
+            - tests
       - kotlin-jackson-micronaut:
           context: specgen
           requires:
-            - tests            
+            - tests
       - go:
           context: specgen
           requires:
