@@ -6,7 +6,7 @@ orbs:
 parameters:
   specgen-version:
     type: string
-    default: 2.1.1754
+    default: 2.1.1758
   specgen-version-major:
     type: string
     default: v2
@@ -150,7 +150,7 @@ jobs:
       - go-tests:
           command: ./tests/service-tests -test.v         
 
-  java-micronaut:
+  java-micronaut-jackson:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
     working_directory: ~/specgen-tests
@@ -162,7 +162,7 @@ jobs:
           at: .
       - restore_cache:
           keys:
-            - cache-{{ checksum "./java-micronaut/pom.xml" }}
+            - cache-{{ checksum "./java-micronaut-jackson/pom.xml" }}
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
@@ -172,16 +172,16 @@ jobs:
       - run:
           name: Build service
           command: |
-            cd ./java-micronaut
+            cd ./java-micronaut-jackson
             mvn clean compile -Dspecgen.version=<<pipeline.parameters.specgen-version>>
       - run:
           name: Run service
           command: |
-            cd ./java-micronaut
+            cd ./java-micronaut-jackson
             ./mvnw mn:run -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
       - save_cache:
-          key: cache-{{ checksum "./java-micronaut/pom.xml" }}
+          key: cache-{{ checksum "./java-micronaut-jackson/pom.xml" }}
           paths:
             - ~/.m2
       - wait-url:
@@ -534,7 +534,7 @@ workflows:
           context: specgen
           requires:
             - tests
-      - java-micronaut:
+      - java-micronaut-jackson:
           context: specgen
           requires:
             - tests
