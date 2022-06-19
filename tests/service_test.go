@@ -26,7 +26,7 @@ func contains(what string, where []string) bool {
 	return false
 }
 
-func assertJsonResponse(t *testing.T, req *http.Request, expectedStatusCode int, expectedPaths map[string]interface{}) {
+func assertJsonResponse(t *testing.T, req *http.Request, expectedStatusCode int, expectedBody string, expectedBodyPaths map[string]interface{}) {
 	resp, err := http.DefaultClient.Do(req)
 	assert.NilError(t, err)
 
@@ -42,13 +42,45 @@ func assertJsonResponse(t *testing.T, req *http.Request, expectedStatusCode int,
 		t.Errorf(`Content-Type should contain application/json, but received %s'`, actualContentTypeValue)
 	}
 
-	if expectedPaths != nil {
+	if expectedBody != "" || expectedBodyPaths != nil {
 		actualBody, err := ioutil.ReadAll(resp.Body)
 		assert.NilError(t, err)
 		err = resp.Body.Close()
 		assert.NilError(t, err)
 
-		assertJsonPaths(t, expectedPaths, actualBody)
+		if expectedBody != "" {
+			assertEqualJson(t, actualBody, expectedBody)
+		}
+
+		if expectedBodyPaths != nil {
+			assertJsonPaths(t, expectedBodyPaths, actualBody)
+		}
+	}
+}
+
+func assertTextResponse(t *testing.T, req *http.Request, expectedStatusCode int, expectedBody string) {
+	resp, err := http.DefaultClient.Do(req)
+	assert.NilError(t, err)
+
+	assert.Equal(t, resp.StatusCode, expectedStatusCode)
+
+	actualContentTypeValue := resp.Header.Get("Content-Type")
+	actualContentType := []string{}
+	for _, part := range strings.Split(actualContentTypeValue, ";") {
+		actualContentType = append(actualContentType, strings.ToLower(strings.TrimSpace(part)))
+	}
+
+	if !contains("text/plain", actualContentType) {
+		t.Errorf(`Content-Type should contain text/plain, but received %s'`, actualContentTypeValue)
+	}
+
+	if expectedBody != "" {
+		actualBody, err := ioutil.ReadAll(resp.Body)
+		assert.NilError(t, err)
+		err = resp.Body.Close()
+		assert.NilError(t, err)
+
+		assert.Equal(t, strings.TrimSuffix(string(actualBody), "\n"), expectedBody)
 	}
 }
 
@@ -85,21 +117,21 @@ func assertResponse(t *testing.T, req *http.Request, expectedStatusCode int, exp
 }
 
 func Test_EchoBodyString(t *testing.T) {
-	dataText := "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu"
+	dataText := "Some text here"
 
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(dataText))
 	req.Header.Add("Content-Type", "text/plain")
 
-	assertResponse(t, req, 200, dataText, "text/plain")
+	assertTextResponse(t, req, 200, dataText)
 }
 
 func Test_EchoBodyString_Request_ContentType_Charset(t *testing.T) {
-	dataText := "TWFueSBoYW5kcyBtYWtlIGxpZ2h0IHdvcmsu"
+	dataText := "Some text here"
 
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(dataText))
 	req.Header.Add("Content-Type", "text/plain;charset=utf-8")
 
-	assertResponse(t, req, 200, dataText, "text/plain")
+	assertTextResponse(t, req, 200, dataText)
 }
 
 func Test_EchoBodyString_Request_ContentType_Empty(t *testing.T) {
@@ -121,7 +153,7 @@ func Test_EchoBodyModel(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, strings.NewReader(dataJson))
 	req.Header.Add("Content-Type", "application/json")
 
-	assertResponse(t, req, 200, dataJson, "application/json")
+	assertJsonResponse(t, req, 200, dataJson, nil)
 }
 
 func Test_EchoBodyArray(t *testing.T) {
@@ -130,7 +162,7 @@ func Test_EchoBodyArray(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_array`, strings.NewReader(dataJson))
 	req.Header.Add("Content-Type", "application/json")
 
-	assertResponse(t, req, 200, dataJson, "application/json")
+	assertJsonResponse(t, req, 200, dataJson, nil)
 }
 
 func Test_EchoBodyMap(t *testing.T) {
@@ -139,7 +171,7 @@ func Test_EchoBodyMap(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_map`, strings.NewReader(dataJson))
 	req.Header.Add("Content-Type", "application/json")
 
-	assertResponse(t, req, 200, dataJson, "application/json")
+	assertJsonResponse(t, req, 200, dataJson, nil)
 }
 
 func Test_EchoBodyModel_Request_ContentType_Charset(t *testing.T) {
@@ -148,7 +180,7 @@ func Test_EchoBodyModel_Request_ContentType_Charset(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, strings.NewReader(dataJson))
 	req.Header.Add("Content-Type", "application/json;charset=utf-8")
 
-	assertResponse(t, req, 200, dataJson, "application/json")
+	assertJsonResponse(t, req, 200, dataJson, nil)
 }
 
 func Test_EchoBodyModel_Request_ContentType_Empty(t *testing.T) {
@@ -171,7 +203,7 @@ func Test_EchoBodyModel_Bad_Json(t *testing.T) {
 	req.Header.Add("Content-Type", "application/json")
 
 	if check(ERRORS) {
-		assertJsonResponse(t, req, 400, map[string]interface{}{
+		assertJsonResponse(t, req, 400, "", map[string]interface{}{
 			"$.message":        "Failed to parse body",
 			"$.location":       "body",
 			"$.errors[0].path": "int_field",
@@ -223,7 +255,7 @@ func Test_EchoQuery(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponse(t, req, 200, dataJson, "application/json")
+	assertJsonResponse(t, req, 200, dataJson, nil)
 }
 
 func Test_EchoQuery_Missing_Required_Param(t *testing.T) {
@@ -249,7 +281,7 @@ func Test_EchoQuery_Missing_Required_Param(t *testing.T) {
 	req.URL.RawQuery = q.Encode()
 
 	if check(ERRORS) {
-		assertJsonResponse(t, req, 400, map[string]interface{}{
+		assertJsonResponse(t, req, 400, "", map[string]interface{}{
 			"$.message":        "Failed to parse query",
 			"$.location":       "query",
 			"$.errors[0].path": "string_query",
@@ -381,7 +413,7 @@ func Test_EchoHeader(t *testing.T) {
 	h.Add("Datetime-Header", "2019-11-30T17:45:55")
 	h.Add("Enum-Header", "SECOND_CHOICE")
 
-	assertResponse(t, req, 200, dataJson, "application/json")
+	assertJsonResponse(t, req, 200, dataJson, nil)
 }
 
 func Test_EchoHeader_Missing_Defaulted_Param(t *testing.T) {
@@ -424,7 +456,7 @@ func Test_EchoHeader_Missing_Defaulted_Param(t *testing.T) {
 	h.Add("Datetime-Header", "2019-11-30T17:45:55")
 	h.Add("Enum-Header", "SECOND_CHOICE")
 
-	assertResponse(t, req, 200, dataJson, "application/json")
+	assertJsonResponse(t, req, 200, dataJson, nil)
 }
 
 func Test_EchoHeader_Missing_Optional_Param(t *testing.T) {
@@ -477,14 +509,14 @@ func Test_EchoUrlParams(t *testing.T) {
 
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/url_params/123/12345/1.23/12.345/12345/true/the value/123e4567-e89b-12d3-a456-426655440000/2020-01-01/2019-11-30T17:45:55/SECOND_CHOICE`, nil)
 
-	assertResponse(t, req, 200, dataJson, "application/json")
+	assertJsonResponse(t, req, 200, dataJson, nil)
 }
 
 func Test_EchoUrlParams_Unparsable(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/url_params/value/12345/1.23/12.345/12345/true/the value/123e4567-e89b-12d3-a456-426655440000/2020-01-01/2019-11-30T17:45:55/SECOND_CHOICE`, nil)
 
 	if check(ERRORS) {
-		assertJsonResponse(t, req, 404, map[string]interface{}{
+		assertJsonResponse(t, req, 404, "", map[string]interface{}{
 			"$.message": "Failed to parse url parameters",
 		})
 	} else {
@@ -513,7 +545,7 @@ func Test_EchoEverything(t *testing.T) {
 	q.Add("bool_query", "true")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponse(t, req, 200, dataJson, "application/json")
+	assertJsonResponse(t, req, 200, dataJson, nil)
 }
 
 func Test_EchoEverything_Bad_Request(t *testing.T) {
@@ -556,5 +588,5 @@ func Test_V2_EchoBodyModel(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/v2/echo/body_model`, strings.NewReader(dataJson))
 	req.Header.Add("Content-Type", "application/json")
 
-	assertResponse(t, req, 200, dataJson, "application/json")
+	assertJsonResponse(t, req, 200, dataJson, nil)
 }
