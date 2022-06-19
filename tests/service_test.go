@@ -26,54 +26,30 @@ func contains(what string, where []string) bool {
 	return false
 }
 
-func assertJsonResponse(t *testing.T, req *http.Request, expectedStatusCode int, expectedBody string, expectedBodyPaths map[string]interface{}) {
+func assertResponseStatus(t *testing.T, req *http.Request, expectedStatusCode int) {
 	resp, err := http.DefaultClient.Do(req)
 	assert.NilError(t, err)
 
 	assert.Equal(t, resp.StatusCode, expectedStatusCode)
+}
 
+func assertContentType(t *testing.T, resp *http.Response, expectedContentType string) {
 	actualContentTypeValue := resp.Header.Get("Content-Type")
 	actualContentType := []string{}
 	for _, part := range strings.Split(actualContentTypeValue, ";") {
 		actualContentType = append(actualContentType, strings.ToLower(strings.TrimSpace(part)))
 	}
 
-	if !contains("application/json", actualContentType) {
-		t.Errorf(`Content-Type should contain application/json, but received %s'`, actualContentTypeValue)
-	}
-
-	if expectedBody != "" || expectedBodyPaths != nil {
-		actualBody, err := ioutil.ReadAll(resp.Body)
-		assert.NilError(t, err)
-		err = resp.Body.Close()
-		assert.NilError(t, err)
-
-		if expectedBody != "" {
-			assertEqualJson(t, actualBody, expectedBody)
-		}
-
-		if expectedBodyPaths != nil {
-			assertJsonPaths(t, expectedBodyPaths, actualBody)
-		}
+	if !contains(expectedContentType, actualContentType) {
+		t.Errorf(`Content-Type should contain %s, but received %s'`, expectedContentType, actualContentTypeValue)
 	}
 }
 
 func assertTextResponse(t *testing.T, req *http.Request, expectedStatusCode int, expectedBody string) {
 	resp, err := http.DefaultClient.Do(req)
 	assert.NilError(t, err)
-
 	assert.Equal(t, resp.StatusCode, expectedStatusCode)
-
-	actualContentTypeValue := resp.Header.Get("Content-Type")
-	actualContentType := []string{}
-	for _, part := range strings.Split(actualContentTypeValue, ";") {
-		actualContentType = append(actualContentType, strings.ToLower(strings.TrimSpace(part)))
-	}
-
-	if !contains("text/plain", actualContentType) {
-		t.Errorf(`Content-Type should contain text/plain, but received %s'`, actualContentTypeValue)
-	}
-
+	assertContentType(t, resp, "text/plain")
 	if expectedBody != "" {
 		actualBody, err := ioutil.ReadAll(resp.Body)
 		assert.NilError(t, err)
@@ -81,6 +57,25 @@ func assertTextResponse(t *testing.T, req *http.Request, expectedStatusCode int,
 		assert.NilError(t, err)
 
 		assert.Equal(t, strings.TrimSuffix(string(actualBody), "\n"), expectedBody)
+	}
+}
+
+func assertJsonResponse(t *testing.T, req *http.Request, expectedStatusCode int, expectedBody string, expectedBodyPaths map[string]interface{}) {
+	resp, err := http.DefaultClient.Do(req)
+	assert.NilError(t, err)
+	assert.Equal(t, resp.StatusCode, expectedStatusCode)
+	assertContentType(t, resp, "application/json")
+	if expectedBody != "" || expectedBodyPaths != nil {
+		actualBody, err := ioutil.ReadAll(resp.Body)
+		assert.NilError(t, err)
+		err = resp.Body.Close()
+		assert.NilError(t, err)
+		if expectedBody != "" {
+			assertEqualJson(t, actualBody, expectedBody)
+		}
+		if expectedBodyPaths != nil {
+			assertJsonPaths(t, expectedBodyPaths, actualBody)
+		}
 	}
 }
 
@@ -288,7 +283,7 @@ func Test_EchoQuery_Missing_Required_Param(t *testing.T) {
 			"$.errors[0].code": "missing",
 		})
 	} else {
-		assertResponse(t, req, 400, ``, ``)
+		assertResponse(t, req, 400, "", "")
 	}
 }
 
@@ -314,7 +309,7 @@ func Test_EchoQuery_Missing_Optional_Param(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponse(t, req, 200, "", "")
+	assertJsonResponse(t, req, 200, "", nil)
 }
 
 func Test_EchoQuery_Missing_Defaulted_Param(t *testing.T) {
@@ -339,7 +334,9 @@ func Test_EchoQuery_Missing_Defaulted_Param(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	assertResponse(t, req, 200, "", "")
+	assertJsonResponse(t, req, 200, "", map[string]interface{}{
+		"$.string_defaulted_query": "the default value",
+	})
 }
 
 func Test_EchoQuery_MissingParams(t *testing.T) {
@@ -480,7 +477,7 @@ func Test_EchoHeader_Missing_Optional_Param(t *testing.T) {
 	h.Add("Datetime-Header", "2019-11-30T17:45:55")
 	h.Add("Enum-Header", "SECOND_CHOICE")
 
-	assertResponse(t, req, 200, "", "")
+	assertJsonResponse(t, req, 200, "", nil)
 }
 
 func Test_EchoHeader_Bad_Request(t *testing.T) {
@@ -563,8 +560,7 @@ func Test_EchoEverything_Bad_Request(t *testing.T) {
 
 func Test_CheckEmpty(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/check/empty`, nil)
-
-	assertResponse(t, req, 200, "", "")
+	assertResponseStatus(t, req, 200)
 }
 
 func Test_CheckEmpty_Response(t *testing.T) {
@@ -573,13 +569,12 @@ func Test_CheckEmpty_Response(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/check/empty_response`, strings.NewReader(dataJson))
 	req.Header.Add("Content-Type", "application/json")
 
-	assertResponse(t, req, 200, "", "")
+	assertResponseStatus(t, req, 200)
 }
 
 func Test_CheckForbidden(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/check/forbidden`, nil)
-
-	assertResponse(t, req, 403, "", "")
+	assertResponseStatus(t, req, 403)
 }
 
 func Test_V2_EchoBodyModel(t *testing.T) {
