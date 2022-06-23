@@ -6,7 +6,7 @@ orbs:
 parameters:
   specgen-version:
     type: string
-    default: 2.1.1760
+    default: 2.1.1762
   specgen-version-major:
     type: string
     default: v2
@@ -231,7 +231,6 @@ jobs:
   kotlin-micronaut-moshi:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
-      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:11-jdk
@@ -272,7 +271,6 @@ jobs:
   kotlin-micronaut-jackson:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
-      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:11-jdk
