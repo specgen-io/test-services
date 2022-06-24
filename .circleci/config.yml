@@ -569,3 +569,7 @@ workflows:
           context: specgen
           requires:
             - tests
+      - ts-koa-iots:
+          context: specgen
+          requires:
+            - tests      
