@@ -1,5 +1,5 @@
 {
-  "name": "test-service-koa-superstruct",
+  "name": "ts-koa-superstruct",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",

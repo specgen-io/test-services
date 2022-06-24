@@ -1,5 +1,5 @@
 {
-  "name": "test-service-koa-iots",
+  "name": "ts-koa-iots",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
