@@ -1,10 +1,10 @@
 {
-  "name": "ts-koa-superstruct",
+  "name": "ts-koa-iots",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "specgen": "specgen service-ts --server koa --validation superstruct --spec-file ./../spec.yaml --generate-path ./src/spec --swagger-path ./docs/swagger.yaml --services-path ./src",
+    "specgen": "specgen service-ts --server koa --validation io-ts --spec-file ./../spec.yaml --generate-path ./src/spec --swagger-path ./docs/swagger.yaml --services-path ./src",
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node .",
@@ -15,7 +15,10 @@
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
     "koa2-swagger-ui": "^5.2.0",
-    "superstruct": "^0.15.2",
+    "fp-ts": "^2.9.3",
+    "io-ts": "^2.2.13",
+    "io-ts-types": "^0.5.16",
+    "monocle-ts": "^2.0.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
