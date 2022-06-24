@@ -10,17 +10,6 @@
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/specgen-io/test-service-express.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/specgen-io/test-service-express/issues"
-  },
-  "homepage": "https://github.com/specgen-io/test-service-express#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -33,7 +22,7 @@
     "newtype-ts": "^0.3.2"
   },
   "devDependencies": {
-    "specgen.io": "^2.1.1700",
+    "specgen.io": "^2.1.1742",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.12",
     "@types/node": "^15.12.2",
