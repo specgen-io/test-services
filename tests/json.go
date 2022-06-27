@@ -55,11 +55,11 @@ func assertJsonPaths(t *testing.T, expectedPaths map[string]interface{}, actual 
 	for path, expectedValue := range expectedPaths {
 		actualValue, err := jsonpath.Read(actualData, path)
 		if err != nil {
-			t.Fatalf(`failed to find json path: "%s"`, path)
+			t.Errorf(`failed to find json path: "%s"`, path)
 			return
 		}
 		if !cmp.Equal(expectedValue, actualValue)().Success() {
-			t.Fatalf(`values are different at path: "%s", expected: %s, actual: %s`, path, expectedValue, actualValue)
+			t.Errorf(`values are different at path: "%s", expected: %s, actual: %s`, path, expectedValue, actualValue)
 			return
 		}
 	}

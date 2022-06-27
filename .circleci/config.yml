@@ -6,7 +6,7 @@ orbs:
 parameters:
   specgen-version:
     type: string
-    default: 2.1.1742
+    default: 2.1.1762
   specgen-version-major:
     type: string
     default: v2
@@ -69,7 +69,7 @@ jobs:
       - go-tests:
           command: ./tests/service-tests -test.v
 
-  java-jackson-spring:
+  java-spring-jackson:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
       TEST_ERRORS: false
@@ -82,7 +82,7 @@ jobs:
           at: .
       - restore_cache:
           keys:
-            - cache-{{ checksum "./java-jackson-spring/pom.xml" }}
+            - cache-{{ checksum "./java-spring-jackson/pom.xml" }}
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
@@ -92,16 +92,16 @@ jobs:
       - run:
           name: Build service
           command: |
-            cd ./java-jackson-spring
+            cd ./java-spring-jackson
             mvn clean compile -Dspecgen.version=<<pipeline.parameters.specgen-version>>
       - run:
           name: Run service
           command: |
-            cd ./java-jackson-spring
+            cd ./java-spring-jackson
             ./mvnw spring-boot:run -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
       - save_cache:
-          key: cache-{{ checksum "./java-jackson-spring/pom.xml" }}
+          key: cache-{{ checksum "./java-spring-jackson/pom.xml" }}
           paths:
             - ~/.m2
       - wait-url:
@@ -109,7 +109,7 @@ jobs:
       - go-tests:
           command: ./tests/service-tests -test.v
 
-  java-moshi-spring:
+  java-spring-moshi:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
       TEST_ERRORS: false
@@ -121,14 +121,14 @@ jobs:
       - attach_workspace:
           at: .
       - restore_cache:
-          key: cache-{{ checksum "./java-moshi-spring/build.gradle.kts" }}-{{ checksum "./java-moshi-spring/settings.gradle.kts" }}
+          key: cache-{{ checksum "./java-spring-moshi/build.gradle.kts" }}-{{ checksum "./java-spring-moshi/settings.gradle.kts" }}
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
       - run:
           name: Build service
           command: |
-            cd ./java-moshi-spring
+            cd ./java-spring-moshi
             ./gradlew --build-cache --no-daemon --stacktrace build \
             -Djfrog.user=$JFROG_USER \
             -Djfrog.pass=$JFROG_PASS \
@@ -136,24 +136,23 @@ jobs:
       - run:
           name: Run service
           command: |
-            cd ./java-moshi-spring
+            cd ./java-spring-moshi
             ./gradlew --build-cache --no-daemon --stacktrace bootRun \
             -Djfrog.user=$JFROG_USER \
             -Djfrog.pass=$JFROG_PASS \
             -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
       - save_cache:
-          key: cache-{{ checksum "./java-moshi-spring/build.gradle.kts" }}-{{ checksum "./java-moshi-spring/settings.gradle.kts" }}
+          key: cache-{{ checksum "./java-spring-moshi/build.gradle.kts" }}-{{ checksum "./java-spring-moshi/settings.gradle.kts" }}
           paths: [ ~/.gradle ]  
       - wait-url:
           url: http://localhost:8081/swagger-ui/
       - go-tests:
           command: ./tests/service-tests -test.v         
 
-  java-micronaut:
+  java-micronaut-jackson:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
-      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:11-jdk
@@ -163,7 +162,7 @@ jobs:
           at: .
       - restore_cache:
           keys:
-            - cache-{{ checksum "./java-micronaut/pom.xml" }}
+            - cache-{{ checksum "./java-micronaut-jackson/pom.xml" }}
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
@@ -173,27 +172,26 @@ jobs:
       - run:
           name: Build service
           command: |
-            cd ./java-micronaut
+            cd ./java-micronaut-jackson
             mvn clean compile -Dspecgen.version=<<pipeline.parameters.specgen-version>>
       - run:
           name: Run service
           command: |
-            cd ./java-micronaut
+            cd ./java-micronaut-jackson
             ./mvnw mn:run -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
       - save_cache:
-          key: cache-{{ checksum "./java-micronaut/pom.xml" }}
+          key: cache-{{ checksum "./java-micronaut-jackson/pom.xml" }}
           paths:
             - ~/.m2
       - wait-url:
           url: http://localhost:8081/swagger-ui/
       - go-tests:
           command: ./tests/service-tests -test.v  
-          
-  kotlin-moshi-micronaut:
+
+  java-micronaut-moshi:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
-      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:11-jdk
@@ -202,14 +200,53 @@ jobs:
       - attach_workspace:
           at: .
       - restore_cache:
-          key: cache-{{ checksum "./kotlin-moshi-micronaut/build.gradle.kts" }}-{{ checksum "./kotlin-moshi-micronaut/settings.gradle.kts" }}
+          keys:
+            - cache-{{ checksum "./java-micronaut-moshi/pom.xml" }}
+      - run:
+          name: Create temp folder for tests results
+          command: mkdir -p /tmp/test-results
+      - artifactory/setup-maven:
+          jfrog-server-url: specgen.jfrog.io
+          repo-name: maven
+      - run:
+          name: Build service
+          command: |
+            cd ./java-micronaut-moshi
+            mvn clean compile -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+      - run:
+          name: Run service
+          command: |
+            cd ./java-micronaut-moshi
+            ./mvnw mn:run -Dspecgen.version=<<pipeline.parameters.specgen-version>>
+          background: true
+      - save_cache:
+          key: cache-{{ checksum "./java-micronaut-moshi/pom.xml" }}
+          paths:
+            - ~/.m2
+      - wait-url:
+          url: http://localhost:8081/swagger-ui/
+      - go-tests:
+          command: ./tests/service-tests -test.v  
+
+  kotlin-micronaut-moshi:
+    environment:
+      SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
+    working_directory: ~/specgen-tests
+    docker:
+      - image: circleci/openjdk:11-jdk
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          key: cache-{{ checksum "./kotlin-micronaut-moshi/build.gradle.kts" }}-{{ checksum "./kotlin-micronaut-moshi/settings.gradle.kts" }}
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
       - run:
           name: Build service
           command: |
-            cd ./kotlin-moshi-micronaut
+            cd ./kotlin-micronaut-moshi
             ./gradlew --build-cache --no-daemon --stacktrace build \
             -Djfrog.user=$JFROG_USER \
             -Djfrog.pass=$JFROG_PASS \
@@ -217,24 +254,23 @@ jobs:
       - run:
           name: Run service
           command: |
-            cd ./kotlin-moshi-micronaut
+            cd ./kotlin-micronaut-moshi
             ./gradlew --build-cache --no-daemon --stacktrace run \
             -Djfrog.user=$JFROG_USER \
             -Djfrog.pass=$JFROG_PASS \
             -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
       - save_cache:
-          key: cache-{{ checksum "./kotlin-moshi-micronaut/build.gradle.kts" }}-{{ checksum "./kotlin-moshi-micronaut/settings.gradle.kts" }}
+          key: cache-{{ checksum "./kotlin-micronaut-moshi/build.gradle.kts" }}-{{ checksum "./kotlin-micronaut-moshi/settings.gradle.kts" }}
           paths: [ ~/.gradle ]  
       - wait-url:
           url: http://localhost:8081/swagger-ui/
       - go-tests:
           command: ./tests/service-tests -test.v     
 
-  kotlin-jackson-micronaut:
+  kotlin-micronaut-jackson:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
-      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:11-jdk
@@ -243,14 +279,14 @@ jobs:
       - attach_workspace:
           at: .
       - restore_cache:
-          key: cache-{{ checksum "./kotlin-jackson-micronaut/build.gradle.kts" }}-{{ checksum "./kotlin-jackson-micronaut/settings.gradle.kts" }}
+          key: cache-{{ checksum "./kotlin-micronaut-jackson/build.gradle.kts" }}-{{ checksum "./kotlin-micronaut-jackson/settings.gradle.kts" }}
       - run:
           name: Create temp folder for tests results
           command: mkdir -p /tmp/test-results
       - run:
           name: Build service
           command: |
-            cd ./kotlin-jackson-micronaut
+            cd ./kotlin-micronaut-jackson
             ./gradlew --build-cache --no-daemon --stacktrace build \
             -Djfrog.user=$JFROG_USER \
             -Djfrog.pass=$JFROG_PASS \
@@ -258,14 +294,14 @@ jobs:
       - run:
           name: Run service
           command: |
-            cd ./kotlin-jackson-micronaut
+            cd ./kotlin-micronaut-jackson
             ./gradlew --build-cache --no-daemon --stacktrace run \
             -Djfrog.user=$JFROG_USER \
             -Djfrog.pass=$JFROG_PASS \
             -Dspecgen.version=<<pipeline.parameters.specgen-version>>
           background: true
       - save_cache:
-          key: cache-{{ checksum "./kotlin-jackson-micronaut/build.gradle.kts" }}-{{ checksum "./kotlin-jackson-micronaut/settings.gradle.kts" }}
+          key: cache-{{ checksum "./kotlin-micronaut-jackson/build.gradle.kts" }}-{{ checksum "./kotlin-micronaut-jackson/settings.gradle.kts" }}
           paths: [ ~/.gradle ]  
       - wait-url:
           url: http://localhost:8081/swagger-ui/
@@ -533,26 +569,30 @@ workflows:
           context: specgen
           requires:
             - tests
-      - java-jackson-spring:
+      - java-spring-jackson:
           context: specgen
           requires:
             - tests
-      - java-moshi-spring:
+      - java-spring-moshi:
           context: specgen
           requires:
-            - tests      
-      - java-micronaut:
+            - tests
+      - java-micronaut-jackson:
           context: specgen
           requires:
-            - tests  
-      - kotlin-moshi-micronaut:
+            - tests
+      - java-micronaut-moshi:
           context: specgen
           requires:
-            - tests    
-      - kotlin-jackson-micronaut:
+            - tests
+      - kotlin-micronaut-moshi:
           context: specgen
           requires:
-            - tests            
+            - tests
+      - kotlin-micronaut-jackson:
+          context: specgen
+          requires:
+            - tests
       - go:
           context: specgen
           requires:
