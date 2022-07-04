@@ -31,7 +31,6 @@ jobs:
   scala-play:
     environment:
       SPECGEN_VERSION: <<pipeline.parameters.specgen-version>>
-      TEST_ERRORS: false
     working_directory: ~/specgen-tests
     docker:
       - image: circleci/openjdk:8-jdk

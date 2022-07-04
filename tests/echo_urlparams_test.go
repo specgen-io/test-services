@@ -29,9 +29,5 @@ func Test_EchoUrlParams(t *testing.T) {
 func Test_EchoUrlParams_Unparsable(t *testing.T) {
 	req, _ := http.NewRequest("GET", serviceUrl+`/echo/url_params/value/12345/1.23/12.345/12345/true/the value/123e4567-e89b-12d3-a456-426655440000/2020-01-01/2019-11-30T17:45:55/SECOND_CHOICE`, nil)
 
-	if check(ERRORS) {
-		assertJsonResponse(t, req, 404, `{"message":"Failed to parse url parameters"}`, nil)
-	} else {
-		assertResponseStatus(t, req, 400)
-	}
+	assertJsonResponse(t, req, 404, `{"message":"Failed to parse url parameters"}`, nil)
 }

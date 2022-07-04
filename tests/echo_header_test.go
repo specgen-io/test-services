@@ -136,14 +136,10 @@ func Test_EchoHeader_Missing_Required_Param(t *testing.T) {
 	h.Add("Datetime-Header", "2019-11-30T17:45:55")
 	h.Add("Enum-Header", "SECOND_CHOICE")
 
-	if check(ERRORS) {
-		assertJsonResponse(t, req, 400, "", map[string]interface{}{
-			"$.message":        "Failed to parse header",
-			"$.location":       "header",
-			"$.errors[0].path": "Int-Header",
-			"$.errors[0].code": "missing",
-		})
-	} else {
-		assertResponseStatus(t, req, 400)
-	}
+	assertJsonResponse(t, req, 400, "", map[string]interface{}{
+		"$.message":        "Failed to parse header",
+		"$.location":       "header",
+		"$.errors[0].path": "Int-Header",
+		"$.errors[0].code": "missing",
+	})
 }

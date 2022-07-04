@@ -71,16 +71,12 @@ func Test_EchoQuery_Missing_Required_Param(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	if check(ERRORS) {
-		assertJsonResponse(t, req, 400, "", map[string]interface{}{
-			"$.message":        "Failed to parse query",
-			"$.location":       "query",
-			"$.errors[0].path": "string_query",
-			"$.errors[0].code": "missing",
-		})
-	} else {
-		assertResponseStatus(t, req, 400)
-	}
+	assertJsonResponse(t, req, 400, "", map[string]interface{}{
+		"$.message":        "Failed to parse query",
+		"$.location":       "query",
+		"$.errors[0].path": "string_query",
+		"$.errors[0].code": "missing",
+	})
 }
 
 func Test_EchoQuery_Missing_Optional_Param(t *testing.T) {
@@ -157,14 +153,10 @@ func Test_EchoQuery_WrongFormat(t *testing.T) {
 	q.Add("enum_query", "SECOND_CHOICE")
 	req.URL.RawQuery = q.Encode()
 
-	if check(ERRORS) {
-		assertJsonResponse(t, req, 400, "", map[string]interface{}{
-			"$.message":        "Failed to parse query",
-			"$.location":       "query",
-			"$.errors[0].path": "int_query",
-			"$.errors[0].code": "parsing_failed",
-		})
-	} else {
-		assertResponseStatus(t, req, 400)
-	}
+	assertJsonResponse(t, req, 400, "", map[string]interface{}{
+		"$.message":        "Failed to parse query",
+		"$.location":       "query",
+		"$.errors[0].path": "int_query",
+		"$.errors[0].code": "parsing_failed",
+	})
 }

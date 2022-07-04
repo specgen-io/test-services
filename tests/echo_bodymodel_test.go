@@ -23,29 +23,25 @@ func Test_EchoBodyModel_Request_ContentType_Charset(t *testing.T) {
 }
 
 func Test_EchoBodyModel_Request_ContentType_Empty(t *testing.T) {
-	if check(ERRORS) {
-		req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, strings.NewReader(ECHO_BODY_MODEL_JSON))
-		req.Header.Add("Content-Type", "")
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, strings.NewReader(ECHO_BODY_MODEL_JSON))
+	req.Header.Add("Content-Type", "")
 
-		assertJsonResponse(t, req, 400, "", map[string]interface{}{
-			"$.location":       "header",
-			"$.message":        "Failed to parse header",
-			"$.errors[0].code": "missing",
-			"$.errors[0].path": "Content-Type",
-		})
-	}
+	assertJsonResponse(t, req, 400, "", map[string]interface{}{
+		"$.location":       "header",
+		"$.message":        "Failed to parse header",
+		"$.errors[0].code": "missing",
+		"$.errors[0].path": "Content-Type",
+	})
 }
 
 func Test_EchoBodyModel_Request_ContentType_Missing(t *testing.T) {
-	if check(ERRORS) {
-		req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, strings.NewReader(ECHO_BODY_MODEL_JSON))
-		assertJsonResponse(t, req, 400, "", map[string]interface{}{
-			"$.location":       "header",
-			"$.message":        "Failed to parse header",
-			"$.errors[0].code": "missing",
-			"$.errors[0].path": "Content-Type",
-		})
-	}
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, strings.NewReader(ECHO_BODY_MODEL_JSON))
+	assertJsonResponse(t, req, 400, "", map[string]interface{}{
+		"$.location":       "header",
+		"$.message":        "Failed to parse header",
+		"$.errors[0].code": "missing",
+		"$.errors[0].path": "Content-Type",
+	})
 }
 
 func Test_EchoBodyModel_Bad_Json(t *testing.T) {
@@ -54,14 +50,10 @@ func Test_EchoBodyModel_Bad_Json(t *testing.T) {
 	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_model`, strings.NewReader(dataJson))
 	req.Header.Add("Content-Type", "application/json")
 
-	if check(ERRORS) {
-		assertJsonResponse(t, req, 400, "", map[string]interface{}{
-			"$.message":        "Failed to parse body",
-			"$.location":       "body",
-			"$.errors[0].path": "int_field",
-			"$.errors[0].code": "parsing_failed",
-		})
-	} else {
-		assertResponseStatus(t, req, 400)
-	}
+	assertJsonResponse(t, req, 400, "", map[string]interface{}{
+		"$.message":        "Failed to parse body",
+		"$.location":       "body",
+		"$.errors[0].path": "int_field",
+		"$.errors[0].code": "parsing_failed",
+	})
 }

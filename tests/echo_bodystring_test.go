@@ -23,26 +23,22 @@ func Test_EchoBodyString_Request_ContentType_Charset(t *testing.T) {
 }
 
 func Test_EchoBodyString_Request_ContentType_Empty(t *testing.T) {
-	if check(ERRORS) {
-		req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(ECHO_BODY_STRING))
-		req.Header.Add("Content-Type", "")
-		assertJsonResponse(t, req, 400, "", map[string]interface{}{
-			"$.location":       "header",
-			"$.message":        "Failed to parse header",
-			"$.errors[0].code": "missing",
-			"$.errors[0].path": "Content-Type",
-		})
-	}
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(ECHO_BODY_STRING))
+	req.Header.Add("Content-Type", "")
+	assertJsonResponse(t, req, 400, "", map[string]interface{}{
+		"$.location":       "header",
+		"$.message":        "Failed to parse header",
+		"$.errors[0].code": "missing",
+		"$.errors[0].path": "Content-Type",
+	})
 }
 
 func Test_EchoBodyString_Request_ContentType_Missing(t *testing.T) {
-	if check(ERRORS) {
-		req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(ECHO_BODY_STRING))
-		assertJsonResponse(t, req, 400, "", map[string]interface{}{
-			"$.location":       "header",
-			"$.message":        "Failed to parse header",
-			"$.errors[0].code": "missing",
-			"$.errors[0].path": "Content-Type",
-		})
-	}
+	req, _ := http.NewRequest("POST", serviceUrl+`/echo/body_string`, strings.NewReader(ECHO_BODY_STRING))
+	assertJsonResponse(t, req, 400, "", map[string]interface{}{
+		"$.location":       "header",
+		"$.message":        "Failed to parse header",
+		"$.errors[0].code": "missing",
+		"$.errors[0].path": "Content-Type",
+	})
 }
