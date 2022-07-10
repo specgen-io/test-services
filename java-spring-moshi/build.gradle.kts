@@ -2,7 +2,7 @@ plugins {
     id("java")
     id("org.springframework.boot") version "2.5.7"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    id("io.specgen.gradle")
+    id("io.specgen.java.gradle")
 }
 
 group = "io.specgen"

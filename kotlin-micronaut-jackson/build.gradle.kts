@@ -4,7 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.allopen") version "1.6.10"
     id("com.github.johnrengelman.shadow") version "7.1.1"
     id("io.micronaut.application") version "3.2.2"
-    id("io.specgen.gradle")
+    id("io.specgen.kotlin.gradle")
 }
 
 group = "io.specgen"
